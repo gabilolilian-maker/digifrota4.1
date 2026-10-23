@@ -50,6 +50,13 @@
                         </select>
                     </div>
 
+                    <!-- Hora de Saída -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Hora da Saída</label>
+                        <input type="time" id="horaSaida" required
+                            class="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm outline-none">
+                    </div>
+
                     <!-- KM Saída -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">KM Saída</label>
@@ -68,17 +75,6 @@
                         </select>
                     </div>
 
-                    <!-- Foto Hodômetro -->
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Foto do Hodômetro (Saída)</label>
-                        <input type="file" id="fotoHodometro" accept="image/*" capture="environment" onchange="converterFotoBase64()" class="hidden">
-                        <label for="fotoHodometro" class="w-full p-3 bg-blue-50 border-2 border-dashed border-blue-300 rounded-xl text-blue-700 flex items-center justify-center gap-2 cursor-pointer text-sm font-medium">
-                            <i class="fa-solid fa-camera text-lg"></i>
-                            <span id="label-foto">Tirar Foto / Anexar</span>
-                        </label>
-                        <input type="hidden" id="fotoBase64">
-                    </div>
-
                     <button type="submit" id="btn-enviar" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold p-3.5 rounded-xl shadow-lg text-base mt-2 flex justify-center items-center gap-2">
                         <i class="fa-solid fa-paper-plane"></i> Registrar Saída
                     </button>
@@ -86,14 +82,14 @@
             </div>
         </section>
 
-        <!-- ABA 2: HISTÓRICO -->
+        <!-- ABA 2: VIAGENS EM ANDAMENTO -->
         <section id="aba-historico" class="hidden space-y-3">
             <h2 class="text-base font-bold text-gray-800 mb-2 px-1 flex justify-between items-center">
-                <span><i class="fa-solid fa-clock-rotate-left text-blue-600"></i> Viagens Recentes</span>
+                <span><i class="fa-solid fa-car text-blue-600"></i> Viagens em Andamento</span>
                 <button onclick="carregarHistorico()" class="text-xs text-blue-700 font-semibold">Atualizar</button>
             </h2>
             <div id="lista-cards-historico" class="space-y-3">
-                <p class="text-center text-gray-500 text-sm py-8">Carregando histórico...</p>
+                <p class="text-center text-gray-500 text-sm py-8">Carregando viagens ativas...</p>
             </div>
         </section>
     </main>
@@ -111,7 +107,7 @@
                 <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Foto Hodômetro (Chegada)</label>
                 <input type="file" id="modal-fotoChegada" accept="image/*" capture="environment" onchange="converterFotoModalBase64()" class="hidden">
                 <label for="modal-fotoChegada" class="w-full p-3 bg-blue-50 border-2 border-dashed border-blue-300 rounded-xl text-blue-700 flex items-center justify-center gap-2 cursor-pointer text-sm font-medium">
-                    <i class="fa-solid fa-camera"></i> <span id="modal-label-foto">Foto de Chegada</span>
+                    <i class="fa-solid fa-camera"></i> <span id="modal-label-foto">Tirar Foto / Anexar</span>
                 </label>
                 <input type="hidden" id="modal-fotoBase64">
             </div>
@@ -127,7 +123,7 @@
             <i class="fa-solid fa-circle-plus text-lg"></i><span>Nova Viagem</span>
         </button>
         <button onclick="mudarAba('historico')" id="nav-historico" class="flex flex-col items-center gap-1 text-gray-400 font-semibold p-1 text-xs">
-            <i class="fa-solid fa-list text-lg"></i><span>Histórico</span>
+            <i class="fa-solid fa-list text-lg"></i><span>Em Andamento</span>
         </button>
     </nav>
 
@@ -139,6 +135,9 @@
             carregarFrotas();
             carregarDestinos();
             carregarHistorico();
+            
+            const agora = new Date();
+            document.getElementById("horaSaida").value = agora.toTimeString().substring(0, 5);
         });
 
         function mudarAba(aba) {
@@ -163,13 +162,10 @@
             try {
                 const res = await fetch(`${API_URL}?action=getMotoristas`);
                 const dados = await res.json();
-                
                 const selMot = document.getElementById("motorista");
                 const selAcamp = document.getElementById("acompanhante");
-                
                 selMot.innerHTML = '<option value="">Selecione o motorista...</option>';
                 selAcamp.innerHTML = '<option value="">Nenhum / Selecione...</option>';
-                
                 dados.forEach(m => {
                     selMot.innerHTML += `<option value="${m}">${m}</option>`;
                     selAcamp.innerHTML += `<option value="${m}">${m}</option>`;
@@ -213,16 +209,6 @@
             finally { loading.classList.add("hidden"); }
         }
 
-        function converterFotoBase64() {
-            const file = document.getElementById("fotoHodometro").files[0];
-            if (file) {
-                const reader = new FileReader();
-                document.getElementById("label-foto").textContent = "Foto Anexada ✓";
-                reader.onload = e => document.getElementById("fotoBase64").value = e.target.result;
-                reader.readAsDataURL(file);
-            }
-        }
-
         function converterFotoModalBase64() {
             const file = document.getElementById("modal-fotoChegada").files[0];
             if (file) {
@@ -244,22 +230,21 @@
                 motorista: document.getElementById("motorista").value,
                 frota: document.getElementById("frota").value,
                 acompanhante: document.getElementById("acompanhante").value,
+                horaSaida: document.getElementById("horaSaida").value,
                 kmSaida: document.getElementById("kmSaida").value,
                 destino: document.getElementById("destino").value,
-                fotoBase64: document.getElementById("fotoBase64").value,
                 dataSaida: agora.toLocaleDateString("pt-BR"),
-                horaSaida: agora.toLocaleTimeString("pt-BR", {hour: '2-digit', minute:'2-digit'}),
                 situacao: "EM ANDAMENTO"
             };
 
             try {
                 const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
                 const resp = await res.json();
-                if (resp.status === "sucesso") {
-                    alert("Saída registrada com sucesso!");
+                
+                if (resp.status === "sucesso" || resp.status === "alerta") {
+                    alert(resp.mensagem || "Saída registrada com sucesso!");
                     document.getElementById("form-viagem").reset();
-                    document.getElementById("label-foto").textContent = "Tirar Foto / Anexar";
-                    document.getElementById("fotoBase64").value = "";
+                    document.getElementById("horaSaida").value = new Date().toTimeString().substring(0, 5);
                     carregarHistorico();
                     mudarAba('historico');
                 } else { alert("Erro: " + resp.mensagem); }
@@ -272,31 +257,30 @@
             try {
                 const res = await fetch(`${API_URL}?action=obterDadosFrotas`);
                 const dados = await res.json();
-                if (dados && dados.length > 0) {
+                
+                // Filtra para exibir apenas as viagens EM ANDAMENTO para o motorista
+                const viagensAtivas = dados.filter(v => v.situacao === "EM ANDAMENTO" || v.situacao.includes("ATENÇÃO"));
+
+                if (viagensAtivas && viagensAtivas.length > 0) {
                     container.innerHTML = "";
-                    dados.slice(0, 15).forEach(v => {
-                        let emAndamento = v.situacao === "EM ANDAMENTO";
+                    viagensAtivas.forEach(v => {
                         container.innerHTML += `
                             <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-2">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-blue-800 text-sm">${v.frota}</span>
-                                    <span class="text-xs px-2 py-0.5 rounded font-semibold ${emAndamento ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'}">${v.situacao}</span>
+                                    <span class="text-xs px-2 py-0.5 rounded font-semibold bg-amber-100 text-amber-800">EM ANDAMENTO</span>
                                 </div>
                                 <div class="text-xs text-gray-600 space-y-1">
                                     <p><strong>Motorista:</strong> ${v.motorista} ${v.acompanhante ? '/ ' + v.acompanhante : ''}</p>
                                     <p><strong>Destino:</strong> ${v.destino}</p>
                                     <p><strong>Saída:</strong> ${v.saida} (KM: ${v.kmSaida})</p>
-                                    ${!emAndamento ? `<p><strong>Chegada:</strong> KM ${v.kmChegada} | <strong>Rodado:</strong> ${v.kmRodado} km</p>` : ''}
-                                    <div class="pt-1 flex gap-3">
-                                        ${v.foto ? `<a href="${v.foto}" target="_blank" class="text-blue-600 underline font-semibold">Foto Saída</a>` : ''}
-                                    </div>
                                 </div>
-                                ${emAndamento ? `<button onclick="abrirModalEncerrar(${v.linha}, '${v.frota}')" class="w-full mt-2 bg-green-700 text-white text-xs font-bold py-2 rounded-lg shadow">Encerrar Viagem</button>` : ''}
+                                <button onclick="abrirModalEncerrar(${v.linha}, '${v.frota}')" class="w-full mt-2 bg-green-700 text-white text-xs font-bold py-2 rounded-lg shadow">Encerrar Viagem</button>
                             </div>
                         `;
                     });
-                } else { container.innerHTML = '<p class="text-center text-gray-500 text-sm py-6">Nenhuma viagem encontrada.</p>'; }
-            } catch (e) { container.innerHTML = '<p class="text-center text-red-500 text-sm py-6">Erro ao carregar histórico.</p>'; }
+                } else { container.innerHTML = '<p class="text-center text-gray-500 text-sm py-6">Nenhuma viagem em andamento no momento.</p>'; }
+            } catch (e) { container.innerHTML = '<p class="text-center text-red-500 text-sm py-6">Erro ao carregar viagens.</p>'; }
         }
 
         function abrirModalEncerrar(linha, frota) {
@@ -304,7 +288,7 @@
             document.getElementById("modal-frota-txt").textContent = frota;
             document.getElementById("modal-kmChegada").value = "";
             document.getElementById("modal-fotoBase64").value = "";
-            document.getElementById("modal-label-foto").textContent = "Foto de Chegada";
+            document.getElementById("modal-label-foto").textContent = "Tirar Foto / Anexar";
             document.getElementById("modal-encerrar").classList.remove("hidden");
         }
 
