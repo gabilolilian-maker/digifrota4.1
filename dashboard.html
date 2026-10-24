@@ -39,7 +39,7 @@
             
             <div class="flex items-center space-x-4">
                 <span id="data-atual" class="text-xs bg-gray-100 px-3 py-1.5 rounded-lg font-bold text-gray-600">--</span>
-                <button onclick="atualizarDadosGerais()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-xs font-black shadow flex items-center gap-2">
+                <button onclick="carregarDados()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-xs font-black shadow flex items-center gap-2">
                     <i class="fa-solid fa-rotate"></i> Atualizar
                 </button>
             </div>
@@ -177,7 +177,7 @@
             const agora = new Date();
             document.getElementById("data-atual").textContent = `${dias[agora.getDay()]}, ${agora.getDate()} de ${meses[agora.getMonth()]} de ${agora.getFullYear()}`;
             
-            atualizarDadosGerais();
+            carregarDados();
         });
 
         function mudarSecao(secao) {
@@ -192,24 +192,25 @@
             document.getElementById("titulo-secao").textContent = titulos[secao];
         }
 
-        async function atualizarDadosGerais() {
+        async function carregarDados() {
             try {
-                // 1. Carregar dados do Dashboard e Frotas
-                const resDash = await fetch(`${API_URL}?action=getDashboard`);
-                const dataDash = await resDash.json();
-                
-                document.getElementById("stat-total").textContent = dataDash.total || 0;
-                document.getElementById("stat-trocar").textContent = dataDash.trocar || 0;
-                document.getElementById("stat-atencao").textContent = dataDash.atencao || 0;
+                // Buscar dados gerais do painel
+                const res = await fetch(`${API_URL}?action=getDashboard`);
+                const dados = await res.json();
+
+                // Preencher totais
+                document.getElementById("stat-total").textContent = dados.total || 0;
+                document.getElementById("stat-trocar").textContent = dados.trocar || 0;
+                document.getElementById("stat-atencao").textContent = dados.atencao || 0;
 
                 // Alertas de Óleo e Tabela de Frotas
                 const alertasDiv = document.getElementById("dash-alertas-frota");
                 const dashAlertas = document.getElementById("tabela-frotas-corpo");
                 alertasDiv.innerHTML = "";
                 dashAlertas.innerHTML = "";
-                
-                if (dataDash.ranking && Array.isArray(dataDash.ranking)) {
-                    dataDash.ranking.forEach(v => {
+
+                if (dados.ranking && Array.isArray(dados.ranking)) {
+                    dados.ranking.forEach(v => {
                         let alertaTexto = v.alerta ? v.alerta.toString().toUpperCase() : "OK";
                         if(alertaTexto === "TROCAR" || alertaTexto.includes("VENCIDA")) {
                             alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-red-50 border border-red-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-red-700">TROCAR</span></div>`;
@@ -232,10 +233,10 @@
                 }
                 if(alertasDiv.innerHTML === "") alertasDiv.innerHTML = '<p class="text-xs text-emerald-600 font-bold">Nenhum alerta pendente.</p>';
 
-                // 2. Carregar Viagens e Calcular o Ranking por SOMA DE KM RODADO nas utilizações
-                const resViagens = await fetch(`${API_URL}?action=obterDadosFrotas`);
-                const dataViagens = await resViagens.json();
-                
+                // Buscar Viagens e calcular o Ranking por SOMA DE KM RODADO nas utilizações
+                const resV = await fetch(`${API_URL}?action=obterDadosFrotas`);
+                const viagens = await resV.json();
+
                 const recViagensDiv = document.getElementById("dash-viagens-recentes");
                 const tabelaViagens = document.getElementById("tabela-viagens-corpo");
                 recViagensDiv.innerHTML = "";
@@ -243,8 +244,8 @@
 
                 let kmRodadoPorFrota = {};
 
-                if (Array.isArray(dataViagens)) {
-                    dataViagens.forEach(v => {
+                if (Array.isArray(viagens)) {
+                    viagens.forEach(v => {
                         let kmRodadoNum = parseFloat(v.kmRodado) || 0;
                         let nomeFrota = v.frota ? v.frota.toString().trim() : "Desconhecida";
                         
@@ -266,7 +267,7 @@
                         `;
                     });
 
-                    dataViagens.slice(0, 5).forEach(v => {
+                    viagens.slice(0, 5).forEach(v => {
                         recViagensDiv.innerHTML += `
                             <div class="p-2.5 bg-gray-50 rounded-xl flex justify-between items-center border">
                                 <div>
@@ -278,10 +279,10 @@
                         `;
                     });
                 }
-                
+
                 if(recViagensDiv.innerHTML === "") recViagensDiv.innerHTML = '<p class="text-xs text-gray-400">Sem registos de viagens.</p>';
 
-                // Montar o Ranking baseado na SOMA de km rodado nas utilizações
+                // Montar o Ranking por SOMA de km rodado nas utilizações
                 let rankingArray = Object.keys(kmRodadoPorFrota).map(frota => {
                     return { frota: frota, totalKm: kmRodadoPorFrota[frota] };
                 });
@@ -301,8 +302,8 @@
                     rankingDiv.innerHTML = '<p class="text-xs text-gray-400">Ainda sem quilometragem registada nas utilizações.</p>';
                 }
 
-            } catch (e) {
-                console.error("Erro ao carregar dados do painel:", e);
+            } catch (err) {
+                console.error("Erro ao carregar dados:", err);
             }
         }
     </script>
