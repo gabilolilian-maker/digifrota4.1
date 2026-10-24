@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigiFrota 4.1</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-100 min-h-screen pb-20 font-sans">
 
+    <!-- CABEÇALHO DO APP -->
     <header class="bg-blue-800 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
         <div class="flex items-center gap-2">
             <i class="fa-solid font-bold text-xl fa-car-side"></i>
@@ -18,15 +20,20 @@
     </header>
 
     <main class="max-w-md mx-auto p-4">
-        <!-- ABA 1: FORMULÁRIO -->
+        <!-- ABA 1: REGISTRAR NOVA SAÍDA -->
         <section id="aba-nova-viagem" class="space-y-4">
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
                 <h2 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2">
                     <i class="fa-solid fa-route text-blue-600"></i> Registrar Nova Viagem
                 </h2>
 
+                <!-- Alerta quando veículo está com viagem em aberto -->
+                <div id="alerta-veiculo-uso" class="hidden bg-amber-50 border-l-4 border-amber-500 p-3 mb-3 text-xs text-amber-800 rounded-r-xl">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <strong>Aviso:</strong> Este veículo consta com viagem em aberto na planilha. Verifique e digite o KM atual manualmente se necessário.
+                </div>
+
                 <form id="form-viagem" onsubmit="salvarViagem(event)" class="space-y-4">
-                    <!-- Motorista -->
+                    <!-- Seleção do Motorista -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Motorista</label>
                         <select id="motorista" required class="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm outline-none">
@@ -34,7 +41,7 @@
                         </select>
                     </div>
 
-                    <!-- Frota -->
+                    <!-- Seleção da Frota -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Frota / Veículo (Em Operação)</label>
                         <select id="frota" required onchange="aoSelecionarFrota()" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm outline-none">
@@ -42,7 +49,7 @@
                         </select>
                     </div>
 
-                    <!-- Acompanhante -->
+                    <!-- Seleção do Acompanhante -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Acompanhante (Opcional)</label>
                         <select id="acompanhante" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm outline-none">
@@ -50,20 +57,18 @@
                         </select>
                     </div>
 
-                    <!-- Hora de Saída -->
+                    <!-- Hora da Saída -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Hora da Saída</label>
-                        <input type="time" id="horaSaida" required
-                            class="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm outline-none">
+                        <input type="time" id="horaSaida" required class="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm outline-none">
                     </div>
 
-                    <!-- KM Saída -->
+                    <!-- KM de Saída -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">KM Saída</label>
                         <div class="relative">
-                            <input type="number" id="kmSaida" required placeholder="Ex: 160001"
-                                class="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm outline-none">
-                            <span id="loading-km" class="hidden absolute right-3 top-3 text-xs text-blue-600">Buscando KM...</span>
+                            <input type="number" id="kmSaida" required placeholder="Ex: 160001" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm outline-none">
+                            <span id="loading-km" class="hidden absolute right-3 top-3 text-xs text-blue-600">Verificando...</span>
                         </div>
                     </div>
 
@@ -75,6 +80,68 @@
                         </select>
                     </div>
 
+                    <!-- CHECKLIST DE AVARIAS / PROBLEMAS (ENVIO PARA ABA SEPARADA) -->
+                    <div class="border border-gray-200 rounded-xl p-3 bg-gray-50/50 space-y-2">
+                        <label class="block text-xs font-bold text-gray-700 uppercase flex items-center justify-between">
+                            <span><i class="fa-solid fa-list-check text-blue-600"></i> Checklist / Avarias</span>
+                            <span class="text-[10px] font-normal text-gray-500">(Marque se houver defeito)</span>
+                        </label>
+
+                        <details class="bg-white rounded-lg border border-gray-200 text-xs">
+                            <summary class="p-2.5 font-semibold text-gray-700 cursor-pointer select-none flex justify-between items-center">
+                                <span>🛠️ Funilaria e Lataria</span>
+                                <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                            </summary>
+                            <div class="p-3 pt-1 space-y-2 border-t border-gray-100">
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Funilaria: Amassado/Arranhão"> Amassado / Arranhão</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Funilaria: Para-choque Danificado"> Para-choque solto/danificado</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Funilaria: Vidro/Retrovisor Trincado"> Vidro / Retrovisor trincado</label>
+                            </div>
+                        </details>
+
+                        <details class="bg-white rounded-lg border border-gray-200 text-xs">
+                            <summary class="p-2.5 font-semibold text-gray-700 cursor-pointer select-none flex justify-between items-center">
+                                <span>💡 Iluminação e Sinalização</span>
+                                <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                            </summary>
+                            <div class="p-3 pt-1 space-y-2 border-t border-gray-100">
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Iluminação: Farol Queimado"> Farol queimado/quebrado</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Iluminação: Lanterna/Luz de Freio"> Luz de freio / Lanterna traseira</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Iluminação: Seta com Defeito"> Seta / Pisca-alerta</label>
+                            </div>
+                        </details>
+
+                        <details class="bg-white rounded-lg border border-gray-200 text-xs">
+                            <summary class="p-2.5 font-semibold text-gray-700 cursor-pointer select-none flex justify-between items-center">
+                                <span>❄️ Conforto e Acessórios</span>
+                                <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                            </summary>
+                            <div class="p-3 pt-1 space-y-2 border-t border-gray-100">
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Conforto: Ar Condicionado Ruim"> Ar-condicionado não gela</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Conforto: Vidro Elétrico/Trava"> Vidro elétrico / Trava com defeito</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Conforto: Limpador Para-brisa"> Limpador de para-brisa ruim</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Conforto: Sujeira Interna"> Higienização / Sujeira interna</label>
+                            </div>
+                        </details>
+
+                        <details class="bg-white rounded-lg border border-gray-200 text-xs">
+                            <summary class="p-2.5 font-semibold text-gray-700 cursor-pointer select-none flex justify-between items-center">
+                                <span>⚙️ Motor e Mecânica</span>
+                                <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                            </summary>
+                            <div class="p-3 pt-1 space-y-2 border-t border-gray-100">
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Mecânica: Pneu Murcho/Careca"> Pneu murcho / careca</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Mecânica: Barulho no Freio"> Ruído / Defeito no freio</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Mecânica: Luz da Injeção/Painel"> Luz de alerta acesa no painel</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="chk_prob" value="Mecânica: Barulho Estranho Motor"> Barulho anormal no motor</label>
+                            </div>
+                        </details>
+
+                        <input type="text" id="obs_livre_prob" placeholder="Outras observações de problemas (opcional)"
+                            class="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-xs outline-none">
+                    </div>
+
+                    <!-- Botão de Envio de Saída -->
                     <button type="submit" id="btn-enviar" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold p-3.5 rounded-xl shadow-lg text-base mt-2 flex justify-center items-center gap-2">
                         <i class="fa-solid fa-paper-plane"></i> Registrar Saída
                     </button>
@@ -82,7 +149,7 @@
             </div>
         </section>
 
-        <!-- ABA 2: VIAGENS EM ANDAMENTO -->
+        <!-- ABA 2: VIAGENS EM ANDAMENTO (SOMENTE ATIVAS) -->
         <section id="aba-historico" class="hidden space-y-3">
             <h2 class="text-base font-bold text-gray-800 mb-2 px-1 flex justify-between items-center">
                 <span><i class="fa-solid fa-car text-blue-600"></i> Viagens em Andamento</span>
@@ -94,15 +161,19 @@
         </section>
     </main>
 
-    <!-- MODAL DE ENCERRAMENTO -->
+    <!-- MODAL DE ENCERRAMENTO / RETORNO -->
     <div id="modal-encerrar" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl p-5 w-full max-w-sm space-y-4">
+        <div class="bg-white rounded-2xl p-5 w-full max-w-sm space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 class="font-bold text-gray-800 text-base border-b pb-2">Encerrar Viagem - Frota: <span id="modal-frota-txt"></span></h3>
             <input type="hidden" id="modal-linha">
+            
+            <!-- KM Chegada -->
             <div>
                 <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">KM Chegada</label>
                 <input type="number" id="modal-kmChegada" required placeholder="Ex: 160150" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-sm outline-none">
             </div>
+
+            <!-- Foto Hodômetro Obrigatoria no Encerramento -->
             <div>
                 <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Foto Hodômetro (Chegada)</label>
                 <input type="file" id="modal-fotoChegada" accept="image/*" capture="environment" onchange="converterFotoModalBase64()" class="hidden">
@@ -111,6 +182,16 @@
                 </label>
                 <input type="hidden" id="modal-fotoBase64">
             </div>
+
+            <!-- Observação de Avaria no Encerramento -->
+            <div class="border border-gray-200 rounded-xl p-3 bg-gray-50/50 space-y-2">
+                <label class="block text-xs font-bold text-gray-700 uppercase">
+                    <i class="fa-solid fa-list-check text-blue-600"></i> Surgiu Algum Problema na Viagem?
+                </label>
+                <input type="text" id="modal-obs-prob" placeholder="Relate avarias na chegada (opcional)"
+                    class="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-xs outline-none">
+            </div>
+
             <div class="flex gap-2 pt-2">
                 <button type="button" onclick="fecharModal()" class="w-1/2 bg-gray-300 text-gray-700 font-bold p-3 rounded-xl text-sm">Cancelar</button>
                 <button type="button" onclick="salvarEncerramento()" class="w-1/2 bg-green-700 text-white font-bold p-3 rounded-xl text-sm">Concluir</button>
@@ -118,6 +199,7 @@
         </div>
     </div>
 
+    <!-- NAVEGAÇÃO SUPERIOR/INFERIOR -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around p-2 z-50">
         <button onclick="mudarAba('nova-viagem')" id="nav-nova-viagem" class="flex flex-col items-center gap-1 text-blue-700 font-semibold p-1 text-xs">
             <i class="fa-solid fa-circle-plus text-lg"></i><span>Nova Viagem</span>
@@ -127,6 +209,7 @@
         </button>
     </nav>
 
+    <!-- SCRIPTS DE INTEGRAÇÃO COM BACKEND -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
 
@@ -135,9 +218,7 @@
             carregarFrotas();
             carregarDestinos();
             carregarHistorico();
-            
-            const agora = new Date();
-            document.getElementById("horaSaida").value = agora.toTimeString().substring(0, 5);
+            document.getElementById("horaSaida").value = new Date().toTimeString().substring(0, 5);
         });
 
         function mudarAba(aba) {
@@ -168,97 +249,18 @@
                 selAcamp.innerHTML = '<option value="">Nenhum / Selecione...</option>';
                 dados.forEach(m => {
                     selMot.innerHTML += `<option value="${m}">${m}</option>`;
-                    selAcamp.innerHTML += `<option value="${m}">${m}</option>`;
-                });
-            } catch (e) { console.error(e); }
-        }
-
-        async function carregarFrotas() {
-            try {
-                const res = await fetch(`${API_URL}?action=getFrotasEmOperacao`);
+                    selAcamp.innerHTML += `<option value="${m}">${m}</option>`; }); } catch (e) { console.error(e); } }  async function carregarFrotas() { try { const res = await fetch(`${API_URL}?action=getFrotasEmOperacao`);
                 const dados = await res.json();
                 const sel = document.getElementById("frota");
                 sel.innerHTML = '<option value="">Selecione o veículo...</option>';
-                dados.forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`);
-            } catch (e) { console.error(e); }
-        }
-
-        async function carregarDestinos() {
-            try {
-                const res = await fetch(`${API_URL}?action=getDestinos`);
+                dados.forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`); } catch (e) { console.error(e); } }  async function carregarDestinos() { try { const res = await fetch(`${API_URL}?action=getDestinos`);
                 const dados = await res.json();
                 const sel = document.getElementById("destino");
                 sel.innerHTML = '<option value="">Selecione o destino...</option>';
-                dados.forEach(d => sel.innerHTML += `<option value="${d}">${d}</option>`);
-            } catch (e) { console.error(e); }
-        }
-
-        async function aoSelecionarFrota() {
-            const frota = document.getElementById("frota").value;
-            const inputKm = document.getElementById("kmSaida");
-            const loading = document.getElementById("loading-km");
-            if (!frota) return;
-            loading.classList.remove("hidden");
-            try {
-                const res = await fetch(`${API_URL}?action=getUltimoKm&frota=${encodeURIComponent(frota)}`);
-                const data = await res.json();
-                if (data.ultimoKm !== "") {
-                    inputKm.value = data.ultimoKm;
-                }
-            } catch (e) { console.error(e); }
-            finally { loading.classList.add("hidden"); }
-        }
-
-        function converterFotoModalBase64() {
-            const file = document.getElementById("modal-fotoChegada").files[0];
-            if (file) {
-                const reader = new FileReader();
-                document.getElementById("modal-label-foto").textContent = "Foto OK ✓";
-                reader.onload = e => document.getElementById("modal-fotoBase64").value = e.target.result;
-                reader.readAsDataURL(file);
-            }
-        }
-
-        async function salvarViagem(e) {
-            e.preventDefault();
-            const btn = document.getElementById("btn-enviar");
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando...';
-
-            const agora = new Date();
-            const payload = {
-                motorista: document.getElementById("motorista").value,
-                frota: document.getElementById("frota").value,
-                acompanhante: document.getElementById("acompanhante").value,
-                horaSaida: document.getElementById("horaSaida").value,
-                kmSaida: document.getElementById("kmSaida").value,
-                destino: document.getElementById("destino").value,
-                dataSaida: agora.toLocaleDateString("pt-BR"),
-                situacao: "EM ANDAMENTO"
-            };
-
-            try {
-                const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
-                const resp = await res.json();
-                
-                if (resp.status === "sucesso" || resp.status === "alerta") {
-                    alert(resp.mensagem || "Saída registrada com sucesso!");
-                    document.getElementById("form-viagem").reset();
-                    document.getElementById("horaSaida").value = new Date().toTimeString().substring(0, 5);
-                    carregarHistorico();
-                    mudarAba('historico');
-                } else { alert("Erro: " + resp.mensagem); }
-            } catch (err) { alert("Erro de comunicação."); }
-            finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Registrar Saída'; }
-        }
-
-        async function carregarHistorico() {
-            const container = document.getElementById("lista-cards-historico");
-            try {
-                const res = await fetch(`${API_URL}?action=obterDadosFrotas`);
+                dados.forEach(d => sel.innerHTML += `<option value="${d}">${d}</option>`); } catch (e) { console.error(e); } }  async function aoSelecionarFrota() { const frota = document.getElementById("frota").value; const inputKm = document.getElementById("kmSaida"); const loading = document.getElementById("loading-km"); const alertaBox = document.getElementById("alerta-veiculo-uso");  if (!frota) return; loading.classList.remove("hidden"); alertaBox.classList.add("hidden");  try { const res = await fetch(`${API_URL}?action=getUltimoKm&frota=${encodeURIComponent(frota)}`); const data = await res.json(); if (data.ultimoKm !== "") { inputKm.value = data.ultimoKm; } if (data.emUso) { alertaBox.classList.remove("hidden"); } } catch (e) { console.error(e); } finally { loading.classList.add("hidden"); } }  function obterProblemasSelecionados() { const checkboxes = document.querySelectorAll('input[name="chk_prob"]:checked'); let selecionados = []; checkboxes.forEach(cb => selecionados.push(cb.value));  const obsLivre = document.getElementById("obs_livre_prob").value.trim(); if (obsLivre) selecionados.push("Outro: " + obsLivre);  return selecionados.join(" \vert{} "); }  function converterFotoModalBase64() { const file = document.getElementById("modal-fotoChegada").files[0]; if (file) { const reader = new FileReader(); document.getElementById("modal-label-foto").textContent = "Foto OK ✓"; reader.onload = e => document.getElementById("modal-fotoBase64").value = e.target.result; reader.readAsDataURL(file); } }  async function salvarViagem(e) { e.preventDefault(); const btn = document.getElementById("btn-enviar"); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando...';  const agora = new Date(); const payload = { motorista: document.getElementById("motorista").value, frota: document.getElementById("frota").value, acompanhante: document.getElementById("acompanhante").value, horaSaida: document.getElementById("horaSaida").value, kmSaida: document.getElementById("kmSaida").value, destino: document.getElementById("destino").value, dataSaida: agora.toLocaleDateString("pt-BR"), problemas: obterProblemasSelecionados(), situacao: "EM ANDAMENTO" };  try { const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) }); const resp = await res.json();  if (resp.status === "sucesso" \vert{}\vert{} resp.status === "alerta") { alert(resp.mensagem \vert{}\vert{} "Saída registrada com sucesso!"); document.getElementById("form-viagem").reset(); document.getElementById("horaSaida").value = new Date().toTimeString().substring(0, 5); document.getElementById("alerta-veiculo-uso").classList.add("hidden"); carregarHistorico(); mudarAba('historico'); } else { alert("Erro: " + resp.mensagem); } } catch (err) { alert("Erro de comunicação."); } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Registrar Saída'; } }  async function carregarHistorico() { const container = document.getElementById("lista-cards-historico"); try { const res = await fetch(`${API_URL}?action=obterDadosFrotas`);
                 const dados = await res.json();
                 
-                // Filtra para exibir apenas as viagens EM ANDAMENTO para o motorista
+                // Exibe apenas viagens ativas na tela do motorista
                 const viagensAtivas = dados.filter(v => v.situacao === "EM ANDAMENTO" || v.situacao.includes("ATENÇÃO"));
 
                 if (viagensAtivas && viagensAtivas.length > 0) {
@@ -268,61 +270,11 @@
                             <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-2">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-blue-800 text-sm">${v.frota}</span>
-                                    <span class="text-xs px-2 py-0.5 rounded font-semibold bg-amber-100 text-amber-800">EM ANDAMENTO</span>
+                                    <span class="text-xs px-2 py-0.5 rounded font-semibold bg-amber-100 text-amber-800">${v.situacao}</span>
                                 </div>
                                 <div class="text-xs text-gray-600 space-y-1">
-                                    <p><strong>Motorista:</strong> ${v.motorista} ${v.acompanhante ? '/ ' + v.acompanhante : ''}</p>
+                                    <p><strong>Motorista:</strong> ${v.motorista}${v.acompanhante ? '/ ' + v.acompanhante : ''}</p>
                                     <p><strong>Destino:</strong> ${v.destino}</p>
-                                    <p><strong>Saída:</strong> ${v.saida} (KM: ${v.kmSaida})</p>
+                                    <p><strong>Saída:</strong> ${v.saida} (KM:${v.kmSaida})</p>
                                 </div>
-                                <button onclick="abrirModalEncerrar(${v.linha}, '${v.frota}')" class="w-full mt-2 bg-green-700 text-white text-xs font-bold py-2 rounded-lg shadow">Encerrar Viagem</button>
-                            </div>
-                        `;
-                    });
-                } else { container.innerHTML = '<p class="text-center text-gray-500 text-sm py-6">Nenhuma viagem em andamento no momento.</p>'; }
-            } catch (e) { container.innerHTML = '<p class="text-center text-red-500 text-sm py-6">Erro ao carregar viagens.</p>'; }
-        }
-
-        function abrirModalEncerrar(linha, frota) {
-            document.getElementById("modal-linha").value = linha;
-            document.getElementById("modal-frota-txt").textContent = frota;
-            document.getElementById("modal-kmChegada").value = "";
-            document.getElementById("modal-fotoBase64").value = "";
-            document.getElementById("modal-label-foto").textContent = "Tirar Foto / Anexar";
-            document.getElementById("modal-encerrar").classList.remove("hidden");
-        }
-
-        function fecharModal() {
-            document.getElementById("modal-encerrar").classList.add("hidden");
-        }
-
-        async function salvarEncerramento() {
-            const linha = document.getElementById("modal-linha").value;
-            const kmChegada = document.getElementById("modal-kmChegada").value;
-            const fotoBase64 = document.getElementById("modal-fotoBase64").value;
-
-            if (!kmChegada) {
-                alert("Informe o KM de chegada!");
-                return;
-            }
-
-            const payload = {
-                acao: "encerrar",
-                linha: linha,
-                kmChegada: kmChegada,
-                fotoBase64: fotoBase64
-            };
-
-            try {
-                const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
-                const resp = await res.json();
-                if (resp.status === "sucesso") {
-                    alert("Viagem encerrada com sucesso!");
-                    fecharModal();
-                    carregarHistorico();
-                } else { alert("Erro: " + resp.mensagem); }
-            } catch (e) { alert("Erro de comunicação."); }
-        }
-    </script>
-</body>
-</html>
+                                <button onclick="abrirModalEncerrar(${v
