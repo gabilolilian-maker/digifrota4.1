@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiFrota 4.0 - Painel Administrativo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar-icon { transition: all 0.2s ease; }
+        .sidebar-icon:hover { transform: scale(1.1); }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex text-gray-900 font-sans">
+
+    <!-- MENU LATERAL -->
+    <aside class="w-20 bg-white border-r border-gray-200 flex flex-col items-center py-5 space-y-6 z-30 sticky top-0 h-screen shadow-sm">
+        <div class="bg-blue-900 p-3 rounded-2xl text-white shadow-md">
+            <i class="fa-solid fa-truck-medical text-xl"></i>
+        </div>
+        <nav class="flex flex-col space-y-4 w-full px-3">
+            <button onclick="mudarSecao('dashboard')" id="nav-btn-dashboard" class="sidebar-icon p-3 rounded-xl bg-blue-50 text-blue-800 flex justify-center text-lg shadow-sm"><i class="fa-solid fa-chart-pie"></i></button>
+            <button onclick="mudarSecao('viagens')" id="nav-btn-viagens" class="sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg"><i class="fa-solid fa-map-location-dot"></i></button>
+            <button onclick="mudarSecao('frotas')" id="nav-btn-frotas" class="sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg"><i class="fa-solid fa-truck"></i></button>
+            <button onclick="mudarSecao('motoristas')" id="nav-btn-motoristas" class="sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg"><i class="fa-solid fa-users"></i></button>
+            <button onclick="mudarSecao('checklist')" id="nav-btn-checklist" class="sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg"><i class="fa-solid fa-list-check"></i></button>
+        </nav>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="flex-1 flex flex-col min-w-0">
+        
+        <!-- CABEÇALHO SUPERIOR -->
+        <header class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center sticky top-0 z-20 shadow-xs">
+            <div class="flex items-center space-x-4">
+                <h1 id="titulo-secao" class="text-xl font-black text-blue-900 tracking-wide">Dashboard</h1>
+                <span class="text-xs text-gray-400 italic hidden md:inline">“Tudo o que a tua mão encontrar para fazer, faze-o com todo o teu poder.” — Ec 9:10</span>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <span id="data-atual" class="text-xs bg-gray-100 px-3 py-1.5 rounded-lg font-bold text-gray-600">--</span>
+                
+                <!-- SELETOR DE TEMAS -->
+                <div class="hidden lg:flex items-center bg-gray-100 p-1 rounded-xl space-x-1 text-xs font-bold text-gray-600">
+                    <button onclick="mudarTema('light')" class="px-2.5 py-1 rounded-lg bg-white shadow-sm">Claro</button>
+                    <button onclick="mudarTema('dark')" class="px-2.5 py-1 rounded-lg hover:bg-white">Escuro</button>
+                </div>
+
+                <button onclick="atualizarDadosGerais()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-xs font-black shadow flex items-center gap-2">
+                    <i class="fa-solid fa-rotate"></i> Atualizar
+                </button>
+            </div>
+        </header>
+
+        <!-- CORPO DAS SECÇÕES -->
+        <main class="p-6 space-y-6 flex-1 overflow-y-auto">
+
+            <!-- SECÇÃO 1: DASHBOARD (VISÃO GERAL) -->
+            <section id="secao-dashboard" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Viagens Recentes -->
+                    <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-map-location-dot text-blue-600 mr-2"></i> Viagens Recentes</h2>
+                            <button onclick="mudarSecao('viagens')" class="text-xs text-blue-700 font-bold hover:underline">Ver todas →</button>
+                        </div>
+                        <div id="dash-viagens-recentes" class="space-y-2 text-xs text-gray-500">A carregar...</div>
+                    </div>
+
+                    <!-- Ranking KM -->
+                    <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-ranking-star text-amber-500 mr-2"></i> Ranking KM</h2>
+                        </div>
+                        <div id="dash-ranking-km" class="space-y-2 text-xs text-gray-500">A carregar...</div>
+                    </div>
+                </div>
+
+                <!-- Alertas da Frota e Combustível -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3 md:col-span-2">
+                        <h2 class="font-black text-sm uppercase text-gray-800 border-b pb-2"><i class="fa-solid fa-chart-line text-emerald-600 mr-2"></i> Visão Geral da Frota Municipal</h2>
+                        <div class="grid grid-cols-3 gap-4 text-center py-4">
+                            <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100">
+                                <span class="block text-[10px] uppercase font-bold text-blue-600">Total Frotas</span>
+                                <span id="stat-total" class="text-2xl font-black text-blue-900">-</span>
+                            </div>
+                            <div class="bg-red-50 p-4 rounded-2xl border border-red-100">
+                                <span class="block text-[10px] uppercase font-bold text-red-600">Troca Óleo Vencida</span>
+                                <span id="stat-trocar" class="text-2xl font-black text-red-700">-</span>
+                            </div>
+                            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100">
+                                <span class="block text-[10px] uppercase font-bold text-amber-600">Em Atenção</span>
+                                <span id="stat-atencao" class="text-2xl font-black text-amber-700">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alertas Frota -->
+                    <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-triangle-exclamation text-red-600 mr-2"></i> Alertas Frota</h2>
+                            <button onclick="mudarSecao('frotas')" class="text-xs text-blue-700 font-bold hover:underline">Ver frotas →</button>
+                        </div>
+                        <div id="dash-alertas-frota" class="space-y-2 text-xs text-gray-500 max-h-48 overflow-y-auto">A carregar...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECÇÃO 2: VIAGENS -->
+            <section id="secao-viagens" class="hidden space-y-4">
+                <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <h2 class="font-black text-base text-blue-900"><i class="fa-solid fa-map-location-dot mr-2"></i> Registo de Viagens</h2>
+                        <button onclick="exportarCSV('viagens')" class="bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-black shadow flex items-center gap-2">
+                            <i class="fa-solid fa-file-csv"></i> Exportar CSV
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-50 text-gray-600 uppercase">
+                                <tr>
+                                    <th class="p-3">Data</th>
+                                    <th class="p-3">Saída</th>
+                                    <th class="p-3">Chegada</th>
+                                    <th class="p-3">Motorista</th>
+                                    <th class="p-3">Frota</th>
+                                    <th class="p-3">Destino</th>
+                                    <th class="p-3">KM Chegada</th>
+                                    <th class="p-3">KM Rodado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-viagens-corpo" class="divide-y divide-gray-100 text-gray-700">
+                                <tr><td colspan="8" class="text-center py-6 text-gray-400">A carregar dados de viagens...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECÇÃO 3: FROTAS -->
+            <section id="secao-frotas" class="hidden space-y-4">
+                <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <h2 class="font-black text-base text-blue-900"><i class="fa-solid fa-truck mr-2"></i> Gestão de Frotas e Manutenção</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-50 text-gray-600 uppercase">
+                                <tr>
+                                    <th class="p-3">Frota</th>
+                                    <th class="p-3">Placa</th>
+                                    <th class="p-3">Tipo</th>
+                                    <th class="p-3">Situação</th>
+                                    <th class="p-3">KM Atual</th>
+                                    <th class="p-3">KM Próx. Troca</th>
+                                    <th class="p-3">Alerta Óleo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-frotas-corpo" class="divide-y divide-gray-100 text-gray-700">
+                                <tr><td colspan="7" class="text-center py-6 text-gray-400">A carregar frotas...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECÇÃO 4: MOTORISTAS -->
+            <section id="secao-motoristas" class="hidden space-y-4">
+                <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
+                    <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-users mr-2"></i> Desempenho de Motoristas</h2>
+                    <div id="conteudo-motoristas" class="text-xs text-gray-600">Funcionalidade ativa baseada nas escalas e viagens registadas.</div>
+                </div>
+            </section>
+
+            <!-- SECÇÃO 5: CHECKLIST -->
+            <section id="secao-checklist" class="hidden space-y-4">
+                <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
+                    <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-list-check mr-2"></i> Registo de Avarias e Checklist</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-50 text-gray-600 uppercase">
+                                <tr>
+                                    <th class="p-3">Data/Hora</th>
+                                    <th class="p-3">Frota</th>
+                                    <th class="p-3">Motorista</th>
+                                    <th class="p-3">Tipo</th>
+                                    <th class="p-3">Ocorrência / Avaria</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-checklist-corpo" class="divide-y divide-gray-100 text-gray-700">
+                                <tr><td colspan="5" class="text-center py-6 text-gray-400">A carregar checklist...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const dias = ["dom.", "seg.", "ter.", "qua.", "qui.", "sex.", "sáb."];
+            const meses = ["jan.", "fev.", "mar.", "abr.", "mai.", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."];
+            const agora = new Date();
+            document.getElementById("data-atual").textContent = `${dias[agora.getDay()]}, ${agora.getDate()} de ${meses[agora.getMonth()]} de ${agora.getFullYear()}`;
+            
+            atualizarDadosGerais();
+        });
+
+        function mudarSecao(secao) {
+            ['dashboard', 'viagens', 'frotas', 'motoristas', 'checklist'].forEach(s => {
+                document.getElementById(`secao-${s}`).classList.add('hidden');
+                document.getElementById(`nav-btn-${s}`).className = "sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg";
+            });
+            document.getElementById(`secao-${secao}`).classList.remove('hidden');
+            document.getElementById(`nav-btn-${secao}`).className = "sidebar-icon p-3 rounded-xl bg-blue-50 text-blue-800 flex justify-center text-lg shadow-sm";
+            
+            const titulos = { dashboard: "Dashboard", viagens: "Viagens", frotas: "Frotas", motoristas: "Motoristas", checklist: "Checklist" };
+            document.getElementById("titulo-secao").textContent = titulos[secao];
+        }
+
+        function mudarTema(tema) {
+            if(tema === 'dark') {
+                document.body.className = "bg-gray-900 text-gray-100 min-h-screen flex";
+            } else {
+                document.body.className = "bg-gray-100 text-gray-900 min-h-screen flex";
+            }
+        }
+
+        async function atualizarDadosGerais() {
+            try {
+                // Carregar Dashboard e Frotas
+                const resDash = await fetch(`${API_URL}?action=getDashboard`);
+                const dataDash = await resDash.json();
+                
+                document.getElementById("stat-total").textContent = dataDash.total;
+                document.getElementById("stat-trocar").textContent = dataDash.trocar;
+                document.getElementById("stat-atencao").textContent = dataDash.atencao;
+
+                // Ranking KM
+                const rankingDiv = document.getElementById("dash-ranking-km");
+                rankingDiv.innerHTML = "";
+                dataDash.ranking.slice(0, 5).forEach((v, index) => {
+                    rankingDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-gray-50 rounded-xl"><span><strong>#${index+1}</strong> Frota ${v.frota}</span> <span class="font-black text-blue-900">${v.kmAtual.toLocaleString('pt-BR')} KM</span></div>`;
+                });
+
+                // Alertas Frota
+                const alertasDiv = document.getElementById("dash-alertas-frota");
+                const dashAlertas = document.getElementById("tabela-frotas-corpo");
+                alertasDiv.innerHTML = "";
+                dashAlertas.innerHTML = "";
+                
+                dataDash.ranking.forEach(v => {
+                    if(v.alerta === "TROCAR" || v.alerta === "ATENÇÃO" || v.alerta.includes("VENCIDA")) {
+                        alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-red-50 border border-red-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-red-700">${v.alerta}</span></div>`;
+                    }
+                    dashAlertas.innerHTML += `
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 font-bold">${v.frota}</td>
+                            <td class="p-3">${v.placa || '-'}</td>
+                            <td class="p-3">${v.tipo || '-'}</td>
+                            <td class="p-3">${v.situacao || '-'}</td>
+                            <td class="p-3 font-semibold">${v.kmAtual.toLocaleString('pt-BR')}</td>
+                            <td class="p-3">-</td>
+                            <td class="p-3"><span class="px-2 py-1 rounded font-bold ${v.alerta==='TROCAR'?'bg-red-100 text-red-800':'bg-emerald-100 text-emerald-800'}">${v.alerta}</span></td>
+                        </tr>
+                    `;
+                });
+                if(alertasDiv.innerHTML === "") alertasDiv.innerHTML = '<p class="text-xs text-emerald-600 font-bold">Nenhum alerta pendente.</p>';
+
+                // Carregar Viagens
+                const resViagens = await fetch(`${API_URL}?action=obterDadosFrotas`);
+                const dataViagens = await resViagens.json();
+                
+                const recViagensDiv = document.getElementById("dash-viagens-recentes");
+                const tabelaViagens = document.getElementById("tabela-viagens-corpo");
+                recViagensDiv.innerHTML = "";
+                tabelaViagens.innerHTML = "";
+
+                dataViagens.slice(0, 5).forEach(v => {
+                    recViagensDiv.innerHTML += `<div class="p-2 bg-gray-50 rounded-xl flex justify-between"><span>Frota ${v.frota} → ${v.destino}</span> <span class="text-gray-400">${v.motorista}</span></div>`;
+                });
+
+                dataViagens.forEach(v => {
+                    tabelaViagens.innerHTML += `
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3">${v.saida.split(' ')[0]}</td>
+                            <td class="p-3">${v.saida}</td>
+                            <td class="p-3">${v.kmChegada ? 'Concluído' : 'Em andamento'}</td>
+                            <td class="p-3 font-bold">${v.motorista}</td>
+                            <td class="p-3">${v.frota}</td>
+                            <td class="p-3">${v.destino}</td>
+                            <td class="p-3">${v.kmChegada || '-'}</td>
+                            <td class="p-3 font-semibold">${v.kmRodado || '-'}</td>
+                        </tr>
+                    `;
+                });
+
+            } catch (e) {
+                console.error("Erro ao carregar dados do painel:", e);
+            }
+        }
+
+        function exportarCSV(tipo) {
+            alert("A exportação de dados para CSV está pronta para ser acionada.");
+        }
+    </script>
+</body>
+</html>
