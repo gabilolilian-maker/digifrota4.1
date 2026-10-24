@@ -24,6 +24,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen pb-24 font-sans text-gray-900">
 
+    <!-- CABEÇALHO DO APP -->
     <header class="bg-blue-800 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
         <div class="flex items-center gap-2">
             <i class="fa-solid text-2xl fa-car-side"></i>
@@ -34,12 +35,13 @@
 
     <main class="max-w-md mx-auto p-4 space-y-4">
 
-        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3 flex justify-between items-center">
+        <!-- CABEÇALHO DE IDENTIFICAÇÃO DO APARELHO -->
+        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3 flex justify-between items-center shadow-sm">
             <div>
-                <span class="block text-[10px] uppercase font-bold text-blue-800">Lançado por:</span>
+                <span class="block text-[10px] uppercase font-bold text-blue-800">Aparelho / Lançador Padrão:</span>
                 <span id="txt-identificacao" class="text-xs font-bold text-gray-800">Carregando...</span>
             </div>
-            <button onclick="alterarIdentificacao()" class="text-xs bg-blue-700 text-white font-bold px-2.5 py-1 rounded-lg">Alterar</button>
+            <button onclick="abrirModalCadastroUsuario()" class="text-xs bg-blue-700 text-white font-bold px-3 py-1.5 rounded-xl shadow">Alterar Perfil</button>
         </div>
 
         <!-- ABA 1: REGISTRAR SAÍDA -->
@@ -54,13 +56,16 @@
                 </div>
 
                 <form id="form-viagem" onsubmit="salvarViagem(event)" class="space-y-4">
+                    
+                    <!-- Motorista (Menu Editável, pré-selecionado com o dono do cel) -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Motorista</label>
-                        <select id="motorista" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600">
+                        <select id="motorista" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600 font-bold">
                             <option value="">Carregando motoristas...</option>
                         </select>
                     </div>
 
+                    <!-- Frota -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Frota / Veículo</label>
                         <select id="frota" required onchange="aoSelecionarFrota()" class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600">
@@ -68,6 +73,7 @@
                         </select>
                     </div>
 
+                    <!-- Acompanhante -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Acompanhante (Opcional)</label>
                         <select id="acompanhante" class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none">
@@ -75,6 +81,7 @@
                         </select>
                     </div>
 
+                    <!-- Data e Hora -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block label-maior text-gray-700 uppercase mb-1">Data Saída</label>
@@ -86,6 +93,7 @@
                         </div>
                     </div>
 
+                    <!-- KM Saída -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1 text-blue-800">KM de Saída</label>
                         <div class="relative">
@@ -95,6 +103,7 @@
                         </div>
                     </div>
 
+                    <!-- Destino -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Destino</label>
                         <select id="destino" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none">
@@ -102,7 +111,7 @@
                         </select>
                     </div>
 
-                    <!-- CHECKLIST ATUALIZADO -->
+                    <!-- CHECKLIST COMPLETO -->
                     <div class="border-2 border-gray-200 rounded-2xl p-3 bg-gray-50 space-y-2">
                         <label class="block label-maior text-gray-800 uppercase flex items-center justify-between">
                             <span><i class="fa-solid fa-list-check text-blue-600"></i> Checklist do Veículo</span>
@@ -215,6 +224,30 @@
         </section>
     </main>
 
+    <!-- MODAL PRIMEIRO ACESSO / CADASTRO DE PERFIL -->
+    <div id="modal-cadastro-usuario" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm space-y-4 shadow-2xl">
+            <h3 class="font-black text-blue-900 text-lg border-b pb-2 flex items-center gap-2">
+                <i class="fa-solid fa-id-card text-blue-600"></i> Configurar Perfil
+            </h3>
+            <p class="text-xs text-gray-600">Identifique-se para preenchimento automático das suas viagens neste aparelho.</p>
+
+            <div>
+                <label class="block label-maior text-gray-700 uppercase mb-1">Seu Nome Completo</label>
+                <input type="text" id="setup-nome" required placeholder="Ex: Lílian Gabiló" class="w-full p-3 bg-gray-50 border-2 border-gray-300 rounded-xl text-sm font-bold outline-none">
+            </div>
+
+            <div>
+                <label class="block label-maior text-gray-700 uppercase mb-1">Seu Telefone / WhatsApp</label>
+                <input type="tel" id="setup-telefone" required placeholder="Ex: (18) 99999-9999" class="w-full p-3 bg-gray-50 border-2 border-gray-300 rounded-xl text-sm font-bold outline-none">
+            </div>
+
+            <button onclick="salvarCadastroUsuario()" class="w-full bg-blue-700 text-white font-black p-3.5 rounded-2xl text-base shadow-lg mt-2">
+                Salvar Perfil
+            </button>
+        </div>
+    </div>
+
     <!-- MODAL DE ENCERRAMENTO -->
     <div id="modal-encerrar" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-5 w-full max-w-sm space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -258,6 +291,7 @@
         </div>
     </div>
 
+    <!-- BARRA NAVEGAÇÃO INFERIOR -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 flex justify-around p-2 z-50">
         <button onclick="mudarAba('nova-viagem')" id="nav-nova-viagem" class="flex flex-col items-center gap-1 text-blue-700 font-extrabold p-1 text-xs">
             <i class="fa-solid fa-circle-plus text-2xl"></i><span>Nova Viagem</span>
@@ -271,7 +305,7 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
 
         document.addEventListener("DOMContentLoaded", () => {
-            inicializarIdentificacao();
+            verificarPrimeiroAcesso();
             carregarMotoristasEAcompanhantes();
             carregarFrotas();
             carregarDestinos();
@@ -282,20 +316,56 @@
             document.getElementById("horaSaida").value = agora.toTimeString().substring(0, 5);
         });
 
-        function inicializarIdentificacao() {
-            let idSalvo = localStorage.getItem("digifrota_user_id");
-            if (!idSalvo) {
-                idSalvo = prompt("Por favor, digite seu E-mail ou WhatsApp para identificação dos lançamentos:") || "Sem Identificacao";
-                localStorage.setItem("digifrota_user_id", idSalvo);
+        function verificarPrimeiroAcesso() {
+            const nome = localStorage.getItem("digifrota_user_nome");
+            const tel = localStorage.getItem("digifrota_user_tel");
+            
+            if (!nome || !tel) {
+                abrirModalCadastroUsuario();
+            } else {
+                atualizarLabelIdentificacao();
             }
-            document.getElementById("txt-identificacao").textContent = idSalvo;
         }
 
-        function alterarIdentificacao() {
-            const novoId = prompt("Digite o novo E-mail ou WhatsApp para identificação:");
-            if (novoId) {
-                localStorage.setItem("digifrota_user_id", novoId);
-                document.getElementById("txt-identificacao").textContent = novoId;
+        function abrirModalCadastroUsuario() {
+            document.getElementById("setup-nome").value = localStorage.getItem("digifrota_user_nome") || "";
+            document.getElementById("setup-telefone").value = localStorage.getItem("digifrota_user_tel") || "";
+            document.getElementById("modal-cadastro-usuario").classList.remove("hidden");
+        }
+
+        function salvarCadastroUsuario() {
+            const nome = document.getElementById("setup-nome").value.trim();
+            const tel = document.getElementById("setup-telefone").value.trim();
+
+            if (!nome || !tel) {
+                alert("Por favor, preencha seu nome e telefone!");
+                return;
+            }
+
+            localStorage.setItem("digifrota_user_nome", nome);
+            localStorage.setItem("digifrota_user_tel", tel);
+            document.getElementById("modal-cadastro-usuario").classList.add("hidden");
+            
+            atualizarLabelIdentificacao();
+            selecionarMotoristaPadrao();
+        }
+
+        function atualizarLabelIdentificacao() {
+            const nome = localStorage.getItem("digifrota_user_nome") || "Não Cadastrado";
+            const tel = localStorage.getItem("digifrota_user_tel") || "";
+            document.getElementById("txt-identificacao").textContent = `${nome} (${tel})`;
+        }
+
+        function selecionarMotoristaPadrao() {
+            const nomeSalvo = localStorage.getItem("digifrota_user_nome");
+            if (!nomeSalvo) return;
+
+            const selectMotorista = document.getElementById("motorista");
+            for (let i = 0; i < selectMotorista.options.length; i++) {
+                if (selectMotorista.options[i].value.toLowerCase().includes(nomeSalvo.toLowerCase())) {
+                    selectMotorista.selectedIndex = i;
+                    break;
+                }
             }
         }
 
@@ -329,6 +399,9 @@
                     selMot.innerHTML += `<option value="${m}">${m}</option>`;
                     selAcamp.innerHTML += `<option value="${m}">${m}</option>`;
                 });
+                
+                // Pré-seleciona automaticamente o motorista dono do celular
+                selecionarMotoristaPadrao();
             } catch (e) { console.error(e); }
         }
 
@@ -440,8 +513,11 @@
             const dataPartes = document.getElementById("dataSaida").value.split("-");
             const dataSaidaBR = `${dataPartes[2]}/${dataPartes[1]}/${dataPartes[0]}`;
 
+            const nomeUsuario = localStorage.getItem("digifrota_user_nome") || "Nao identificado";
+            const telUsuario = localStorage.getItem("digifrota_user_tel") || "";
+
             const payload = {
-                usuarioId: localStorage.getItem("digifrota_user_id") || "App Web",
+                usuarioId: `${nomeUsuario} (${telUsuario})`,
                 motorista: document.getElementById("motorista").value,
                 frota: document.getElementById("frota").value,
                 acompanhante: document.getElementById("acompanhante").value,
@@ -466,6 +542,7 @@
                     document.getElementById("alerta-veiculo-uso").classList.add("hidden");
                     document.getElementById("chk_bom_estado").checked = false;
                     alternarBomEstado();
+                    selecionarMotoristaPadrao();
                     carregarHistorico();
                     mudarAba('historico');
                 } else { alert("Erro: " + resp.mensagem); }
