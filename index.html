@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Estilos de acessibilidade com fontes maiores para uso no trânsito */
         input, select, button {
             font-size: 1.1rem !important;
         }
@@ -35,7 +34,6 @@
 
     <main class="max-w-md mx-auto p-4 space-y-4">
 
-        <!-- IDENTIFICAÇÃO DO LANÇADOR / DISPOSITIVO -->
         <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3 flex justify-between items-center">
             <div>
                 <span class="block text-[10px] uppercase font-bold text-blue-800">Lançado por:</span>
@@ -56,7 +54,6 @@
                 </div>
 
                 <form id="form-viagem" onsubmit="salvarViagem(event)" class="space-y-4">
-                    <!-- Motorista -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Motorista</label>
                         <select id="motorista" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600">
@@ -64,7 +61,6 @@
                         </select>
                     </div>
 
-                    <!-- Frota -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Frota / Veículo</label>
                         <select id="frota" required onchange="aoSelecionarFrota()" class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600">
@@ -72,7 +68,6 @@
                         </select>
                     </div>
 
-                    <!-- Acompanhante -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Acompanhante (Opcional)</label>
                         <select id="acompanhante" class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none">
@@ -80,7 +75,6 @@
                         </select>
                     </div>
 
-                    <!-- Data e Hora de Saída (Lançamento Retroativo) -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block label-maior text-gray-700 uppercase mb-1">Data Saída</label>
@@ -92,7 +86,6 @@
                         </div>
                     </div>
 
-                    <!-- KM Saída (CAMPO GIGANTE) -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1 text-blue-800">KM de Saída</label>
                         <div class="relative">
@@ -102,7 +95,6 @@
                         </div>
                     </div>
 
-                    <!-- Destino -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Destino</label>
                         <select id="destino" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none">
@@ -202,7 +194,6 @@
             <h3 class="font-black text-gray-900 text-lg border-b pb-2">Encerrar Viagem - Frota: <span id="modal-frota-txt" class="text-blue-700"></span></h3>
             <input type="hidden" id="modal-linha">
 
-            <!-- Data e Hora de Chegada -->
             <div class="grid grid-cols-2 gap-2">
                 <div>
                     <label class="block label-maior text-gray-700 uppercase mb-1">Data Chegada</label>
@@ -214,23 +205,20 @@
                 </div>
             </div>
             
-            <!-- KM Chegada (CAMPO GIGANTE) -->
             <div>
                 <label class="block label-maior text-gray-700 uppercase mb-1 text-green-800">KM de Chegada</label>
                 <input type="number" id="modal-kmChegada" required placeholder="Ex: 160150" class="w-full input-gigante bg-green-50/50 border-2 border-green-500 rounded-xl outline-none text-green-900">
             </div>
 
-            <!-- Foto Hodômetro -->
             <div>
                 <label class="block label-maior text-gray-700 uppercase mb-1">Foto Hodômetro (Chegada)</label>
-                <input type="file" id="modal-fotoChegada" accept="image/*" capture="environment" onchange="converterFotoModalBase64()" class="hidden">
+                <input type="file" id="modal-fotoChegada" accept="image/*" capture="environment" onchange="comprimirEConverterFoto(this)" class="hidden">
                 <label for="modal-fotoChegada" class="w-full p-4 bg-blue-50 border-2 border-dashed border-blue-400 rounded-2xl text-blue-800 flex items-center justify-center gap-2 cursor-pointer font-extrabold text-base">
                     <i class="fa-solid fa-camera text-xl"></i> <span id="modal-label-foto">Tirar Foto / Anexar</span>
                 </label>
                 <input type="hidden" id="modal-fotoBase64">
             </div>
 
-            <!-- Observação Chegada -->
             <div class="border border-gray-300 rounded-2xl p-3 bg-gray-50 space-y-1">
                 <label class="block text-xs font-bold text-gray-700 uppercase">Avarias / Observações na Chegada</label>
                 <input type="text" id="modal-obs-prob" placeholder="Relate se houver problema..." class="w-full p-3 bg-white border border-gray-300 rounded-xl text-sm outline-none">
@@ -238,7 +226,7 @@
 
             <div class="flex gap-2 pt-2">
                 <button type="button" onclick="fecharModal()" class="w-1/2 bg-gray-300 text-gray-800 font-extrabold p-3.5 rounded-xl text-base">Cancelar</button>
-                <button type="button" onclick="salvarEncerramento()" class="w-1/2 bg-green-700 text-white font-extrabold p-3.5 rounded-xl text-base shadow-lg">Concluir</button>
+                <button type="button" id="btn-concluir-modal" onclick="salvarEncerramento()" class="w-1/2 bg-green-700 text-white font-extrabold p-3.5 rounded-xl text-base shadow-lg">Concluir</button>
             </div>
         </div>
     </div>
@@ -389,14 +377,34 @@
             return selecionados.length > 0 ? selecionados.join(" | ") : "Sem observações";
         }
 
-        function converterFotoModalBase64() {
-            const file = document.getElementById("modal-fotoChegada").files[0];
-            if (file) {
-                const reader = new FileReader();
-                document.getElementById("modal-label-foto").textContent = "Foto OK ✓";
-                reader.onload = e => document.getElementById("modal-fotoBase64").value = e.target.result;
-                reader.readAsDataURL(file);
+        // Função de compressão de imagem para celular (Evita travamentos de envio)
+        function comprimirEConverterFoto(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Reduz para largura máxima de 800px mantendo a proporção
+                    const MAX_WIDTH = 800;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // Converte para JPEG comprimido (Qualidade 0.7)
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    document.getElementById("modal-fotoBase64").value = compressedDataUrl;
+                    document.getElementById("modal-label-foto").textContent = "Foto OK ✓";
+                }
+                img.src = e.target.result;
             }
+            reader.readAsDataURL(file);
         }
 
         async function salvarViagem(e) {
@@ -495,11 +503,16 @@
             const kmChegada = document.getElementById("modal-kmChegada").value;
             const fotoBase64 = document.getElementById("modal-fotoBase64").value;
             const problemas = document.getElementById("modal-obs-prob").value;
+            const btnConcluir = document.getElementById("btn-concluir-modal");
 
             if (!kmChegada) {
                 alert("Informe o KM de chegada!");
                 return;
             }
+
+            // Altera visualmente o botão para mostrar que está enviando
+            btnConcluir.disabled = true;
+            btnConcluir.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
 
             const dataPartes = document.getElementById("modal-dataChegada").value.split("-");
             const dataChegadaBR = `${dataPartes[2]}/${dataPartes[1]}/${dataPartes[0]}`;
@@ -522,7 +535,12 @@
                     fecharModal();
                     carregarHistorico();
                 } else { alert("Erro: " + resp.mensagem); }
-            } catch (e) { alert("Erro de comunicação."); }
+            } catch (e) { 
+                alert("Erro de comunicação ao encerrar a viagem."); 
+            } finally {
+                btnConcluir.disabled = false;
+                btnConcluir.innerHTML = 'Concluir';
+            }
         }
     </script>
 </body>
