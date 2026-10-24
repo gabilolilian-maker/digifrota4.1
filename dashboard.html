@@ -198,33 +198,38 @@
                 const resDash = await fetch(`${API_URL}?action=getDashboard`);
                 const dataDash = await resDash.json();
                 
-                document.getElementById("stat-total").textContent = dataDash.total;
-                document.getElementById("stat-trocar").textContent = dataDash.trocar;
-                document.getElementById("stat-atencao").textContent = dataDash.atencao;
+                document.getElementById("stat-total").textContent = dataDash.total || 0;
+                document.getElementById("stat-trocar").textContent = dataDash.trocar || 0;
+                document.getElementById("stat-atencao").textContent = dataDash.atencao || 0;
 
-                // Alertas de Óleo
+                // Alertas de Óleo e Tabela de Frotas
                 const alertasDiv = document.getElementById("dash-alertas-frota");
                 const dashAlertas = document.getElementById("tabela-frotas-corpo");
                 alertasDiv.innerHTML = "";
                 dashAlertas.innerHTML = "";
                 
-                dataDash.ranking.forEach(v => {
-                    if(v.alerta === "TROCAR" || v.alerta.includes("VENCIDA")) {
-                        alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-red-50 border border-red-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-red-700">TROCAR</span></div>`;
-                    } else if(v.alerta === "ATENÇÃO") {
-                        alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-amber-50 border border-amber-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-amber-700">ATENÇÃO</span></div>`;
-                    }
-                    dashAlertas.innerHTML += `
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-3 font-bold">${v.frota}</td>
-                            <td class="p-3">${v.placa || '-'}</td>
-                            <td class="p-3">${v.tipo || '-'}</td>
-                            <td class="p-3">${v.situacao || '-'}</td>
-                            <td class="p-3 font-semibold">${v.kmAtual.toLocaleString('pt-BR')}</td>
-                            <td class="p-3"><span class="px-2 py-1 rounded font-bold ${v.alerta==='TROCAR'?'bg-red-100 text-red-800':'bg-emerald-100 text-emerald-800'}">${v.alerta}</span></td>
-                        </tr>
-                    `;
-                });
+                if (dataDash.ranking && Array.isArray(dataDash.ranking)) {
+                    dataDash.ranking.forEach(v => {
+                        let alertaTexto = v.alerta ? v.alerta.toString().toUpperCase() : "OK";
+                        if(alertaTexto === "TROCAR" || alertaTexto.includes("VENCIDA")) {
+                            alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-red-50 border border-red-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-red-700">TROCAR</span></div>`;
+                        } else if(alertaTexto === "ATENÇÃO") {
+                            alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-amber-50 border border-amber-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-amber-700">ATENÇÃO</span></div>`;
+                        }
+                        
+                        let kmAtualNum = parseFloat(v.kmAtual) || 0;
+                        dashAlertas.innerHTML += `
+                            <tr class="hover:bg-gray-50 border-b">
+                                <td class="p-3 font-bold">${v.frota || '-'}</td>
+                                <td class="p-3">${v.placa || '-'}</td>
+                                <td class="p-3">${v.tipo || '-'}</td>
+                                <td class="p-3">${v.situacao || '-'}</td>
+                                <td class="p-3 font-semibold">${kmAtualNum.toLocaleString('pt-BR')}</td>
+                                <td class="p-3"><span class="px-2 py-1 rounded font-bold ${alertaTexto==='TROCAR'?'bg-red-100 text-red-800':'bg-emerald-100 text-emerald-800'}">${alertaTexto}</span></td>
+                            </tr>
+                        `;
+                    });
+                }
                 if(alertasDiv.innerHTML === "") alertasDiv.innerHTML = '<p class="text-xs text-emerald-600 font-bold">Nenhum alerta pendente.</p>';
 
                 // 2. Carregar Viagens e Calcular o Ranking por SOMA DE KM RODADO nas utilizações
@@ -236,47 +241,47 @@
                 recViagensDiv.innerHTML = "";
                 tabelaViagens.innerHTML = "";
 
-                // Dicionário para somar o KM rodado por veículo nas utilizações
                 let kmRodadoPorFrota = {};
 
-                dataViagens.forEach(v => {
-                    // Soma dos KM rodados
-                    let kmRodadoNum = parseFloat(v.kmRodado) || 0;
-                    let nomeFrota = v.frota ? v.frota.trim() : "Desconhecida";
-                    if (!kmRodadoPorFrota[nomeFrota]) {
-                        kmRodadoPorFrota[nomeFrota] = 0;
-                    }
-                    kmRodadoPorFrota[nomeFrota] += kmRodadoNum;
+                if (Array.isArray(dataViagens)) {
+                    dataViagens.forEach(v => {
+                        let kmRodadoNum = parseFloat(v.kmRodado) || 0;
+                        let nomeFrota = v.frota ? v.frota.toString().trim() : "Desconhecida";
+                        
+                        if (!kmRodadoPorFrota[nomeFrota]) {
+                            kmRodadoPorFrota[nomeFrota] = 0;
+                        }
+                        kmRodadoPorFrota[nomeFrota] += kmRodadoNum;
 
-                    // Tabela de viagens completas
-                    tabelaViagens.innerHTML += `
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-3">${v.saida}</td>
-                            <td class="p-3 font-bold">${v.motorista}</td>
-                            <td class="p-3">${v.frota}</td>
-                            <td class="p-3">${v.destino}</td>
-                            <td class="p-3">${v.situacao}</td>
-                            <td class="p-3">${v.kmChegada || '-'}</td>
-                            <td class="p-3 font-semibold text-blue-900">${v.kmRodado ? v.kmRodado + ' KM' : '-'}</td>
-                        </tr>
-                    `;
-                });
+                        tabelaViagens.innerHTML += `
+                            <tr class="hover:bg-gray-50 border-b">
+                                <td class="p-3">${v.saida || '-'}</td>
+                                <td class="p-3 font-bold">${v.motorista || '-'}</td>
+                                <td class="p-3">${v.frota || '-'}</td>
+                                <td class="p-3">${v.destino || '-'}</td>
+                                <td class="p-3">${v.situacao || '-'}</td>
+                                <td class="p-3">${v.kmChegada || '-'}</td>
+                                <td class="p-3 font-semibold text-blue-900">${v.kmRodado ? v.kmRodado + ' KM' : '-'}</td>
+                            </tr>
+                        `;
+                    });
 
-                // Viagens Recentes (Top 5)
-                dataViagens.slice(0, 5).forEach(v => {
-                    recViagensDiv.innerHTML += `
-                        <div class="p-2.5 bg-gray-50 rounded-xl flex justify-between items-center border">
-                            <div>
-                                <span class="font-black text-blue-900">Frota ${v.frota}</span> → <span class="text-gray-700">${v.destino}</span>
-                                <div class="text-[10px] text-gray-400">Motorista: ${v.motorista}</div>
+                    dataViagens.slice(0, 5).forEach(v => {
+                        recViagensDiv.innerHTML += `
+                            <div class="p-2.5 bg-gray-50 rounded-xl flex justify-between items-center border">
+                                <div>
+                                    <span class="font-black text-blue-900">Frota ${v.frota || '-'}</span> → <span class="text-gray-700">${v.destino || '-'}</span>
+                                    <div class="text-[10px] text-gray-400">Motorista: ${v.motorista || '-'}</div>
+                                </div>
+                                <span class="text-xs font-bold text-gray-600">${v.kmRodado ? v.kmRodado + ' KM' : 'Em curso'}</span>
                             </div>
-                            <span class="text-xs font-bold text-gray-600">${v.kmRodado ? v.kmRodado + ' KM' : 'Em curso'}</span>
-                        </div>
-                    `;
-                });
+                        `;
+                    });
+                }
+                
                 if(recViagensDiv.innerHTML === "") recViagensDiv.innerHTML = '<p class="text-xs text-gray-400">Sem registos de viagens.</p>';
 
-                // Montar o Ranking KM baseado na SOMA dos km rodados nas utilizações
+                // Montar o Ranking baseado na SOMA de km rodado nas utilizações
                 let rankingArray = Object.keys(kmRodadoPorFrota).map(frota => {
                     return { frota: frota, totalKm: kmRodadoPorFrota[frota] };
                 });
