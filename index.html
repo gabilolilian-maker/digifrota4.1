@@ -1,11 +1,668 @@
-<!-- CABEÇALHO DO APP -->
-<header class="bg-blue-900 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
-    <div class="flex items-center gap-2.5">
-        <i class="fa-solid fa-truck-medical text-2xl text-blue-300"></i>
-        <div>
-            <h1 class="text-xl font-black tracking-wide leading-none">DigiFrota</h1>
-            <span class="text-[10px] text-blue-200 font-bold uppercase tracking-wider">Escala & 2º Motorista</span>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiFrota 4.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Ícones de Atalho do Aplicativo (PWA / Mobile) -->
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/gabilolilian-maker/sigest/main/icone.jpg">
+    <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/gabilolilian-maker/sigest/main/icone.jpg">
+
+    <style>
+        input, select, button {
+            font-size: 1.1rem !important;
+        }
+        .label-maior {
+            font-size: 0.85rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.05em;
+        }
+        .input-gigante {
+            font-size: 1.35rem !important;
+            font-weight: bold !important;
+            padding: 0.85rem !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen pb-24 font-sans text-gray-900">
+
+    <!-- CABEÇALHO DO APP -->
+    <header class="bg-blue-900 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+        <div class="flex items-center gap-2.5">
+            <i class="fa-solid fa-truck-medical text-2xl text-blue-300"></i>
+            <div>
+                <h1 class="text-xl font-black tracking-wide leading-none">DigiFrota</h1>
+                <span class="text-[10px] text-blue-200 font-bold uppercase tracking-wider">Escala & 2º Motorista</span>
+            </div>
+        </div>
+        <span id="status-conexao" class="text-xs bg-blue-950 px-3 py-1.5 rounded-full text-blue-200 font-bold">Online</span>
+    </header>
+
+    <main class="max-w-md mx-auto p-4 space-y-3">
+
+        <!-- IDENTIFICAÇÃO DO APARELHO -->
+        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3 flex justify-between items-center shadow-sm">
+            <div>
+                <span class="block text-[10px] uppercase font-bold text-blue-800">Motorista / Aparelho:</span>
+                <span id="txt-identificacao" class="text-xs font-bold text-gray-800">Carregando...</span>
+            </div>
+            <button onclick="abrirModalCadastroUsuario()" class="text-xs bg-blue-700 text-white font-bold px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
+                <i class="fa-solid fa-user-gear"></i> Perfil
+            </button>
+        </div>
+
+        <!-- CARD INTELIGENTE: SUA VIAGEM ATIVA -->
+        <div id="card-viagem-ativa-usuario" class="hidden bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-4 shadow-lg border-2 border-emerald-400 space-y-2">
+            <div class="flex justify-between items-center border-b border-emerald-400/50 pb-2">
+                <span class="text-xs font-black uppercase tracking-wider bg-emerald-900/60 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-dot text-emerald-300 animate-pulse"></i> Sua Viagem Ativa
+                </span>
+                <span id="card-ativa-hora" class="text-xs font-bold opacity-90">--:--</span>
+            </div>
+            <div class="flex justify-between items-end pt-1">
+                <div>
+                    <h3 id="card-ativa-frota" class="text-2xl font-black tracking-wide">FROTA --</h3>
+                    <p id="card-ativa-destino" class="text-xs font-medium text-emerald-100">Destino: --</p>
+                </div>
+                <button id="card-ativa-btn" onclick="" class="bg-white text-emerald-800 font-black px-4 py-2.5 rounded-xl text-sm shadow-md hover:bg-emerald-50 active:scale-95 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-flag-checkered"></i> Encerrar
+                </button>
+            </div>
+        </div>
+
+        <!-- ABA 1: REGISTRAR SAÍDA -->
+        <section id="aba-nova-viagem" class="space-y-4">
+            <div class="bg-white p-5 rounded-2xl shadow-md border border-gray-200">
+                <h2 class="text-lg font-black text-blue-900 mb-4 flex items-center gap-2 border-b pb-2">
+                    <i class="fa-solid fa-compass text-blue-600"></i> Registrar Saída
+                </h2>
+
+                <div id="alerta-veiculo-uso" class="hidden bg-amber-50 border-l-4 border-amber-500 p-3 mb-3 text-sm text-amber-900 rounded-r-xl font-medium">
+                    <i class="fa-solid fa-triangle-exclamation text-base"></i> <strong>Aviso:</strong> Este veículo consta em aberto. Confirme o KM manualmente.
+                </div>
+
+                <form id="form-viagem" onsubmit="salvarViagem(event)" class="space-y-4">
+                    <div>
+                        <label class="block label-maior text-gray-700 uppercase mb-1">Motorista</label>
+                        <select id="motorista" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600 font-bold">
+                            <option value="">Carregando motoristas...</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block label-maior text-gray-700 uppercase mb-1">Frota / Veículo</label>
+                        <select id="frota" required onchange="aoSelecionarFrota()" class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600">
+                            <option value="">Carregando frotas...</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block label-maior text-gray-700 uppercase mb-1">2º Motorista (Opcional)</label>
+                        <select id="acompanhante" class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none">
+                            <option value="">Nenhum / Selecione...</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block label-maior text-gray-700 uppercase mb-1">Data Saída</label>
+                            <input type="date" id="dataSaida" required class="w-full p-3 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none text-base font-bold">
+                        </div>
+                        <div>
+                            <label class="block label-maior text-gray-700 uppercase mb-1">Hora Saída</label>
+                            <input type="time" id="horaSaida" required class="w-full p-3 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none text-base font-bold">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block label-maior text-gray-700 uppercase mb-1 text-blue-800">KM de Saída</label>
+                        <div class="relative">
+                            <input type="number" id="kmSaida" required placeholder="Ex: 160001"
+                                class="w-full input-gigante bg-blue-50/50 border-2 border-blue-400 rounded-xl outline-none text-blue-900">
+                            <span id="loading-km" class="hidden absolute right-3 top-4 text-xs font-bold text-blue-600">Buscando...</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block label-maior text-gray-700 uppercase mb-1">Destino</label>
+                        <select id="destino" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none">
+                            <option value="">Carregando destinos...</option>
+                        </select>
+                    </div>
+
+                    <div class="border-2 border-gray-200 rounded-2xl p-3 bg-gray-50 space-y-2">
+                        <label class="block label-maior text-gray-800 uppercase flex items-center justify-between">
+                            <span><i class="fa-solid fa-list-check text-blue-600"></i> Checklist do Veículo</span>
+                        </label>
+
+                        <div class="bg-green-100 border-2 border-green-300 rounded-xl p-3 flex items-center gap-3">
+                            <input type="checkbox" id="chk_bom_estado" onchange="alternarBomEstado()" class="w-6 h-6 text-green-700 rounded">
+                            <label for="chk_bom_estado" class="text-sm font-black text-green-900 cursor-pointer select-none">
+                                ✔️ Veículo em bom estado / Sem defeito
+                            </label>
+                        </div>
+
+                        <div id="container-checklist" class="space-y-2">
+                            <details class="bg-white rounded-xl border border-gray-300 text-sm">
+                                <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
+                                    <span>🛠️ Funilaria e Lataria</span>
+                                    <i class="fa-solid fa-chevron-down text-gray-500"></i>
+                                </summary>
+                                <div class="p-3 space-y-3 border-t border-gray-200">
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Amassado" class="w-5 h-5"> Amassado</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Arranhão" class="w-5 h-5"> Arranhão</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Vidro quebrado" class="w-5 h-5"> Vidro quebrado</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Para-choque solto" class="w-5 h-5"> Para-choque solto</label>
+                                </div>
+                            </details>
+
+                            <details class="bg-white rounded-xl border border-gray-300 text-sm">
+                                <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
+                                    <span>💡 Iluminação e Sinalização</span>
+                                    <i class="fa-solid fa-chevron-down text-gray-500"></i>
+                                </summary>
+                                <div class="p-3 space-y-3 border-t border-gray-200">
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Farol defeito" class="w-5 h-5"> Farol com defeito</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Luz de freio" class="w-5 h-5"> Luz de freio</label>
+                                </div>
+                            </details>
+
+                            <details class="bg-white rounded-xl border border-gray-300 text-sm">
+                                <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
+                                    <span>⚙️ Motor e Mecânica</span>
+                                    <i class="fa-solid fa-chevron-down text-gray-500"></i>
+                                </summary>
+                                <div class="p-3 space-y-3 border-t border-gray-200">
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Freios" class="w-5 h-5"> Freios</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Pneu murcho/careca" class="w-5 h-5"> Pneu murcho ou careca</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Nível de óleo/água baixo" class="w-5 h-5"> Nível de óleo/água baixo</label>
+                                </div>
+                            </details>
+                        </div>
+
+                        <input type="text" id="obs_livre_prob" placeholder="Outra observação..."
+                            class="w-full p-3 bg-white border border-gray-300 rounded-xl text-sm outline-none mt-2">
+                    </div>
+
+                    <button type="submit" id="btn-enviar" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-black p-4 rounded-2xl shadow-xl text-lg mt-2 flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-xl"></i> Registrar Saída
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ABA 2: VIAGENS EM ANDAMENTO -->
+        <section id="aba-historico" class="hidden space-y-3">
+            <h2 class="text-lg font-black text-gray-800 mb-2 px-1 flex justify-between items-center">
+                <span><i class="fa-solid fa-truck-medical text-blue-600"></i> Em Andamento</span>
+                <button onclick="carregarHistorico()" class="bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded-xl text-xs flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate"></i> Atualizar
+                </button>
+            </h2>
+            <div id="lista-cards-historico" class="space-y-3">
+                <p class="text-center text-gray-500 text-base py-8">Carregando viagens ativas...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL SEGURO -->
+    <div id="modal-seguro" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-black text-red-700 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-red-600"></i> Gente Seguradora
+                </h3>
+                <button onclick="fecharModalSeguro()" class="text-gray-400 text-xl font-bold p-1">&times;</button>
+            </div>
+            <p class="text-xs text-gray-600 font-medium">Assistência 24h para guincho ou pane no veículo municipal.</p>
+
+            <div class="space-y-2 pt-2">
+                <a href="tel:+555199931300" class="w-full bg-red-600 hover:bg-red-700 text-white font-black p-4 rounded-2xl shadow-lg text-base flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-phone text-xl"></i> Ligar Emergência
+                </a>
+                <a href="https://wa.me/555199931300?text=Olá,%20preciso%20de%20assistência/guincho%20para%20o%20veículo%20da%20frota%20municipal." target="_blank" class="w-full bg-green-600 hover:bg-green-700 text-white font-black p-4 rounded-2xl shadow-lg text-base flex items-center justify-center gap-3">
+                    <i class="fa-brands fa-whatsapp text-2xl"></i> Solicitar via WhatsApp
+                </a>
+            </div>
+
+            <button onclick="fecharModalSeguro()" class="w-full bg-gray-200 text-gray-800 font-bold p-3 rounded-xl text-sm mt-2">
+                Fechar
+            </button>
         </div>
     </div>
-    <span id="status-conexao" class="text-xs bg-blue-950 px-3 py-1.5 rounded-full text-blue-200 font-bold">Online</span>
-</header>
+
+    <!-- MODAL PERFIL -->
+    <div id="modal-cadastro-usuario" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm space-y-4 shadow-2xl">
+            <h3 class="font-black text-blue-900 text-lg border-b pb-2 flex items-center gap-2">
+                <i class="fa-solid fa-id-card text-blue-600"></i> Configurar Perfil
+            </h3>
+            <p class="text-xs text-gray-600">Identifique-se para preenchimento automático das suas viagens.</p>
+
+            <div>
+                <label class="block label-maior text-gray-700 uppercase mb-1">Seu Nome Completo</label>
+                <input type="text" id="setup-nome" required placeholder="Ex: Lílian Gabiló" class="w-full p-3 bg-gray-50 border-2 border-gray-300 rounded-xl text-sm font-bold outline-none">
+            </div>
+
+            <div>
+                <label class="block label-maior text-gray-700 uppercase mb-1">Seu Telefone / WhatsApp</label>
+                <input type="tel" id="setup-telefone" required placeholder="Ex: (18) 99999-9999" class="w-full p-3 bg-gray-50 border-2 border-gray-300 rounded-xl text-sm font-bold outline-none">
+            </div>
+
+            <button onclick="salvarCadastroUsuario()" class="w-full bg-blue-700 text-white font-black p-3.5 rounded-2xl text-base shadow-lg mt-2">
+                Salvar Perfil
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE ENCERRAMENTO -->
+    <div id="modal-encerrar" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-5 w-full max-w-sm space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+            <h3 class="font-black text-gray-900 text-lg border-b pb-2">Encerrar - Frota: <span id="modal-frota-txt" class="text-blue-700"></span></h3>
+            <input type="hidden" id="modal-linha">
+
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="block label-maior text-gray-700 uppercase mb-1">Data Chegada</label>
+                    <input type="date" id="modal-dataChegada" required class="w-full p-2.5 bg-gray-50 border-2 border-gray-300 rounded-xl text-sm font-bold">
+                </div>
+                <div>
+                    <label class="block label-maior text-gray-700 uppercase mb-1">Hora Chegada</label>
+                    <input type="time" id="modal-horaChegada" required class="w-full p-2.5 bg-gray-50 border-2 border-gray-300 rounded-xl text-sm font-bold">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block label-maior text-gray-700 uppercase mb-1 text-green-800">KM de Chegada</label>
+                <input type="number" id="modal-kmChegada" required placeholder="Ex: 160150" class="w-full input-gigante bg-green-50/50 border-2 border-green-500 rounded-xl outline-none text-green-900">
+            </div>
+
+            <div>
+                <label class="block label-maior text-gray-700 uppercase mb-1">Foto Hodômetro</label>
+                <input type="file" id="modal-fotoChegada" accept="image/*" capture="environment" onchange="comprimirEConverterFoto(this)" class="hidden">
+                <label for="modal-fotoChegada" class="w-full p-4 bg-blue-50 border-2 border-dashed border-blue-400 rounded-2xl text-blue-800 flex items-center justify-center gap-2 cursor-pointer font-extrabold text-base">
+                    <i class="fa-solid fa-camera text-xl"></i> <span id="modal-label-foto">Tirar Foto / Anexar</span>
+                </label>
+                <input type="hidden" id="modal-fotoBase64">
+            </div>
+
+            <div class="border border-gray-300 rounded-2xl p-3 bg-gray-50 space-y-1">
+                <label class="block text-xs font-bold text-gray-700 uppercase">Avarias na Chegada</label>
+                <input type="text" id="modal-obs-prob" placeholder="Relate se houver problema..." class="w-full p-3 bg-white border border-gray-300 rounded-xl text-sm outline-none">
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button type="button" onclick="fecharModal()" class="w-1/2 bg-gray-300 text-gray-800 font-extrabold p-3.5 rounded-xl text-base">Cancelar</button>
+                <button type="button" id="btn-concluir-modal" onclick="salvarEncerramento()" class="w-1/2 bg-green-700 text-white font-extrabold p-3.5 rounded-xl text-base shadow-lg">Concluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BARRA NAVEGAÇÃO INFERIOR -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 flex justify-around p-2 z-50 shadow-lg">
+        <button onclick="mudarAba('nova-viagem')" id="nav-nova-viagem" class="flex flex-col items-center gap-1 text-blue-800 font-extrabold p-1 text-xs">
+            <i class="fa-solid fa-compass text-2xl"></i><span>Saída</span>
+        </button>
+        <button onclick="mudarAba('historico')" id="nav-historico" class="flex flex-col items-center gap-1 text-gray-400 font-extrabold p-1 text-xs">
+            <i class="fa-solid fa-truck-medical text-2xl"></i><span>Em Andamento</span>
+        </button>
+        <button onclick="abrirModalSeguro()" id="nav-seguro" class="flex flex-col items-center gap-1 text-red-600 font-extrabold p-1 text-xs">
+            <i class="fa-solid fa-shield-halved text-2xl"></i><span>Seguro / Guincho</span>
+        </button>
+    </nav>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            verificarPrimeiroAcesso();
+            carregarDadosComTimeout();
+            
+            const agora = new Date();
+            document.getElementById("dataSaida").value = agora.toISOString().substring(0, 10);
+            document.getElementById("horaSaida").value = agora.toTimeString().substring(0, 5);
+        });
+
+        async function fetchComTimeout(url, options = {}, tempoLimite = 15000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), tempoLimite);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(timer);
+                return response;
+            } catch (err) {
+                clearTimeout(timer);
+                throw err;
+            }
+        }
+
+        async function carregarDadosComTimeout() {
+            carregarMotoristasEAcompanhantes();
+            carregarFrotas();
+            carregarDestinos();
+            carregarHistorico();
+        }
+
+        function removerAcentos(str) {
+            return str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
+        }
+
+        function verificarPrimeiroAcesso() {
+            const nome = localStorage.getItem("digifrota_user_nome");
+            const tel = localStorage.getItem("digifrota_user_tel");
+            if (!nome || !tel) { abrirModalCadastroUsuario(); } 
+            else { atualizarLabelIdentificacao(); }
+        }
+
+        function abrirModalCadastroUsuario() {
+            document.getElementById("setup-nome").value = localStorage.getItem("digifrota_user_nome") || "";
+            document.getElementById("setup-telefone").value = localStorage.getItem("digifrota_user_tel") || "";
+            document.getElementById("modal-cadastro-usuario").classList.remove("hidden");
+        }
+
+        function salvarCadastroUsuario() {
+            const nome = document.getElementById("setup-nome").value.trim();
+            const tel = document.getElementById("setup-telefone").value.trim();
+            if (!nome || !tel) { alert("Preencha nome e telefone!"); return; }
+
+            localStorage.setItem("digifrota_user_nome", nome);
+            localStorage.setItem("digifrota_user_tel", tel);
+            document.getElementById("modal-cadastro-usuario").classList.add("hidden");
+            atualizarLabelIdentificacao();
+            selecionarMotoristaPadrao();
+            carregarHistorico();
+        }
+
+        function atualizarLabelIdentificacao() {
+            const nome = localStorage.getItem("digifrota_user_nome") || "Não Cadastrado";
+            const tel = localStorage.getItem("digifrota_user_tel") || "";
+            document.getElementById("txt-identificacao").textContent = `${nome} (${tel})`;
+        }
+
+        function selecionarMotoristaPadrao() {
+            const nomeSalvo = localStorage.getItem("digifrota_user_nome");
+            if (!nomeSalvo) return;
+            const nomeLimpo = removerAcentos(nomeSalvo);
+            const selectMotorista = document.getElementById("motorista");
+
+            for (let i = 0; i < selectMotorista.options.length; i++) {
+                const opcaoLimpa = removerAcentos(selectMotorista.options[i].value);
+                if (opcaoLimpa && (opcaoLimpa.includes(nomeLimpo) || nomeLimpo.includes(opcaoLimpa))) {
+                    selectMotorista.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        function abrirModalSeguro() { document.getElementById("modal-seguro").classList.remove("hidden"); }
+        function fecharModalSeguro() { document.getElementById("modal-seguro").classList.add("hidden"); }
+
+        function mudarAba(aba) {
+            const secNova = document.getElementById("aba-nova-viagem");
+            const secHist = document.getElementById("aba-historico");
+            const btnNova = document.getElementById("nav-nova-viagem");
+            const btnHist = document.getElementById("nav-historico");
+            if (aba === 'nova-viagem') {
+                secNova.classList.remove("hidden");
+                secHist.classList.add("hidden");
+                btnNova.className = "flex flex-col items-center gap-1 text-blue-800 font-extrabold p-1 text-xs";
+                btnHist.className = "flex flex-col items-center gap-1 text-gray-400 font-extrabold p-1 text-xs";
+            } else {
+                secNova.classList.add("hidden");
+                secHist.classList.remove("hidden");
+                btnHist.className = "flex flex-col items-center gap-1 text-blue-800 font-extrabold p-1 text-xs";
+                btnNova.className = "flex flex-col items-center gap-1 text-gray-400 font-extrabold p-1 text-xs";
+                carregarHistorico();
+            }
+        }
+
+        async function carregarMotoristasEAcompanhantes() {
+            try {
+                const res = await fetchComTimeout(`${API_URL}?action=getMotoristas`);
+                const dados = await res.json();
+                const selMot = document.getElementById("motorista");
+                const selAcamp = document.getElementById("acompanhante");
+                selMot.innerHTML = '<option value="">Selecione o motorista...</option>';
+                selAcamp.innerHTML = '<option value="">Nenhum / Selecione...</option>';
+                dados.forEach(m => {
+                    selMot.innerHTML += `<option value="${m}">${m}</option>`;
+                    selAcamp.innerHTML += `<option value="${m}">${m}</option>`;
+                });
+                selecionarMotoristaPadrao();
+            } catch (e) { document.getElementById("motorista").innerHTML = '<option value="">Erro</option>'; }
+        }
+
+        async function carregarFrotas() {
+            try {
+                const res = await fetchComTimeout(`${API_URL}?action=getFrotasEmOperacao`);
+                const dados = await res.json();
+                const sel = document.getElementById("frota");
+                sel.innerHTML = '<option value="">Selecione o veículo...</option>';
+                dados.forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`);
+            } catch (e) { document.getElementById("frota").innerHTML = '<option value="">Erro</option>'; }
+        }
+
+        async function carregarDestinos() {
+            try {
+                const res = await fetchComTimeout(`${API_URL}?action=getDestinos`);
+                const dados = await res.json();
+                const sel = document.getElementById("destino");
+                sel.innerHTML = '<option value="">Selecione o destino...</option>';
+                dados.forEach(d => sel.innerHTML += `<option value="${d}">${d}</option>`);
+            } catch (e) { document.getElementById("destino").innerHTML = '<option value="">Erro</option>'; }
+        }
+
+        async function aoSelecionarFrota() {
+            const frota = document.getElementById("frota").value;
+            const inputKm = document.getElementById("kmSaida");
+            const loading = document.getElementById("loading-km");
+            const alertaBox = document.getElementById("alerta-veiculo-uso");
+            
+            if (!frota) return;
+            loading.classList.remove("hidden");
+            alertaBox.classList.add("hidden");
+
+            try {
+                const res = await fetchComTimeout(`${API_URL}?action=getUltimoKm&frota=${encodeURIComponent(frota)}`);
+                const data = await res.json();
+                if (data.ultimoKm !== "") { inputKm.value = data.ultimoKm; }
+                if (data.emUso) { alertaBox.classList.remove("hidden"); }
+            } catch (e) { console.error(e); }
+            finally { loading.classList.add("hidden"); }
+        }
+
+        function alternarBomEstado() {
+            const chkBom = document.getElementById("chk_bom_estado").checked;
+            const container = document.getElementById("container-checklist");
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            if (chkBom) {
+                checkboxes.forEach(cb => cb.checked = false);
+                container.style.opacity = "0.3";
+                container.style.pointerEvents = "none";
+            } else {
+                container.style.opacity = "1";
+                container.style.pointerEvents = "auto";
+            }
+        }
+
+        function obterProblemasSelecionados() {
+            if (document.getElementById("chk_bom_estado").checked) return "Veículo em bom estado / Sem defeito";
+            const checkboxes = document.querySelectorAll('input[name="chk_prob"]:checked');
+            let selecionados = [];
+            checkboxes.forEach(cb => selecionados.push(cb.value));
+            const obsLivre = document.getElementById("obs_livre_prob").value.trim();
+            if (obsLivre) selecionados.push("Outro: " + obsLivre);
+            return selecionados.length > 0 ? selecionados.join(" | ") : "Sem observações";
+        }
+
+        function comprimirEConverterFoto(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const MAX_WIDTH = 800;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    document.getElementById("modal-fotoBase64").value = canvas.toDataURL('image/jpeg', 0.7);
+                    document.getElementById("modal-label-foto").textContent = "Foto OK ✓";
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        async function salvarViagem(e) {
+            e.preventDefault();
+            const btn = document.getElementById("btn-enviar");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando...';
+
+            const dataPartes = document.getElementById("dataSaida").value.split("-");
+            const dataSaidaBR = `${dataPartes[2]}/${dataPartes[1]}/${dataPartes[0]}`;
+            const nomeUsuario = localStorage.getItem("digifrota_user_nome") || "Nao identificado";
+            const telUsuario = localStorage.getItem("digifrota_user_tel") || "";
+
+            const payload = {
+                usuarioId: `${nomeUsuario} (${telUsuario})`,
+                motorista: document.getElementById("motorista").value,
+                frota: document.getElementById("frota").value,
+                acompanhante: document.getElementById("acompanhante").value,
+                horaSaida: document.getElementById("horaSaida").value,
+                kmSaida: document.getElementById("kmSaida").value,
+                destino: document.getElementById("destino").value,
+                dataSaida: dataSaidaBR,
+                problemas: obterProblemasSelecionados(),
+                situacao: "EM ANDAMENTO"
+            };
+
+            try {
+                const res = await fetchComTimeout(API_URL, { method: "POST", body: JSON.stringify(payload) });
+                const resp = await res.json();
+                if (resp.status === "sucesso" || resp.status === "alerta") {
+                    alert(resp.mensagem || "Saída registrada com sucesso!");
+                    document.getElementById("form-viagem").reset();
+                    const agora = new Date();
+                    document.getElementById("dataSaida").value = agora.toISOString().substring(0, 10);
+                    document.getElementById("horaSaida").value = agora.toTimeString().substring(0, 5);
+                    document.getElementById("alerta-veiculo-uso").classList.add("hidden");
+                    document.getElementById("chk_bom_estado").checked = false;
+                    alternarBomEstado();
+                    selecionarMotoristaPadrao();
+                    carregarHistorico();
+                    mudarAba('historico');
+                } else { alert("Erro: " + resp.mensagem); }
+            } catch (err) { alert("Erro de comunicação."); }
+            finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane text-xl"></i> Registrar Saída'; }
+        }
+
+        async function carregarHistorico() {
+            const container = document.getElementById("lista-cards-historico");
+            const cardAtivo = document.getElementById("card-viagem-ativa-usuario");
+            const nomeUsuarioSalvo = removerAcentos(localStorage.getItem("digifrota_user_nome"));
+
+            try {
+                const res = await fetchComTimeout(`${API_URL}?action=obterDadosFrotas`);
+                const dados = await res.json();
+                const viagensAtivas = dados.filter(v => v.situacao === "EM ANDAMENTO" || v.situacao.includes("ATENÇÃO"));
+
+                let minhaViagemAtiva = null;
+                if (nomeUsuarioSalvo) {
+                    minhaViagemAtiva = viagensAtivas.find(v => {
+                        const mot = removerAcentos(v.motorista);
+                        const acamp = removerAcentos(v.acompanhante);
+                        const idLan = removerAcentos(v.id);
+                        return mot.includes(nomeUsuarioSalvo) || acamp.includes(nomeUsuarioSalvo) || idLan.includes(nomeUsuarioSalvo);
+                    });
+                }
+
+                if (minhaViagemAtiva) {
+                    document.getElementById("card-ativa-frota").textContent = minhaViagemAtiva.frota;
+                    document.getElementById("card-ativa-hora").textContent = `Saída: ${minhaViagemAtiva.saida}`;
+                    document.getElementById("card-ativa-destino").textContent = `Destino: ${minhaViagemAtiva.destino}`;
+                    document.getElementById("card-ativa-btn").setAttribute("onclick", `abrirModalEncerrar(${minhaViagemAtiva.linha}, '${minhaViagemAtiva.frota}')`);
+                    cardAtivo.classList.remove("hidden");
+                } else { cardAtivo.classList.add("hidden"); }
+
+                if (viagensAtivas && viagensAtivas.length > 0) {
+                    container.innerHTML = "";
+                    viagensAtivas.forEach(v => {
+                        container.innerHTML += `
+                            <div class="bg-white p-4 rounded-2xl border-2 border-gray-200 shadow-md space-y-2">
+                                <div class="text-base font-black text-blue-900">Frota: <span class="text-gray-800">${v.frota}</span></div>
+                                <div class="text-sm text-gray-700 space-y-1">
+                                    <p><strong>Motorista:</strong> <span class="text-base font-black text-blue-950">${v.motorista}</span> ${v.acompanhante ? '<span class="text-xs text-gray-600 font-normal">(2º Mot: ' + v.acompanhante + ')</span>' : ''}</p>
+                                    <p><strong>Destino:</strong> ${v.destino}</p>
+                                    <p><strong>Saída:</strong> ${v.saida}</p>
+                                </div>
+                                <button onclick="abrirModalEncerrar(${v.linha}, '${v.frota}')" class="w-full mt-2 bg-green-700 text-white font-extrabold text-sm py-3 rounded-xl shadow-md flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-flag-checkered"></i> Encerrar Viagem
+                                </button>
+                            </div>
+                        `;
+                    });
+                } else { container.innerHTML = '<p class="text-center text-gray-500 text-sm py-6 font-semibold">Nenhuma viagem em andamento.</p>'; }
+            } catch (e) { container.innerHTML = '<p class="text-center text-red-500 text-sm py-6 font-semibold">Erro ao carregar.</p>'; }
+        }
+
+        function abrirModalEncerrar(linha, frota) {
+            document.getElementById("modal-linha").value = linha;
+            document.getElementById("modal-frota-txt").textContent = frota;
+            document.getElementById("modal-kmChegada").value = "";
+            document.getElementById("modal-fotoBase64").value = "";
+            document.getElementById("modal-obs-prob").value = "";
+            document.getElementById("modal-label-foto").textContent = "Tirar Foto / Anexar";
+            const agora = new Date();
+            document.getElementById("modal-dataChegada").value = agora.toISOString().substring(0, 10);
+            document.getElementById("modal-horaChegada").value = agora.toTimeString().substring(0, 5);
+            document.getElementById("modal-encerrar").classList.remove("hidden");
+        }
+
+        function fecharModal() { document.getElementById("modal-encerrar").classList.add("hidden"); }
+
+        async function salvarEncerramento() {
+            const linha = document.getElementById("modal-linha").value;
+            const kmChegada = document.getElementById("modal-kmChegada").value;
+            const fotoBase64 = document.getElementById("modal-fotoBase64").value;
+            const problemas = document.getElementById("modal-obs-prob").value;
+            const btnConcluir = document.getElementById("btn-concluir-modal");
+
+            if (!kmChegada) { alert("Informe o KM de chegada!"); return; }
+            btnConcluir.disabled = true;
+            btnConcluir.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+            const dataPartes = document.getElementById("modal-dataChegada").value.split("-");
+            const dataChegadaBR = `${dataPartes[2]}/${dataPartes[1]}/${dataPartes[0]}`;
+
+            const payload = {
+                acao: "encerrar",
+                linha: linha,
+                kmChegada: kmChegada,
+                fotoBase64: fotoBase64,
+                problemas: problemas,
+                dataChegada: dataChegadaBR,
+                horaChegada: document.getElementById("modal-horaChegada").value
+            };
+
+            try {
+                const res = await fetchComTimeout(API_URL, { method: "POST", body: JSON.stringify(payload) });
+                const resp = await res.json();
+                if (resp.status === "sucesso") {
+                    alert("Viagem encerrada com sucesso!");
+                    fecharModal();
+                    carregarHistorico();
+                } else { alert("Erro: " + resp.mensagem); }
+            } catch (e) { alert("Erro de comunicação."); }
+            finally { btnConcluir.disabled = false; btnConcluir.innerHTML = 'Concluir'; }
+        }
+    </script>
+</body>
+</html>
