@@ -57,7 +57,7 @@
 
                 <form id="form-viagem" onsubmit="salvarViagem(event)" class="space-y-4">
                     
-                    <!-- Motorista (Menu Editável, pré-selecionado com o dono do cel) -->
+                    <!-- Motorista -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Motorista</label>
                         <select id="motorista" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600 font-bold">
@@ -111,7 +111,7 @@
                         </select>
                     </div>
 
-                    <!-- CHECKLIST COMPLETO -->
+                    <!-- CHECKLIST -->
                     <div class="border-2 border-gray-200 rounded-2xl p-3 bg-gray-50 space-y-2">
                         <label class="block label-maior text-gray-800 uppercase flex items-center justify-between">
                             <span><i class="fa-solid fa-list-check text-blue-600"></i> Checklist do Veículo</span>
@@ -316,6 +316,10 @@
             document.getElementById("horaSaida").value = agora.toTimeString().substring(0, 5);
         });
 
+        function removerAcentos(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+        }
+
         function verificarPrimeiroAcesso() {
             const nome = localStorage.getItem("digifrota_user_nome");
             const tel = localStorage.getItem("digifrota_user_tel");
@@ -360,9 +364,12 @@
             const nomeSalvo = localStorage.getItem("digifrota_user_nome");
             if (!nomeSalvo) return;
 
+            const nomeLimpo = removerAcentos(nomeSalvo);
             const selectMotorista = document.getElementById("motorista");
+
             for (let i = 0; i < selectMotorista.options.length; i++) {
-                if (selectMotorista.options[i].value.toLowerCase().includes(nomeSalvo.toLowerCase())) {
+                const opcaoLimpa = removerAcentos(selectMotorista.options[i].value);
+                if (opcaoLimpa && (opcaoLimpa.includes(nomeLimpo) || nomeLimpo.includes(opcaoLimpa))) {
                     selectMotorista.selectedIndex = i;
                     break;
                 }
@@ -400,7 +407,6 @@
                     selAcamp.innerHTML += `<option value="${m}">${m}</option>`;
                 });
                 
-                // Pré-seleciona automaticamente o motorista dono do celular
                 selecionarMotoristaPadrao();
             } catch (e) { console.error(e); }
         }
@@ -561,18 +567,19 @@
                     container.innerHTML = "";
                     viagensAtivas.forEach(v => {
                         container.innerHTML += `
-                            <div class="bg-white p-4 rounded-2xl border-2 border-gray-200 shadow-md space-y-2">
+                            <div class="bg-white p-4 rounded-2xl border-2 border-gray-200 shadow-md space-y-3">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-black text-blue-900 text-lg">${v.frota}</span>
+                                    <span class="font-black text-blue-900 text-lg"><i class="fa-solid fa-car-side text-blue-600"></i> ${v.frota}</span>
                                     <span class="text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-900">${v.situacao}</span>
                                 </div>
-                                <div class="text-sm text-gray-700 space-y-1">
+                                <div class="text-sm text-gray-700 space-y-1.5 border-t border-b border-gray-100 py-2">
                                     <p><strong>Motorista:</strong> ${v.motorista} ${v.acompanhante ? '/ ' + v.acompanhante : ''}</p>
                                     <p><strong>Destino:</strong> ${v.destino}</p>
-                                    <p><strong>Saída:</strong> ${v.saida} (KM: ${v.kmSaida})</p>
-                                    <p class="text-xs text-gray-500"><strong>Lançado por:</strong> ${v.id}</p>
+                                    <p><strong>Saída:</strong> ${v.saida}</p>
                                 </div>
-                                <button onclick="abrirModalEncerrar(${v.linha}, '${v.frota}')" class="w-full mt-2 bg-green-700 text-white font-extrabold text-base py-3 rounded-xl shadow-md">Encerrar Viagem</button>
+                                <button onclick="abrirModalEncerrar(${v.linha}, '${v.frota}')" class="w-full bg-green-700 text-white font-extrabold text-base py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-flag-checkered"></i> Encerrar Viagem
+                                </button>
                             </div>
                         `;
                     });
