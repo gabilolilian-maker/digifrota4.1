@@ -39,13 +39,6 @@
             
             <div class="flex items-center space-x-4">
                 <span id="data-atual" class="text-xs bg-gray-100 px-3 py-1.5 rounded-lg font-bold text-gray-600">--</span>
-                
-                <!-- SELETOR DE TEMAS -->
-                <div class="hidden lg:flex items-center bg-gray-100 p-1 rounded-xl space-x-1 text-xs font-bold text-gray-600">
-                    <button onclick="mudarTema('light')" class="px-2.5 py-1 rounded-lg bg-white shadow-sm">Claro</button>
-                    <button onclick="mudarTema('dark')" class="px-2.5 py-1 rounded-lg hover:bg-white">Escuro</button>
-                </div>
-
                 <button onclick="atualizarDadosGerais()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-xs font-black shadow flex items-center gap-2">
                     <i class="fa-solid fa-rotate"></i> Atualizar
                 </button>
@@ -64,19 +57,19 @@
                             <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-map-location-dot text-blue-600 mr-2"></i> Viagens Recentes</h2>
                             <button onclick="mudarSecao('viagens')" class="text-xs text-blue-700 font-bold hover:underline">Ver todas →</button>
                         </div>
-                        <div id="dash-viagens-recentes" class="space-y-2 text-xs text-gray-500">A carregar...</div>
+                        <div id="dash-viagens-recentes" class="space-y-2 text-xs text-gray-600">A carregar viagens...</div>
                     </div>
 
-                    <!-- Ranking KM -->
+                    <!-- Ranking KM Rodado nas Utilizações -->
                     <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3">
                         <div class="flex justify-between items-center border-b pb-2">
-                            <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-ranking-star text-amber-500 mr-2"></i> Ranking KM</h2>
+                            <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-ranking-star text-amber-500 mr-2"></i> Ranking KM Rodado (Utilizações)</h2>
                         </div>
-                        <div id="dash-ranking-km" class="space-y-2 text-xs text-gray-500">A carregar...</div>
+                        <div id="dash-ranking-km" class="space-y-2 text-xs text-gray-600">A calcular ranking...</div>
                     </div>
                 </div>
 
-                <!-- Alertas da Frota e Combustível -->
+                <!-- Visão Geral da Frota e Alertas -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3 md:col-span-2">
                         <h2 class="font-black text-sm uppercase text-gray-800 border-b pb-2"><i class="fa-solid fa-chart-line text-emerald-600 mr-2"></i> Visão Geral da Frota Municipal</h2>
@@ -102,7 +95,7 @@
                             <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-triangle-exclamation text-red-600 mr-2"></i> Alertas Frota</h2>
                             <button onclick="mudarSecao('frotas')" class="text-xs text-blue-700 font-bold hover:underline">Ver frotas →</button>
                         </div>
-                        <div id="dash-alertas-frota" class="space-y-2 text-xs text-gray-500 max-h-48 overflow-y-auto">A carregar...</div>
+                        <div id="dash-alertas-frota" class="space-y-2 text-xs text-gray-600 max-h-48 overflow-y-auto">A carregar alertas...</div>
                     </div>
                 </div>
             </section>
@@ -110,28 +103,22 @@
             <!-- SECÇÃO 2: VIAGENS -->
             <section id="secao-viagens" class="hidden space-y-4">
                 <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
-                    <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="font-black text-base text-blue-900"><i class="fa-solid fa-map-location-dot mr-2"></i> Registo de Viagens</h2>
-                        <button onclick="exportarCSV('viagens')" class="bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-black shadow flex items-center gap-2">
-                            <i class="fa-solid fa-file-csv"></i> Exportar CSV
-                        </button>
-                    </div>
+                    <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-map-location-dot mr-2"></i> Registo Completo de Viagens</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs">
                             <thead class="bg-gray-50 text-gray-600 uppercase">
                                 <tr>
-                                    <th class="p-3">Data</th>
-                                    <th class="p-3">Saída</th>
-                                    <th class="p-3">Chegada</th>
+                                    <th class="p-3">Data Saída</th>
                                     <th class="p-3">Motorista</th>
                                     <th class="p-3">Frota</th>
                                     <th class="p-3">Destino</th>
+                                    <th class="p-3">Situação</th>
                                     <th class="p-3">KM Chegada</th>
                                     <th class="p-3">KM Rodado</th>
                                 </tr>
                             </thead>
                             <tbody id="tabela-viagens-corpo" class="divide-y divide-gray-100 text-gray-700">
-                                <tr><td colspan="8" class="text-center py-6 text-gray-400">A carregar dados de viagens...</td></tr>
+                                <tr><td colspan="7" class="text-center py-6 text-gray-400">A carregar...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -141,9 +128,7 @@
             <!-- SECÇÃO 3: FROTAS -->
             <section id="secao-frotas" class="hidden space-y-4">
                 <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
-                    <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="font-black text-base text-blue-900"><i class="fa-solid fa-truck mr-2"></i> Gestão de Frotas e Manutenção</h2>
-                    </div>
+                    <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-truck mr-2"></i> Gestão de Frotas e Manutenção</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs">
                             <thead class="bg-gray-50 text-gray-600 uppercase">
@@ -153,12 +138,11 @@
                                     <th class="p-3">Tipo</th>
                                     <th class="p-3">Situação</th>
                                     <th class="p-3">KM Atual</th>
-                                    <th class="p-3">KM Próx. Troca</th>
                                     <th class="p-3">Alerta Óleo</th>
                                 </tr>
                             </thead>
                             <tbody id="tabela-frotas-corpo" class="divide-y divide-gray-100 text-gray-700">
-                                <tr><td colspan="7" class="text-center py-6 text-gray-400">A carregar frotas...</td></tr>
+                                <tr><td colspan="6" class="text-center py-6 text-gray-400">A carregar...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -169,7 +153,7 @@
             <section id="secao-motoristas" class="hidden space-y-4">
                 <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
                     <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-users mr-2"></i> Desempenho de Motoristas</h2>
-                    <div id="conteudo-motoristas" class="text-xs text-gray-600">Funcionalidade ativa baseada nas escalas e viagens registadas.</div>
+                    <div class="text-xs text-gray-600">Dados baseados nas escalas e viagens registadas no sistema.</div>
                 </div>
             </section>
 
@@ -177,22 +161,7 @@
             <section id="secao-checklist" class="hidden space-y-4">
                 <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
                     <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-list-check mr-2"></i> Registo de Avarias e Checklist</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-gray-50 text-gray-600 uppercase">
-                                <tr>
-                                    <th class="p-3">Data/Hora</th>
-                                    <th class="p-3">Frota</th>
-                                    <th class="p-3">Motorista</th>
-                                    <th class="p-3">Tipo</th>
-                                    <th class="p-3">Ocorrência / Avaria</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-checklist-corpo" class="divide-y divide-gray-100 text-gray-700">
-                                <tr><td colspan="5" class="text-center py-6 text-gray-400">A carregar checklist...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="text-xs text-gray-600">Histórico de vistorias realizadas nas saídas e chegadas.</div>
                 </div>
             </section>
 
@@ -223,17 +192,9 @@
             document.getElementById("titulo-secao").textContent = titulos[secao];
         }
 
-        function mudarTema(tema) {
-            if(tema === 'dark') {
-                document.body.className = "bg-gray-900 text-gray-100 min-h-screen flex";
-            } else {
-                document.body.className = "bg-gray-100 text-gray-900 min-h-screen flex";
-            }
-        }
-
         async function atualizarDadosGerais() {
             try {
-                // Carregar Dashboard e Frotas
+                // 1. Carregar dados do Dashboard e Frotas
                 const resDash = await fetch(`${API_URL}?action=getDashboard`);
                 const dataDash = await resDash.json();
                 
@@ -241,38 +202,32 @@
                 document.getElementById("stat-trocar").textContent = dataDash.trocar;
                 document.getElementById("stat-atencao").textContent = dataDash.atencao;
 
-                // Ranking KM
-                const rankingDiv = document.getElementById("dash-ranking-km");
-                rankingDiv.innerHTML = "";
-                dataDash.ranking.slice(0, 5).forEach((v, index) => {
-                    rankingDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-gray-50 rounded-xl"><span><strong>#${index+1}</strong> Frota ${v.frota}</span> <span class="font-black text-blue-900">${v.kmAtual.toLocaleString('pt-BR')} KM</span></div>`;
-                });
-
-                // Alertas Frota
+                // Alertas de Óleo
                 const alertasDiv = document.getElementById("dash-alertas-frota");
                 const dashAlertas = document.getElementById("tabela-frotas-corpo");
                 alertasDiv.innerHTML = "";
                 dashAlertas.innerHTML = "";
                 
                 dataDash.ranking.forEach(v => {
-                    if(v.alerta === "TROCAR" || v.alerta === "ATENÇÃO" || v.alerta.includes("VENCIDA")) {
-                        alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-red-50 border border-red-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-red-700">${v.alerta}</span></div>`;
+                    if(v.alerta === "TROCAR" || v.alerta.includes("VENCIDA")) {
+                        alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-red-50 border border-red-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-red-700">TROCAR</span></div>`;
+                    } else if(v.alerta === "ATENÇÃO") {
+                        alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-amber-50 border border-amber-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-amber-700">ATENÇÃO</span></div>`;
                     }
                     dashAlertas.innerHTML += `
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-gray-50 border-b">
                             <td class="p-3 font-bold">${v.frota}</td>
                             <td class="p-3">${v.placa || '-'}</td>
                             <td class="p-3">${v.tipo || '-'}</td>
                             <td class="p-3">${v.situacao || '-'}</td>
                             <td class="p-3 font-semibold">${v.kmAtual.toLocaleString('pt-BR')}</td>
-                            <td class="p-3">-</td>
                             <td class="p-3"><span class="px-2 py-1 rounded font-bold ${v.alerta==='TROCAR'?'bg-red-100 text-red-800':'bg-emerald-100 text-emerald-800'}">${v.alerta}</span></td>
                         </tr>
                     `;
                 });
                 if(alertasDiv.innerHTML === "") alertasDiv.innerHTML = '<p class="text-xs text-emerald-600 font-bold">Nenhum alerta pendente.</p>';
 
-                // Carregar Viagens
+                // 2. Carregar Viagens e Calcular o Ranking por SOMA DE KM RODADO nas utilizações
                 const resViagens = await fetch(`${API_URL}?action=obterDadosFrotas`);
                 const dataViagens = await resViagens.json();
                 
@@ -281,32 +236,69 @@
                 recViagensDiv.innerHTML = "";
                 tabelaViagens.innerHTML = "";
 
-                dataViagens.slice(0, 5).forEach(v => {
-                    recViagensDiv.innerHTML += `<div class="p-2 bg-gray-50 rounded-xl flex justify-between"><span>Frota ${v.frota} → ${v.destino}</span> <span class="text-gray-400">${v.motorista}</span></div>`;
-                });
+                // Dicionário para somar o KM rodado por veículo nas utilizações
+                let kmRodadoPorFrota = {};
 
                 dataViagens.forEach(v => {
+                    // Soma dos KM rodados
+                    let kmRodadoNum = parseFloat(v.kmRodado) || 0;
+                    let nomeFrota = v.frota ? v.frota.trim() : "Desconhecida";
+                    if (!kmRodadoPorFrota[nomeFrota]) {
+                        kmRodadoPorFrota[nomeFrota] = 0;
+                    }
+                    kmRodadoPorFrota[nomeFrota] += kmRodadoNum;
+
+                    // Tabela de viagens completas
                     tabelaViagens.innerHTML += `
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-3">${v.saida.split(' ')[0]}</td>
+                        <tr class="hover:bg-gray-50 border-b">
                             <td class="p-3">${v.saida}</td>
-                            <td class="p-3">${v.kmChegada ? 'Concluído' : 'Em andamento'}</td>
                             <td class="p-3 font-bold">${v.motorista}</td>
                             <td class="p-3">${v.frota}</td>
                             <td class="p-3">${v.destino}</td>
+                            <td class="p-3">${v.situacao}</td>
                             <td class="p-3">${v.kmChegada || '-'}</td>
-                            <td class="p-3 font-semibold">${v.kmRodado || '-'}</td>
+                            <td class="p-3 font-semibold text-blue-900">${v.kmRodado ? v.kmRodado + ' KM' : '-'}</td>
                         </tr>
                     `;
                 });
 
+                // Viagens Recentes (Top 5)
+                dataViagens.slice(0, 5).forEach(v => {
+                    recViagensDiv.innerHTML += `
+                        <div class="p-2.5 bg-gray-50 rounded-xl flex justify-between items-center border">
+                            <div>
+                                <span class="font-black text-blue-900">Frota ${v.frota}</span> → <span class="text-gray-700">${v.destino}</span>
+                                <div class="text-[10px] text-gray-400">Motorista: ${v.motorista}</div>
+                            </div>
+                            <span class="text-xs font-bold text-gray-600">${v.kmRodado ? v.kmRodado + ' KM' : 'Em curso'}</span>
+                        </div>
+                    `;
+                });
+                if(recViagensDiv.innerHTML === "") recViagensDiv.innerHTML = '<p class="text-xs text-gray-400">Sem registos de viagens.</p>';
+
+                // Montar o Ranking KM baseado na SOMA dos km rodados nas utilizações
+                let rankingArray = Object.keys(kmRodadoPorFrota).map(frota => {
+                    return { frota: frota, totalKm: kmRodadoPorFrota[frota] };
+                });
+                rankingArray.sort((a, b) => b.totalKm - a.totalKm);
+
+                const rankingDiv = document.getElementById("dash-ranking-km");
+                rankingDiv.innerHTML = "";
+                rankingArray.slice(0, 5).forEach((item, index) => {
+                    rankingDiv.innerHTML += `
+                        <div class="flex justify-between items-center p-2.5 bg-gray-50 rounded-xl border">
+                            <span class="font-bold text-gray-800"><strong>#${index+1}</strong> Frota ${item.frota}</span> 
+                            <span class="font-black text-blue-900">${item.totalKm.toLocaleString('pt-BR')} KM rodados</span>
+                        </div>
+                    `;
+                });
+                if(rankingArray.length === 0 || rankingArray[0].totalKm === 0) {
+                    rankingDiv.innerHTML = '<p class="text-xs text-gray-400">Ainda sem quilometragem registada nas utilizações.</p>';
+                }
+
             } catch (e) {
                 console.error("Erro ao carregar dados do painel:", e);
             }
-        }
-
-        function exportarCSV(tipo) {
-            alert("A exportação de dados para CSV está pronta para ser acionada.");
         }
     </script>
 </body>
