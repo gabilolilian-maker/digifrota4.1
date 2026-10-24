@@ -102,7 +102,7 @@
                         </select>
                     </div>
 
-                    <!-- CHECKLIST -->
+                    <!-- CHECKLIST ATUALIZADO -->
                     <div class="border-2 border-gray-200 rounded-2xl p-3 bg-gray-50 space-y-2">
                         <label class="block label-maior text-gray-800 uppercase flex items-center justify-between">
                             <span><i class="fa-solid fa-list-check text-blue-600"></i> Checklist do Veículo</span>
@@ -116,51 +116,78 @@
                         </div>
 
                         <div id="container-checklist" class="space-y-2">
+                            <!-- 1. Funilaria e Lataria -->
                             <details class="bg-white rounded-xl border border-gray-300 text-sm">
                                 <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
                                     <span>🛠️ Funilaria e Lataria</span>
                                     <i class="fa-solid fa-chevron-down text-gray-500"></i>
                                 </summary>
                                 <div class="p-3 space-y-3 border-t border-gray-200">
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Amassado/Arranhão" class="w-5 h-5"> Amassado / Arranhão</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Para-choque Danificado" class="w-5 h-5"> Para-choque danificado</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Vidro/Retrovisor Trincado" class="w-5 h-5"> Vidro / Retrovisor trincado</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Amassado" class="w-5 h-5"> Amassado</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Arranhão" class="w-5 h-5"> Arranhão</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Vidro quebrado" class="w-5 h-5"> Vidro quebrado</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Vidro trincado" class="w-5 h-5"> Vidro trincado</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Riscado" class="w-5 h-5"> Riscado</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Para-choque solto" class="w-5 h-5"> Para-choque solto</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Para-choque quebrado" class="w-5 h-5"> Para-choque quebrado</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Porta emperrada" class="w-5 h-5"> Porta emperrada / não abre</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Retrovisor solto" class="w-5 h-5"> Retrovisor solto ou com folga</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Funilaria: Borracha rasgada" class="w-5 h-5"> Borracha de vedação rasgada</label>
                                 </div>
                             </details>
 
+                            <!-- 2. Iluminação e Sinalização -->
                             <details class="bg-white rounded-xl border border-gray-300 text-sm">
                                 <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
                                     <span>💡 Iluminação e Sinalização</span>
                                     <i class="fa-solid fa-chevron-down text-gray-500"></i>
                                 </summary>
                                 <div class="p-3 space-y-3 border-t border-gray-200">
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Farol Queimado" class="w-5 h-5"> Farol queimado</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Luz de Freio/Lanterna" class="w-5 h-5"> Luz de freio / Lanterna</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Seta com Defeito" class="w-5 h-5"> Seta com defeito</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Farol (luz alta/baixa com defeito)" class="w-5 h-5"> Farol (luz alta/baixa com defeito)</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Luz de freio" class="w-5 h-5"> Luz de freio</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Lanterna" class="w-5 h-5"> Lanterna</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Seta" class="w-5 h-5"> Seta</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Luz de ré" class="w-5 h-5"> Luz de ré com defeito</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Iluminação: Luz de placa" class="w-5 h-5"> Luz de placa queimada</label>
                                 </div>
                             </details>
 
+                            <!-- 3. Conforto e Acessórios -->
                             <details class="bg-white rounded-xl border border-gray-300 text-sm">
                                 <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
                                     <span>❄️ Conforto e Acessórios</span>
                                     <i class="fa-solid fa-chevron-down text-gray-500"></i>
                                 </summary>
                                 <div class="p-3 space-y-3 border-t border-gray-200">
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Ar Condicionado" class="w-5 h-5"> Ar-condicionado ruim</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Vidro/Trava" class="w-5 h-5"> Vidro / Trava elétrica</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Limpador Para-brisa" class="w-5 h-5"> Limpador de para-brisa</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Ar condicionado ruim" class="w-5 h-5"> Ar-condicionado ruim</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Vidros que não fecham ou não abrem" class="w-5 h-5"> Vidros que não fecham ou não abrem</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Comando do vidro" class="w-5 h-5"> Comando do vidro</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Banco" class="w-5 h-5"> Banco</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Quebra-sol" class="w-5 h-5"> Quebra-sol</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Limpador de para-brisa" class="w-5 h-5"> Limpador de para-brisa</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Jato de água" class="w-5 h-5"> Jato de água do para-brisa</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Cinto de segurança" class="w-5 h-5"> Cinto de segurança travando/danificado</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Conforto: Buzina" class="w-5 h-5"> Buzina não funciona</label>
                                 </div>
                             </details>
 
+                            <!-- 4. Motor e Mecânica -->
                             <details class="bg-white rounded-xl border border-gray-300 text-sm">
                                 <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
                                     <span>⚙️ Motor e Mecânica</span>
                                     <i class="fa-solid fa-chevron-down text-gray-500"></i>
                                 </summary>
                                 <div class="p-3 space-y-3 border-t border-gray-200">
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Pneu Murcho/Careca" class="w-5 h-5"> Pneu murcho / careca</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Freio Ruim" class="w-5 h-5"> Defeito / Barulho no freio</label>
-                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Luz no Painel" class="w-5 h-5"> Luz de alerta acesa no painel</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Rolamento" class="w-5 h-5"> Rolamento</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Freios" class="w-5 h-5"> Freios</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Freio estacionário" class="w-5 h-5"> Freio estacionário (freio de mão)</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Perda de potência" class="w-5 h-5"> Perda de potência</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Folga em volante" class="w-5 h-5"> Folga em volante</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Nível de óleo do motor baixo" class="w-5 h-5"> Nível de óleo do motor baixo</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Nível de fluido do radiador (água) baixo" class="w-5 h-5"> Nível de fluido do radiador (água) baixo</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Luz de advertência no painel" class="w-5 h-5"> Luz de advertência no painel</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Pneu murcho/careca/estepe" class="w-5 h-5"> Pneu murcho / careca / estepe faltando</label>
+                                    <label class="flex items-center gap-3"><input type="checkbox" name="chk_prob" value="Mecânica: Vazamento visível" class="w-5 h-5"> Vazamento visível no chão (óleo/água)</label>
                                 </div>
                             </details>
                         </div>
@@ -377,7 +404,6 @@
             return selecionados.length > 0 ? selecionados.join(" | ") : "Sem observações";
         }
 
-        // Função de compressão de imagem para celular (Evita travamentos de envio)
         function comprimirEConverterFoto(input) {
             const file = input.files[0];
             if (!file) return;
@@ -389,7 +415,6 @@
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     
-                    // Reduz para largura máxima de 800px mantendo a proporção
                     const MAX_WIDTH = 800;
                     const scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
@@ -397,7 +422,6 @@
                     
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     
-                    // Converte para JPEG comprimido (Qualidade 0.7)
                     const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
                     document.getElementById("modal-fotoBase64").value = compressedDataUrl;
                     document.getElementById("modal-label-foto").textContent = "Foto OK ✓";
@@ -510,7 +534,6 @@
                 return;
             }
 
-            // Altera visualmente o botão para mostrar que está enviando
             btnConcluir.disabled = true;
             btnConcluir.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
 
