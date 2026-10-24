@@ -24,7 +24,6 @@
 </head>
 <body class="bg-gray-100 min-h-screen pb-24 font-sans text-gray-900">
 
-    <!-- CABEÇALHO DO APP -->
     <header class="bg-blue-800 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
         <div class="flex items-center gap-2">
             <i class="fa-solid text-2xl fa-car-side"></i>
@@ -35,7 +34,6 @@
 
     <main class="max-w-md mx-auto p-4 space-y-4">
 
-        <!-- CABEÇALHO DE IDENTIFICAÇÃO DO APARELHO -->
         <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3 flex justify-between items-center shadow-sm">
             <div>
                 <span class="block text-[10px] uppercase font-bold text-blue-800">Aparelho / Lançador Padrão:</span>
@@ -56,8 +54,6 @@
                 </div>
 
                 <form id="form-viagem" onsubmit="salvarViagem(event)" class="space-y-4">
-                    
-                    <!-- Motorista -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Motorista</label>
                         <select id="motorista" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600 font-bold">
@@ -65,7 +61,6 @@
                         </select>
                     </div>
 
-                    <!-- Frota -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Frota / Veículo</label>
                         <select id="frota" required onchange="aoSelecionarFrota()" class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none focus:border-blue-600">
@@ -73,7 +68,6 @@
                         </select>
                     </div>
 
-                    <!-- Acompanhante -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Acompanhante (Opcional)</label>
                         <select id="acompanhante" class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none">
@@ -81,7 +75,6 @@
                         </select>
                     </div>
 
-                    <!-- Data e Hora -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block label-maior text-gray-700 uppercase mb-1">Data Saída</label>
@@ -93,7 +86,6 @@
                         </div>
                     </div>
 
-                    <!-- KM Saída -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1 text-blue-800">KM de Saída</label>
                         <div class="relative">
@@ -103,7 +95,6 @@
                         </div>
                     </div>
 
-                    <!-- Destino -->
                     <div>
                         <label class="block label-maior text-gray-700 uppercase mb-1">Destino</label>
                         <select id="destino" required class="w-full p-3.5 bg-gray-50 border-2 border-gray-300 rounded-xl outline-none">
@@ -111,7 +102,6 @@
                         </select>
                     </div>
 
-                    <!-- CHECKLIST -->
                     <div class="border-2 border-gray-200 rounded-2xl p-3 bg-gray-50 space-y-2">
                         <label class="block label-maior text-gray-800 uppercase flex items-center justify-between">
                             <span><i class="fa-solid fa-list-check text-blue-600"></i> Checklist do Veículo</span>
@@ -125,7 +115,6 @@
                         </div>
 
                         <div id="container-checklist" class="space-y-2">
-                            <!-- 1. Funilaria e Lataria -->
                             <details class="bg-white rounded-xl border border-gray-300 text-sm">
                                 <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
                                     <span>🛠️ Funilaria e Lataria</span>
@@ -145,7 +134,6 @@
                                 </div>
                             </details>
 
-                            <!-- 2. Iluminação e Sinalização -->
                             <details class="bg-white rounded-xl border border-gray-300 text-sm">
                                 <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
                                     <span>💡 Iluminação e Sinalização</span>
@@ -161,7 +149,6 @@
                                 </div>
                             </details>
 
-                            <!-- 3. Conforto e Acessórios -->
                             <details class="bg-white rounded-xl border border-gray-300 text-sm">
                                 <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
                                     <span>❄️ Conforto e Acessórios</span>
@@ -180,7 +167,6 @@
                                 </div>
                             </details>
 
-                            <!-- 4. Motor e Mecânica -->
                             <details class="bg-white rounded-xl border border-gray-300 text-sm">
                                 <summary class="p-3 font-bold text-gray-800 cursor-pointer flex justify-between items-center">
                                     <span>⚙️ Motor e Mecânica</span>
@@ -216,7 +202,9 @@
         <section id="aba-historico" class="hidden space-y-3">
             <h2 class="text-lg font-black text-gray-800 mb-2 px-1 flex justify-between items-center">
                 <span><i class="fa-solid fa-car text-blue-600"></i> Viagens em Andamento</span>
-                <button onclick="carregarHistorico()" class="text-sm text-blue-700 font-extrabold">Atualizar</button>
+                <button onclick="carregarHistorico()" class="bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded-xl text-xs flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate"></i> Atualizar
+                </button>
             </h2>
             <div id="lista-cards-historico" class="space-y-3">
                 <p class="text-center text-gray-500 text-base py-8">Carregando viagens ativas...</p>
@@ -224,7 +212,7 @@
         </section>
     </main>
 
-    <!-- MODAL PRIMEIRO ACESSO / CADASTRO DE PERFIL -->
+    <!-- MODAL PRIMEIRO ACESSO -->
     <div id="modal-cadastro-usuario" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm space-y-4 shadow-2xl">
             <h3 class="font-black text-blue-900 text-lg border-b pb-2 flex items-center gap-2">
@@ -391,6 +379,7 @@
                 secHist.classList.remove("hidden");
                 btnHist.className = "flex flex-col items-center gap-1 text-blue-700 font-extrabold p-1 text-xs";
                 btnNova.className = "flex flex-col items-center gap-1 text-gray-400 font-extrabold p-1 text-xs";
+                carregarHistorico(); // Atualiza automaticamente ao entrar na aba
             }
         }
 
@@ -558,6 +547,8 @@
 
         async function carregarHistorico() {
             const container = document.getElementById("lista-cards-historico");
+            container.innerHTML = '<p class="text-center text-gray-500 text-sm py-4"><i class="fa-solid fa-spinner fa-spin"></i> Atualizando...</p>';
+            
             try {
                 const res = await fetch(`${API_URL}?action=obterDadosFrotas`);
                 const dados = await res.json();
@@ -567,24 +558,27 @@
                     container.innerHTML = "";
                     viagensAtivas.forEach(v => {
                         container.innerHTML += `
-                            <div class="bg-white p-4 rounded-2xl border-2 border-gray-200 shadow-md space-y-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-black text-blue-900 text-lg"><i class="fa-solid fa-car-side text-blue-600"></i> ${v.frota}</span>
-                                    <span class="text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-900">${v.situacao}</span>
+                            <div class="bg-white p-4 rounded-2xl border-2 border-gray-200 shadow-md space-y-2">
+                                <div class="text-base font-black text-blue-900">
+                                    Frota: <span class="text-gray-800">${v.frota}</span>
                                 </div>
-                                <div class="text-sm text-gray-700 space-y-1.5 border-t border-b border-gray-100 py-2">
+                                <div class="text-sm text-gray-700 space-y-1">
                                     <p><strong>Motorista:</strong> ${v.motorista} ${v.acompanhante ? '/ ' + v.acompanhante : ''}</p>
                                     <p><strong>Destino:</strong> ${v.destino}</p>
                                     <p><strong>Saída:</strong> ${v.saida}</p>
                                 </div>
-                                <button onclick="abrirModalEncerrar(${v.linha}, '${v.frota}')" class="w-full bg-green-700 text-white font-extrabold text-base py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2">
+                                <button onclick="abrirModalEncerrar(${v.linha}, '${v.frota}')" class="w-full mt-2 bg-green-700 text-white font-extrabold text-sm py-3 rounded-xl shadow-md flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-flag-checkered"></i> Encerrar Viagem
                                 </button>
                             </div>
                         `;
                     });
-                } else { container.innerHTML = '<p class="text-center text-gray-500 text-base py-8 font-semibold">Nenhuma viagem em andamento no momento.</p>'; }
-            } catch (e) { container.innerHTML = '<p class="text-center text-red-500 text-base py-8 font-semibold">Erro ao carregar viagens.</p>'; }
+                } else { 
+                    container.innerHTML = '<p class="text-center text-gray-500 text-sm py-6 font-semibold">Nenhuma viagem em andamento no momento.</p>'; 
+                }
+            } catch (e) { 
+                container.innerHTML = '<p class="text-center text-red-500 text-sm py-6 font-semibold">Erro ao carregar viagens.</p>'; 
+            }
         }
 
         function abrirModalEncerrar(linha, frota) {
