@@ -83,11 +83,13 @@
                         </select>
                     </div>
 
+                    <!-- CHECKLIST COM MÚLTIPLA SELEÇÃO (CHECKBOXES) E SEM TEXTOS LATERAIS -->
                     <div class="pt-2">
                         <label class="font-bold text-gray-700 block mb-2 text-base"><i class="fa-solid fa-list-check text-blue-600"></i> Checklist do Veículo:</label>
                         
                         <div class="space-y-3 bg-gray-50 p-4 rounded-2xl border border-gray-200">
                             
+                            <!-- BOTÃO RÁPIDO BOM ESTADO -->
                             <div class="bg-emerald-50 border-2 border-emerald-500 p-3.5 rounded-xl flex items-center justify-between shadow-xs">
                                 <div class="flex items-center gap-2.5 text-emerald-900 font-black">
                                     <i class="fa-solid fa-circle-check text-xl text-emerald-600"></i>
@@ -101,157 +103,149 @@
                             <!-- MECÂNICA -->
                             <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-bold text-gray-800">🛠️ Mecânica: <span id="status-mecanica" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
+                                    <span class="font-bold text-gray-800">🛠️ Mecânica</span>
                                     <button type="button" onclick="alternarLeque('leque-mecanica')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
                                         <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-mecanica" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
-                                    <select id="chk-mecanica" onchange="atualizarStatusTexto('chk-mecanica', 'status-mecanica')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
-                                        <option value="Normal / OK">Nenhum problema (Tudo Certo)</option>
-                                        <option value="Ruídos na suspensão (estalos ou batidas secas)">Ruídos na suspensão (estalos ou batidas secas)</option>
-                                        <option value="Defeitos nos freios (assobio, pedal baixo ou trepidação)">Defeitos nos freios (assobio, pedal baixo ou trepidação)</option>
-                                        <option value="Problemas na embreagem/câmbio (marcha dura ou dificuldade de engate)">Problemas na embreagem/câmbio (marcha dura ou dificuldade)</option>
-                                        <option value="Vibrações incomuns no volante ou na carroceria">Vibrações incomuns no volante ou na carroceria</option>
-                                    </select>
+                                <div id="leque-mecanica" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-2">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione os problemas (múltipla escolha):</label>
+                                    <div class="space-y-1.5 text-xs">
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-mecanica" value="Ruídos na suspensão (estalos ou batidas secas)" class="w-4 h-4 rounded text-blue-600"> Ruídos na suspensão (estalos ou batidas secas)</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-mecanica" value="Defeitos nos freios (assobio, pedal baixo ou trepidação)" class="w-4 h-4 rounded text-blue-600"> Defeitos nos freios (assobio, pedal baixo ou trepidação)</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-mecanica" value="Problemas na embreagem/câmbio (marcha dura ou dificuldade de engate)" class="w-4 h-4 rounded text-blue-600"> Problemas na embreagem/câmbio (marcha dura ou dificuldade)</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-mecanica" value="Vibrações incomuns no volante ou na carroceria" class="w-4 h-4 rounded text-blue-600"> Vibrações incomuns no volante ou na carroceria</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- FLUIDOS -->
                             <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-bold text-gray-800">🛢️ Fluidos: <span id="status-fluidos" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
+                                    <span class="font-bold text-gray-800">🛢️ Fluidos e Lubrificantes</span>
                                     <button type="button" onclick="alternarLeque('leque-fluidos')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
                                         <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-fluidos" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
-                                    <select id="chk-fluidos" onchange="atualizarStatusTexto('chk-fluidos', 'status-fluidos')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
-                                        <option value="Níveis normais / OK">Nenhum problema (Tudo Certo)</option>
-                                        <option value="Óleo do motor baixo ou vencido">Óleo do motor baixo ou vencido</option>
-                                        <option value="Líquido de arrefecimento baixo ou sujo">Líquido de arrefecimento baixo ou sujo</option>
-                                        <option value="Fluido de freio baixo ou escurecido">Fluido de freio baixo ou escurecido</option>
-                                        <option value="Fluido da direção hidráulica baixo ou com vazamentos">Fluido da direção hidráulica baixo ou com vazamentos</option>
-                                    </select>
+                                <div id="leque-fluidos" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-2">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione os problemas (múltipla escolha):</label>
+                                    <div class="space-y-1.5 text-xs">
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-fluidos" value="Óleo do motor baixo ou vencido" class="w-4 h-4 rounded text-blue-600"> Óleo do motor baixo ou vencido</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-fluidos" value="Líquido de arrefecimento baixo ou sujo" class="w-4 h-4 rounded text-blue-600"> Líquido de arrefecimento baixo ou sujo</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-fluidos" value="Fluido de freio baixo ou escurecido" class="w-4 h-4 rounded text-blue-600"> Fluido de freio baixo ou escurecido</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-fluidos" value="Fluido da direção hidráulica baixo ou com vazamentos" class="w-4 h-4 rounded text-blue-600"> Fluido da direção hidráulica baixo ou com vazamentos</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- ELÉTRICA -->
                             <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-bold text-gray-800">⚡ Elétrica: <span id="status-eletrica" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
+                                    <span class="font-bold text-gray-800">⚡ Elétrica</span>
                                     <button type="button" onclick="alternarLeque('leque-eletrica')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
                                         <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-eletrica" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
-                                    <select id="chk-eletrica" onchange="atualizarStatusTexto('chk-eletrica', 'status-eletrica')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
-                                        <option value="Tudo funcionando / OK">Nenhum problema (Tudo Certo)</option>
-                                        <option value="Bateria com zinabre nos polos ou partida pesada">Bateria com zinabre nos polos ou partida pesada</option>
-                                        <option value="Luzes de advertência acesas no painel (injeção, óleo, etc.)">Luzes de advertência acesas no painel</option>
-                                        <option value="Vidros elétricos lentos ou travados">Vidros elétricos lentos ou travados</option>
-                                        <option value="Tomadas, USB e acendedor inoperantes">Tomadas, USB e acendedor inoperantes</option>
-                                    </select>
+                                <div id="leque-eletrica" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-2">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione os problemas (múltipla escolha):</label>
+                                    <div class="space-y-1.5 text-xs">
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-eletrica" value="Bateria com zinabre nos polos ou partida pesada" class="w-4 h-4 rounded text-blue-600"> Bateria com zinabre nos polos ou partida pesada</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-eletrica" value="Luzes de advertência acesas no painel (injeção, óleo, etc.)" class="w-4 h-4 rounded text-blue-600"> Luzes de advertência acesas no painel (injeção, óleo, etc.)</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-eletrica" value="Vidros elétricos lentos ou travados" class="w-4 h-4 rounded text-blue-600"> Vidros elétricos lentos ou travados</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-eletrica" value="Tomadas, USB e acendedor inoperantes" class="w-4 h-4 rounded text-blue-600"> Tomadas, USB e acendedor inoperantes</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- ILUMINAÇÃO -->
                             <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-bold text-gray-800">💡 Iluminação: <span id="status-iluminacao" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
+                                    <span class="font-bold text-gray-800">💡 Iluminação</span>
                                     <button type="button" onclick="alternarLeque('leque-iluminacao')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
                                         <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-iluminacao" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
-                                    <select id="chk-iluminacao" onchange="atualizarStatusTexto('chk-iluminacao', 'status-iluminacao')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
-                                        <option value="Tudo acendendo / OK">Nenhum problema (Tudo Certo)</option>
-                                        <option value="Faróis e lanternas queimados (alto, baixo, posição e placa)">Faróis e lanternas queimados</option>
-                                        <option value="Setas/piscas piscando rápido ou luz de ré queimada">Setas/piscas piscando rápido ou luz de ré queimada</option>
-                                        <option value="Luz de freio ou break-light queimados">Luz de freio ou break-light queimados</option>
-                                        <option value="Luzes internas do teto, porta-malas ou porta-luvas apagadas">Luzes internas apagadas</option>
-                                    </select>
+                                <div id="leque-iluminacao" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-2">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione os problemas (múltipla escolha):</label>
+                                    <div class="space-y-1.5 text-xs">
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-iluminacao" value="Faróis e lanternas queimados (alto, baixo, posição e placa)" class="w-4 h-4 rounded text-blue-600"> Faróis e lanternas queimados (alto, baixo, posição e placa)</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-iluminacao" value="Setas/piscas piscando rápido ou luz de ré queimada" class="w-4 h-4 rounded text-blue-600"> Setas/piscas piscando rápido ou luz de ré queimada</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-iluminacao" value="Luz de freio ou break-light queimados" class="w-4 h-4 rounded text-blue-600"> Luz de freio ou break-light queimados</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-iluminacao" value="Luzes internas do teto, porta-malas ou porta-luvas apagadas" class="w-4 h-4 rounded text-blue-600"> Luzes internas do teto, porta-malas ou porta-luvas apagadas</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- FUNILARIA -->
                             <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-bold text-gray-800">🎨 Funilaria: <span id="status-funilaria" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
+                                    <span class="font-bold text-gray-800">🎨 Funilaria e Pintura</span>
                                     <button type="button" onclick="alternarLeque('leque-funilaria')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
                                         <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-funilaria" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
-                                    <select id="chk-funilaria" onchange="atualizarStatusTexto('chk-funilaria', 'status-funilaria')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
-                                        <option value="Sem avarias / OK">Nenhum problema (Tudo Certo)</option>
-                                        <option value="Riscos profundos, amassados ou arranhões visíveis">Riscos profundos, amassados ou arranhões visíveis</option>
-                                        <option value="Portas, capô ou porta-malas desalinhados">Portas, capô ou porta-malas desalinhados</option>
-                                        <option value="Pontos de ferrugem ou corrosão na lataria">Pontos de ferrugem ou corrosão na lataria</option>
-                                        <option value="Para-choques quebrados, soltos ou desalinhados">Para-choques quebrados, soltos ou desalinhados</option>
-                                    </select>
+                                <div id="leque-funilaria" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-2">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione os problemas (múltipla escolha):</label>
+                                    <div class="space-y-1.5 text-xs">
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-funilaria" value="Riscos profundos, amassados ou arranhões visíveis" class="w-4 h-4 rounded text-blue-600"> Riscos profundos, amassados ou arranhões visíveis</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-funilaria" value="Portas, capô ou porta-malas desalinhados" class="w-4 h-4 rounded text-blue-600"> Portas, capô ou porta-malas desalinhados</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-funilaria" value="Pontos de ferrugem ou corrosão na lataria" class="w-4 h-4 rounded text-blue-600"> Pontos de ferrugem ou corrosão na lataria</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-funilaria" value="Para-choques quebrados, soltos ou desalinhados" class="w-4 h-4 rounded text-blue-600"> Para-choques quebrados, soltos ou desalinhados</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- VIDROS -->
                             <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-bold text-gray-800">🪟 Vidros: <span id="status-vidros" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
+                                    <span class="font-bold text-gray-800">🪟 Vidros</span>
                                     <button type="button" onclick="alternarLeque('leque-vidros')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
                                         <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-vidros" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
-                                    <select id="chk-vidros" onchange="atualizarStatusTexto('chk-vidros', 'status-vidros')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
-                                        <option value="Integros / OK">Nenhum problema (Tudo Certo)</option>
-                                        <option value="Parabrisa ou vidros com trincas e rachaduras">Parabrisa ou vidros com trincas e rachaduras</option>
-                                        <option value="Palhetas do limpador ressecadas ou rasgadas">Palhetas do limpador ressecadas ou rasgadas</option>
-                                        <option value="Limpador traseiro ou esguichos d'água entupidos/com defeito">Limpador traseiro ou esguichos com defeito</option>
-                                    </select>
+                                <div id="leque-vidros" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-2">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione os problemas (múltipla escolha):</label>
+                                    <div class="space-y-1.5 text-xs">
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-vidros" value="Parabrisa ou vidros com trincas e rachaduras" class="w-4 h-4 rounded text-blue-600"> Parabrisa ou vidros com trincas e rachaduras</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-vidros" value="Palhetas do limpador ressecadas ou rasgadas" class="w-4 h-4 rounded text-blue-600"> Palhetas do limpador ressecadas ou rasgadas</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-vidros" value="Limpador traseiro ou esguichos d'água entupidos/com defeito" class="w-4 h-4 rounded text-blue-600"> Limpador traseiro ou esguichos d'água entupidos/com defeito</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- AR CONDICIONADO -->
                             <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-bold text-gray-800">❄️ Ar Condicionado: <span id="status-ar" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
+                                    <span class="font-bold text-gray-800">❄️ Ar Condicionado</span>
                                     <button type="button" onclick="alternarLeque('leque-ar')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
                                         <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-ar" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
-                                    <select id="chk-ar" onchange="atualizarStatusTexto('chk-ar', 'status-ar')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
-                                        <option value="Funcionando bem / OK">Nenhum problema (Tudo Certo)</option>
-                                        <option value="Ar não gela ou demora muito para resfriar">Ar não gela ou demora muito para resfriar</option>
-                                        <option value="Mau cheiro (mofo/poeira) ao ligar o sistema">Mau cheiro (mofo/poeira) ao ligar o sistema</option>
-                                        <option value="Ruído excessivo vindo do compressor do ar">Ruído excessivo vindo do compressor do ar</option>
-                                    </select>
+                                <div id="leque-ar" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-2">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione os problemas (múltipla escolha):</label>
+                                    <div class="space-y-1.5 text-xs">
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-ar" value="Ar não gela ou demora muito para resfriar" class="w-4 h-4 rounded text-blue-600"> Ar não gela ou demora muito para resfriar</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-ar" value="Mau cheiro (mofo/poeira) ao ligar o sistema" class="w-4 h-4 rounded text-blue-600"> Mau cheiro (mofo/poeira) ao ligar o sistema</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-ar" value="Ruído excessivo vindo do compressor do ar" class="w-4 h-4 rounded text-blue-600"> Ruído excessivo vindo do compressor do ar</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- CINTOS -->
                             <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-bold text-gray-800">🛡️ Cintos: <span id="status-cintos" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
+                                    <span class="font-bold text-gray-800">🛡️ Cintos de Segurança</span>
                                     <button type="button" onclick="alternarLeque('leque-cintos')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
                                         <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-cintos" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
-                                    <select id="chk-cintos" onchange="atualizarStatusTexto('chk-cintos', 'status-cintos')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
-                                        <option value="Seguros / OK">Nenhum problema (Tudo Certo)</option>
-                                        <option value="Falha no travamento do fecho ou no recuo do cinto">Falha no travamento do fecho ou recuo</option>
-                                        <option value="Tiras de tecido desfiadas ou rasgadas">Tiras de tecido desfiadas ou rasgadas</option>
-                                        <option value="Pontos de fixação/ancoragem frouxos">Pontos de fixação/ancoragem frouxos</option>
-                                    </select>
+                                <div id="leque-cintos" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-2">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione os problemas (múltipla escolha):</label>
+                                    <div class="space-y-1.5 text-xs">
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-cintos" value="Falha no travamento do fecho ou no recuo do cinto" class="w-4 h-4 rounded text-blue-600"> Falha no travamento do fecho ou no recuo do cinto</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-cintos" value="Tiras de tecido desfiadas ou rasgadas" class="w-4 h-4 rounded text-blue-600"> Tiras de tecido desfiadas ou rasgadas</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="chk-cintos" value="Pontos de fixação/ancoragem frouxos" class="w-4 h-4 rounded text-blue-600"> Pontos de fixação/ancoragem frouxos</label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -337,7 +331,6 @@
         </div>
     </div>
 
-    <!-- MODAL ENCERRAMENTO COM CÂMARA / FOTO COMPACTADA AUTOMATICAMENTE -->
     <div id="modal-encerrar" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full space-y-4 shadow-2xl">
             <h3 class="font-black text-base text-blue-900 border-b pb-2 flex items-center gap-2">
@@ -351,7 +344,6 @@
                 </div>
                 <div>
                     <label class="font-bold text-gray-700 block mb-1">Foto do Hodômetro:</label>
-                    <!-- Input nativo de câmara invisível acionado pelo botão -->
                     <input type="file" id="input-foto-hodometro" accept="image/*" capture="environment" class="hidden" onchange="processarFotoHodometro(event)">
                     
                     <button type="button" id="btn-foto-hodometro" onclick="document.getElementById('input-foto-hodometro').click()" class="w-full bg-blue-50 text-blue-800 font-bold p-3.5 rounded-xl border border-dashed border-blue-300 flex justify-center items-center gap-2 text-sm">
@@ -414,36 +406,9 @@
         }
 
         function marcarTudoOk() {
-            document.getElementById("chk-mecanica").selectedIndex = 0;
-            document.getElementById("chk-fluidos").selectedIndex = 0;
-            document.getElementById("chk-eletrica").selectedIndex = 0;
-            document.getElementById("chk-iluminacao").selectedIndex = 0;
-            document.getElementById("chk-funilaria").selectedIndex = 0;
-            document.getElementById("chk-vidros").selectedIndex = 0;
-            document.getElementById("chk-ar").selectedIndex = 0;
-            document.getElementById("chk-cintos").selectedIndex = 0;
-
-            ['mecanica', 'fluidos', 'eletrica', 'iluminacao', 'funilaria', 'vidros', 'ar', 'cintos'].forEach(item => {
-                const span = document.getElementById(`status-${item}`);
-                span.textContent = "Tudo Certo (OK)";
-                span.className = "text-emerald-600 font-extrabold";
-            });
-
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
             mostrarAvisoDigiFrota("Veículo marcado como em bom estado de conservação (Tudo OK)!");
-        }
-
-        function atualizarStatusTexto(selectId, spanId) {
-            const sel = document.getElementById(selectId);
-            const span = document.getElementById(spanId);
-            const valor = sel.value;
-
-            if(valor.includes("Nenhum") || valor.includes("OK") || valor.includes("Normal") || valor.includes("Sem avarias") || valor.includes("Integros") || valor.includes("Funcionando") || valor.includes("Seguros")) {
-                span.textContent = "Tudo Certo (OK)";
-                span.className = "text-emerald-600 font-extrabold";
-            } else {
-                span.textContent = "⚠️ " + valor;
-                span.className = "text-amber-600 font-extrabold";
-            }
         }
 
         function mudarAba(aba) {
@@ -559,17 +524,16 @@
             const m1 = document.getElementById("saida-motorista1").value;
             const m2 = document.getElementById("saida-motorista2").value;
             
-            const mecanica = document.getElementById("chk-mecanica").value;
-            const fluidos = document.getElementById("chk-fluidos").value;
-            const eletrica = document.getElementById("chk-eletrica").value;
-            const iluminacao = document.getElementById("chk-iluminacao").value;
-            const funilaria = document.getElementById("chk-funilaria").value;
-            const vidros = document.getElementById("chk-vidros").value;
-            const ar = document.getElementById("chk-ar").value;
-            const cintos = document.getElementById("chk-cintos").value;
+            // Recolhe todos os checkboxes marcados
+            let itensChecklist = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                itensChecklist.push(cb.value);
+            });
+
+            let statusChecklist = itensChecklist.length > 0 ? itensChecklist.join(" | ") : "Tudo Certo (OK)";
             const obsExtra = document.getElementById("saida-obs").value.trim();
 
-            let obsFinal = `Mecânica: ${mecanica} | Fluidos: ${fluidos} | Elétrica: ${eletrica} | Iluminação: ${iluminacao} | Funilaria: ${funilaria} | Vidros: ${vidros} | Ar Cond.: ${ar} | Cintos: ${cintos}`;
+            let obsFinal = `Checklist: ${statusChecklist}`;
             if(obsExtra) obsFinal += ` | Obs: ${obsExtra}`;
 
             if(!m1) {
@@ -606,6 +570,7 @@
                 document.getElementById("saida-destino").value = "";
                 document.getElementById("saida-obs").value = "";
                 document.getElementById("saida-frota").value = "";
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
             } catch(e) {
                 mostrarAvisoDigiFrota("Erro ao conectar com o servidor.");
             } finally {
@@ -629,11 +594,20 @@
                     return;
                 }
 
+                // Coloca a viagem do motorista atual no topo da lista
+                const motoristaAtual = localStorage.getItem("digifrota_nome") || "";
+                ativas.sort((a, b) => {
+                    if (a.motorista.includes(motoristaAtual) && !b.motorista.includes(motoristaAtual)) return -1;
+                    if (!a.motorista.includes(motoristaAtual) && b.motorista.includes(motoristaAtual)) return 1;
+                    return 0;
+                });
+
                 ativas.forEach(v => {
+                    const eDoMotorista = v.motorista.includes(motoristaAtual);
                     div.innerHTML += `
-                        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex justify-between items-center">
+                        <div class="bg-gray-50 p-4 rounded-2xl border ${eDoMotorista ? 'border-blue-400 bg-blue-50/30' : 'border-gray-200'} flex justify-between items-center shadow-xs">
                             <div>
-                                <span class="font-black text-blue-900 text-base">Frota ${v.frota}</span>
+                                <span class="font-black text-blue-900 text-base">Frota ${v.frota} ${eDoMotorista ? '<span class="text-xs bg-blue-700 text-white px-2 py-0.5 rounded-full ml-1">Sua Viagem</span>' : ''}</span>
                                 <div class="text-gray-700 text-sm"><strong>Destino:</strong> ${v.destino}</div>
                                 <div class="text-gray-500 text-xs">Motorista: ${v.motorista}</div>
                             </div>
@@ -663,7 +637,6 @@
             document.getElementById("modal-encerrar").classList.add("hidden");
         }
 
-        // COMPRESSÃO AUTOMÁTICA DA FOTO DO HODÔMETRO
         function processarFotoHodometro(event) {
             const arquivo = event.target.files[0];
             if (!arquivo) return;
@@ -673,7 +646,7 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800; // Limite ideal para leveza e clareza
+                    const MAX_WIDTH = 800;
                     const MAX_HEIGHT = 800;
                     let width = img.width;
                     let height = img.height;
@@ -695,7 +668,6 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // Converte para JPEG compactado a 70% de qualidade automaticamente
                     fotoHodometroBase64 = canvas.toDataURL('image/jpeg', 0.7);
 
                     document.getElementById("label-foto").textContent = "Foto Compactada OK ✓";
