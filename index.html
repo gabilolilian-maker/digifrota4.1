@@ -98,7 +98,7 @@
                         <input type="number" id="kmSaida" placeholder="Digite ou confirme o KM..." class="w-full border rounded-lg p-3 text-base bg-gray-50" required>
                     </div>
 
-                    <!-- Checklist / Observações Detalhado em Cascata (Baseado no histórico real) -->
+                    <!-- Checklist / Observações Detalhado em Cascata -->
                     <div class="mb-5 bg-gray-50 p-4 border rounded-xl space-y-4">
                         <label class="block text-sm font-bold text-gray-800 uppercase">Checklist do Veículo:</label>
                         
@@ -426,14 +426,14 @@
                 return;
             }
 
-            // Validação inteligente do KM de Saída
+            // Validação do KM de Saída
             let kmInput = document.getElementById('kmSaida');
             let kmAtualDigitado = parseFloat(kmInput.value);
             let kmUltimoRegistrado = parseFloat(kmInput.dataset.kmUltimo);
             let alertaKmMenor = "";
 
             if (!isNaN(kmUltimoRegistrado) && kmAtualDigitado < kmUltimoRegistrado) {
-                let confirmar = confirm(`⚠️ ATENÇÃO: O KM digitado (${kmAtualDigitado}) é MENOR que o último KM registrado desta frota (${kmUltimoRegistrado}). Deseja realmente prosseguir?`);
+                let confirmar = confirm(`DigiFrota diz: O KM digitado (${kmAtualDigitado}) é MENOR que o último KM registrado desta frota (${kmUltimoRegistrado}). Deseja realmente prosseguir?`);
                 if (!confirmar) {
                     return;
                 }
