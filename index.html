@@ -37,7 +37,7 @@
     <!-- ÁREA DE PERFIL / MOTORISTA -->
     <div class="bg-white border-b px-5 py-3 flex justify-between items-center shadow-xs">
         <div class="text-xs">
-            <span class="text-gray-400 font-bold block text-[10px] uppercase">Motorista / Aparelho:</span>
+            <span class="text-gray-400 font-bold block text-[10px] uppercase">Motorista Principal (Aparelho):</span>
             <span id="label-motorista" class="font-black text-blue-900">Não identificado</span>
         </div>
         <button onclick="abrirModalPerfil()" class="bg-blue-50 text-blue-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-blue-100 shadow-xs flex items-center gap-1.5">
@@ -56,6 +56,13 @@
                 </h2>
 
                 <div class="space-y-3 text-xs">
+                    <!-- CAMPO DE MOTORISTA NA SAÍDA (Permite alterar ou colocar outro motorista no lançamento) -->
+                    <div>
+                        <label class="font-bold text-gray-700 block mb-1">Motorista da Viagem (Responsável):</label>
+                        <input type="text" id="saida-motorista" placeholder="Nome do motorista..." class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <span class="text-[10px] text-gray-400 mt-0.5 block">Se estiver a lançar por outro colega, altere o nome aqui.</span>
+                    </div>
+
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">Selecione o Veículo (Frota):</label>
                         <select id="saida-frota" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
@@ -242,7 +249,9 @@
             const tel = localStorage.getItem("digifrota_tel") || "";
             if (nome) {
                 document.getElementById("label-motorista").textContent = `${nome} (${tel})`;
+                document.getElementById("saida-motorista").value = nome; // Pré-preenche o motorista no formulário de saída
             } else {
+                document.getElementById("label-motorista").textContent = "Não identificado";
                 abrirModalPerfil();
             }
         }
@@ -260,6 +269,7 @@
             localStorage.setItem("digifrota_nome", nome);
             localStorage.setItem("digifrota_tel", tel);
             document.getElementById("label-motorista").textContent = `${nome} (${tel})`;
+            document.getElementById("saida-motorista").value = nome; // Atualiza também no campo de saída
             document.getElementById("modal-perfil").classList.add("hidden");
             mostrarAvisoDigiFrota("Perfil salvo com sucesso!");
         }
@@ -284,7 +294,7 @@
             const frota = document.getElementById("saida-frota").value;
             const km = document.getElementById("saida-km").value;
             const destino = document.getElementById("saida-destino").value;
-            const motorista = localStorage.getItem("digifrota_nome") || "Não identificado";
+            const motorista = document.getElementById("saida-motorista").value.trim() || localStorage.getItem("digifrota_nome") || "Não identificado";
             const obs = document.getElementById("saida-obs").value;
 
             if(!frota || !km || !destino) {
