@@ -9,20 +9,20 @@
     <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 font-sans pb-20">
+<body class="bg-gray-100 font-sans text-base pb-24">
 
     <!-- Cabeçalho Principal -->
-    <header class="bg-blue-900 text-white p-4 shadow-md flex justify-between items-center">
+    <header class="bg-blue-900 text-white p-5 shadow-md flex justify-between items-center">
         <div class="flex items-center space-x-3">
-            <i class="fa-solid fa-truck-medical text-2xl"></i>
+            <i class="fa-solid fa-truck-medical text-3xl"></i>
             <div>
-                <h1 class="text-lg font-bold">DigiFrota 4.0</h1>
+                <h1 class="text-xl font-bold">DigiFrota 4.0</h1>
                 <p class="text-xs text-blue-200">SAÚDE ARAÇATUBA</p>
             </div>
         </div>
         <div class="flex items-center space-x-3">
-            <span id="status-conexao" class="px-2 py-1 text-xs bg-green-500 text-white rounded-full">Online</span>
-            <button onclick="abrirModalPerfil()" class="bg-blue-800 hover:bg-blue-700 text-xs px-3 py-2 rounded-lg flex items-center space-x-1">
+            <span id="status-conexao" class="px-3 py-1 text-xs bg-green-500 text-white rounded-full font-semibold">Online</span>
+            <button onclick="abrirModalPerfil()" class="bg-blue-800 hover:bg-blue-700 text-sm px-4 py-2.5 rounded-lg flex items-center space-x-2 font-medium">
                 <i class="fa-solid fa-user-gear"></i>
                 <span>Perfil</span>
             </button>
@@ -30,10 +30,10 @@
     </header>
 
     <!-- Informações do Motorista Padrão no Aparelho -->
-    <div class="bg-white border-b px-4 py-2 text-sm text-gray-700 flex justify-between items-center shadow-sm">
+    <div class="bg-white border-b px-5 py-3 text-base text-gray-700 flex justify-between items-center shadow-sm">
         <div>
-            <span class="text-xs text-gray-500 block">MOTORISTA PADRÃO (APARELHO):</span>
-            <span id="label-motorista-padrao" class="font-bold text-blue-900">Não identificado</span>
+            <span class="text-xs text-gray-500 block uppercase font-semibold">Motorista Padrão (Aparelho):</span>
+            <span id="label-motorista-padrao" class="font-bold text-blue-900 text-lg">Não identificado</span>
         </div>
     </div>
 
@@ -41,93 +41,130 @@
     <main class="p-4 max-w-xl mx-auto">
 
         <!-- ABA 1: REGISTRAR SAÍDA -->
-        <section id="aba-saida" class="space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow-md border-t-4 border-blue-900">
-                <h2 class="text-md font-bold text-blue-900 mb-3 flex items-center">
+        <section id="aba-saida" class="space-y-5">
+            <div class="bg-white p-5 rounded-xl shadow-md border-t-4 border-blue-900">
+                <h2 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
                     <i class="fa-solid fa-arrow-up-from-bracket mr-2"></i> REGISTRAR SAÍDA
                 </h2>
 
                 <form id="form-saida" onsubmit="enviarSaida(event)">
                     <!-- Motorista Principal -->
-                    <div class="mb-3">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Motorista Principal (Motorista 1):</label>
-                        <select id="motorista1" class="w-full border rounded-lg p-2 text-sm bg-gray-50" required>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Motorista Principal (Motorista 1):</label>
+                        <select id="motorista1" class="w-full border rounded-lg p-3 text-base bg-gray-50" required>
                             <option value="">Carregando motoristas...</option>
                         </select>
                     </div>
 
                     <!-- Segundo Motorista -->
-                    <div class="mb-3">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Segundo Motorista / Acompanhante (Opcional):</label>
-                        <select id="motorista2" class="w-full border rounded-lg p-2 text-sm bg-gray-50">
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Segundo Motorista / Acompanhante (Opcional):</label>
+                        <select id="motorista2" class="w-full border rounded-lg p-3 text-base bg-gray-50">
                             <option value="Nenhum">Nenhum (Apenas 1 motorista)</option>
                         </select>
                     </div>
 
                     <!-- Seleção de Frota -->
-                    <div class="mb-3">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Selecione o Veículo (Frota):</label>
-                        <select id="frota" class="w-full border rounded-lg p-2 text-sm bg-gray-50" required onchange="atualizarKmSaida()">
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Selecione o Veículo (Frota):</label>
+                        <select id="frota" class="w-full border rounded-lg p-3 text-base bg-gray-50" required onchange="atualizarKmSaida()">
                             <option value="">Carregando frotas...</option>
                         </select>
                     </div>
 
                     <!-- Data e Hora de Saída -->
-                    <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div class="grid grid-cols-2 gap-3 mb-4">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Data de Saída:</label>
-                            <input type="date" id="dataSaida" class="w-full border rounded-lg p-2 text-sm bg-gray-50" required>
+                            <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Data de Saída:</label>
+                            <input type="date" id="dataSaida" class="w-full border rounded-lg p-3 text-base bg-gray-50" required>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Hora de Saída:</label>
-                            <input type="time" id="horaSaida" class="w-full border rounded-lg p-2 text-sm bg-gray-50" required>
+                            <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Hora de Saída:</label>
+                            <input type="time" id="horaSaida" class="w-full border rounded-lg p-3 text-base bg-gray-50" required>
                         </div>
                     </div>
 
                     <!-- Destinos (Checkboxes Múltiplos) -->
-                    <div class="mb-3">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Destino(s) da Viagem (Selecione um ou mais):</label>
-                        <div id="container-destinos" class="border rounded-lg p-3 bg-gray-50 max-h-44 overflow-y-auto space-y-2">
-                            <p class="text-xs text-gray-500">Carregando destinos...</p>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Destino(s) da Viagem (Selecione um ou mais):</label>
+                        <div id="container-destinos" class="border rounded-lg p-3 bg-gray-50 max-h-48 overflow-y-auto space-y-2">
+                            <p class="text-sm text-gray-500">Carregando destinos...</p>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">💡 Marque uma ou mais cidades. Serão gravadas separadas por " / ".</p>
                     </div>
 
                     <!-- KM de Saída -->
-                    <div class="mb-3">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">KM de Saída (Hodômetro):</label>
-                        <input type="number" id="kmSaida" placeholder="Digite ou confirme o KM..." class="w-full border rounded-lg p-2 text-sm bg-gray-50" required>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 uppercase mb-1">KM de Saída (Hodômetro):</label>
+                        <input type="number" id="kmSaida" placeholder="Digite ou confirme o KM..." class="w-full border rounded-lg p-3 text-base bg-gray-50" required>
                     </div>
 
-                    <!-- Checklist / Observações Integrado -->
-                    <div class="mb-4 bg-gray-50 p-3 border rounded-lg space-y-3">
-                        <label class="block text-xs font-bold text-gray-700 uppercase">Checklist do Veículo:</label>
+                    <!-- Checklist / Observações Detalhado em Cascata -->
+                    <div class="mb-5 bg-gray-50 p-4 border rounded-xl space-y-4">
+                        <label class="block text-sm font-bold text-gray-800 uppercase">Checklist do Veículo:</label>
                         
                         <!-- Atalho Tudo Certo -->
-                        <div class="flex items-center bg-green-50 border border-green-200 p-2.5 rounded-lg">
-                            <input type="checkbox" id="check-tudo-ok" checked onchange="alternarChecklistGeral(this)" class="w-4 h-4 text-green-600 rounded">
-                            <label for="check-tudo-ok" class="ml-2 text-sm font-bold text-green-800 cursor-pointer">✅ Veículo 100% OK / Sem Observações</label>
+                        <div class="flex items-center bg-green-50 border border-green-300 p-3 rounded-xl shadow-sm">
+                            <input type="checkbox" id="check-tudo-ok" checked onchange="alternarChecklistGeral(this)" class="w-5 h-5 text-green-600 rounded">
+                            <label for="check-tudo-ok" class="ml-3 text-base font-bold text-green-900 cursor-pointer">✅ Veículo 100% OK / Sem Observações</label>
                         </div>
 
-                        <!-- Detalhes do Checklist (Oculto se tudo estiver OK) -->
-                        <div id="detalhes-checklist" class="hidden space-y-2 pt-2 border-t">
-                            <p class="text-xs text-gray-600 font-semibold">Marque itens com pendência ou observação:</p>
-                            <div class="grid grid-cols-2 gap-2 text-xs">
-                                <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pneus OK"><span>Pneus</span></label>
-                                <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Lanternas/Faróis OK"><span>Faróis / Lanternas</span></label>
-                                <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Nível de Óleo/Água OK"><span>Óleo / Água</span></label>
-                                <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Limpeza Interna OK"><span>Limpeza Interna</span></label>
+                        <!-- Detalhes do Checklist em Cascata por Grupo -->
+                        <div id="detalhes-checklist" class="hidden space-y-3 pt-2 border-t">
+                            <p class="text-xs text-red-600 font-bold uppercase">Marque abaixo itens com pendência ou avaria:</p>
+                            
+                            <!-- Grupo Pneus -->
+                            <div class="bg-white p-3 rounded-lg border shadow-sm">
+                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-circle-dot mr-1"></i> Pneus</span>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pneu Furado" class="w-4 h-4"><span>Pneu Furado</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pneu Murcho" class="w-4 h-4"><span>Pneu Murcho</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pneu Gasto/Liso" class="w-4 h-4"><span>Pneu Gasto / Liso</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Estepe ausente/danificado" class="w-4 h-4"><span>Estepe Ruim</span></label>
+                                </div>
+                            </div>
+
+                            <!-- Grupo Elétrico -->
+                            <div class="bg-white p-3 rounded-lg border shadow-sm">
+                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-bolt mr-1"></i> Elétrico e Iluminação</span>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Farol Queimado/Fraco" class="w-4 h-4"><span>Farol Queimado</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Lanterna Queimada" class="w-4 h-4"><span>Lanterna Queimada</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Bateria Fraca" class="w-4 h-4"><span>Bateria Fraca</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Painel com Luz de Anomalia" class="w-4 h-4"><span>Luz no Painel</span></label>
+                                </div>
+                            </div>
+
+                            <!-- Grupo Mecânica e Fluidos -->
+                            <div class="bg-white p-3 rounded-lg border shadow-sm">
+                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-gears mr-1"></i> Mecânica e Fluidos</span>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Nível de Óleo Baixo" class="w-4 h-4"><span>Óleo Baixo</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Água do Radiador Baixa" class="w-4 h-4"><span>Água Radiador Baixa</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Vazamento Identificado" class="w-4 h-4"><span>Vazamento</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Ruído no Motor" class="w-4 h-4"><span>Ruído no Motor</span></label>
+                                </div>
+                            </div>
+
+                            <!-- Grupo Freios e Direção -->
+                            <div class="bg-white p-3 rounded-lg border shadow-sm">
+                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-car-burst mr-1"></i> Freios, Suspensão e Direção</span>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Freio Esponjoso/Baixo" class="w-4 h-4"><span>Freio Ruim</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Direção Pesada/Puxando" class="w-4 h-4"><span>Direção Puxando</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Vibração Excessiva" class="w-4 h-4"><span>Vibração</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Limpeza Interna Ruim" class="w-4 h-4"><span>Limpeza Interna</span></label>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Campo de Observações Adicionais -->
+                        <!-- Observações Adicionais -->
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Observações / Avarias (Opcional):</label>
-                            <input type="text" id="obs-detalhada" placeholder="Ex: Farol esquerdo queimado..." class="w-full border rounded-lg p-2 text-xs bg-white">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Outras Observações / Avarias (Opcional):</label>
+                            <input type="text" id="obs-detalhada" placeholder="Ex: Pequeno arranhão na porta..." class="w-full border rounded-lg p-3 text-base bg-white">
                         </div>
                     </div>
 
-                    <button type="submit" id="btn-registrar" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg shadow transition flex justify-center items-center">
+                    <button type="submit" id="btn-registrar" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-4 rounded-xl shadow-lg transition flex justify-center items-center text-lg">
                         <span>Registrar Saída</span>
                     </button>
                 </form>
@@ -136,17 +173,17 @@
 
         <!-- ABA 2: EM ANDAMENTO -->
         <section id="aba-andamento" class="space-y-4 hidden">
-            <div class="bg-white p-4 rounded-xl shadow-md border-t-4 border-blue-900">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-md font-bold text-blue-900 flex items-center">
+            <div class="bg-white p-5 rounded-xl shadow-md border-t-4 border-blue-900">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-blue-900 flex items-center">
                         <i class="fa-solid fa-truck-moving mr-2"></i> VIAGENS EM ANDAMENTO
                     </h2>
-                    <button onclick="carregarViagensEmAndamento()" class="text-xs bg-gray-200 hover:bg-gray-300 px-2.5 py-1.5 rounded-lg">
+                    <button onclick="carregarViagensEmAndamento()" class="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded-lg font-medium">
                         <i class="fa-solid fa-rotate"></i> Atualizar
                     </button>
                 </div>
                 <div id="lista-viagens-ativas" class="space-y-3">
-                    <p class="text-sm text-gray-500 text-center py-4">Carregando viagens...</p>
+                    <p class="text-base text-gray-500 text-center py-4">Carregando viagens...</p>
                 </div>
             </div>
         </section>
@@ -154,11 +191,11 @@
         <!-- ABA 3: SEGURO / GUINCHO -->
         <section id="aba-guincho" class="space-y-4 hidden">
             <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-red-600 text-center space-y-4">
-                <i class="fa-solid fa-shield-halved text-5xl text-red-600"></i>
-                <h2 class="text-lg font-bold text-gray-800">Assistência e Guincho 24h</h2>
-                <p class="text-sm text-gray-600">Em caso de pane mecânica, acidente ou necessidade de guincho na estrada, utilize o botão abaixo para contato direto com a central.</p>
-                <a href="https://wa.me/555199931300?text=Olá,%20preciso%20de%20suporte%20de%20guincho%20para%20o%20veículo%20da%20Saúde%20de%20Araçatuba." target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow text-center">
-                    <i class="fa-brands fa-whatsapp text-lg mr-2"></i> Chamar Guincho (51 9993-1300)
+                <i class="fa-solid fa-shield-halved text-6xl text-red-600"></i>
+                <h2 class="text-xl font-bold text-gray-800">Assistência e Guincho 24h</h2>
+                <p class="text-base text-gray-600">Em caso de pane mecânica, acidente ou necessidade de guincho na estrada, utilize o botão abaixo para contato direto com a central.</p>
+                <a href="https://wa.me/555199931300?text=Olá,%20preciso%20de%20suporte%20de%20guincho%20para%20o%20veículo%20da%20Saúde%20de%20Araçatuba." target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-lg text-center text-lg">
+                    <i class="fa-brands fa-whatsapp text-2xl mr-2"></i> Chamar Guincho (51 9993-1300)
                 </a>
             </div>
         </section>
@@ -166,87 +203,87 @@
     </main>
 
     <!-- MENU INFERIOR FIXO -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-2 shadow-lg">
-        <button onclick="alternarAba('saida')" id="nav-saida" class="flex flex-col items-center text-blue-900">
-            <i class="fa-solid fa-compass text-lg"></i>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 shadow-2xl z-40">
+        <button onclick="alternarAba('saida')" id="nav-saida" class="flex flex-col items-center text-blue-900 font-bold">
+            <i class="fa-solid fa-compass text-2xl"></i>
             <span class="text-xs mt-1">Saída</span>
         </button>
-        <button onclick="alternarAba('andamento')" id="nav-andamento" class="flex flex-col items-center text-gray-400">
-            <i class="fa-solid fa-truck-fast text-lg"></i>
+        <button onclick="alternarAba('andamento')" id="nav-andamento" class="flex flex-col items-center text-gray-400 font-medium">
+            <i class="fa-solid fa-truck-fast text-2xl"></i>
             <span class="text-xs mt-1">Em Andamento</span>
         </button>
-        <button onclick="alternarAba('guincho')" id="nav-guincho" class="flex flex-col items-center text-gray-400">
-            <i class="fa-solid fa-shield-heart text-lg"></i>
+        <button onclick="alternarAba('guincho')" id="nav-guincho" class="flex flex-col items-center text-gray-400 font-medium">
+            <i class="fa-solid fa-shield-heart text-2xl"></i>
             <span class="text-xs mt-1">Seguro / Guincho</span>
         </button>
     </nav>
 
     <!-- MODAL DE PERFIL -->
     <div id="modal-perfil" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
-        <div class="bg-white rounded-xl max-w-sm w-full p-5 space-y-4 shadow-xl">
-            <h3 class="text-md font-bold text-blue-900 border-b pb-2"><i class="fa-solid fa-user-gear mr-2"></i> Configurar Perfil Padrão</h3>
+        <div class="bg-white rounded-xl max-w-sm w-full p-6 space-y-4 shadow-xl">
+            <h3 class="text-lg font-bold text-blue-900 border-b pb-2"><i class="fa-solid fa-user-gear mr-2"></i> Configurar Perfil Padrão</h3>
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Seu Nome:</label>
-                <select id="perfil-nome" class="w-full border rounded-lg p-2 text-sm bg-gray-50">
+                <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Seu Nome:</label>
+                <select id="perfil-nome" class="w-full border rounded-lg p-3 text-base bg-gray-50">
                     <option value="">Selecione seu nome...</option>
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Telefone / WhatsApp:</label>
-                <input type="text" id="perfil-telefone" placeholder="(18) 99999-9999" class="w-full border rounded-lg p-2 text-sm bg-gray-50">
+                <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Telefone / WhatsApp:</label>
+                <input type="text" id="perfil-telefone" placeholder="(18) 99999-9999" class="w-full border rounded-lg p-3 text-base bg-gray-50">
             </div>
-            <div class="flex space-x-2 pt-2">
-                <button onclick="fecharModalPerfil()" class="w-1/2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 rounded-lg text-sm">Cancelar</button>
-                <button onclick="salvarPerfil()" class="w-1/2 bg-blue-900 hover:bg-blue-800 text-white font-bold py-2 rounded-lg text-sm">Salvar Perfil</button>
+            <div class="flex space-x-3 pt-2">
+                <button onclick="fecharModalPerfil()" class="w-1/2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-lg text-base">Cancelar</button>
+                <button onclick="salvarPerfil()" class="w-1/2 bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-base">Salvar Perfil</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL DE ENCERRAMENTO DE VIAGEM -->
     <div id="modal-encerrar" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
-        <div class="bg-white rounded-xl max-w-md w-full p-5 space-y-3 shadow-xl max-h-screen overflow-y-auto">
-            <h3 id="modal-encerrar-titulo" class="text-md font-bold text-blue-900 border-b pb-2">Encerrar Viagem</h3>
+        <div class="bg-white rounded-xl max-w-md w-full p-6 space-y-4 shadow-xl max-h-screen overflow-y-auto">
+            <h3 id="modal-encerrar-titulo" class="text-lg font-bold text-blue-900 border-b pb-2">Encerrar Viagem</h3>
             
             <input type="hidden" id="encerrar-frota">
 
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Data Chegada:</label>
-                    <input type="date" id="encerrar-data" class="w-full border rounded-lg p-2 text-sm bg-gray-50">
+                    <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Data Chegada:</label>
+                    <input type="date" id="encerrar-data" class="w-full border rounded-lg p-3 text-base bg-gray-50">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Hora Chegada:</label>
-                    <input type="time" id="encerrar-hora" class="w-full border rounded-lg p-2 text-sm bg-gray-50">
+                    <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Hora Chegada:</label>
+                    <input type="time" id="encerrar-hora" class="w-full border rounded-lg p-3 text-base bg-gray-50">
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">KM de Chegada:</label>
-                <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full border rounded-lg p-2 text-sm bg-gray-50">
+                <label class="block text-sm font-bold text-gray-700 uppercase mb-1">KM de Chegada:</label>
+                <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full border rounded-lg p-3 text-base bg-gray-50">
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Veículo Abastecido?</label>
-                <select id="encerrar-abastecido" class="w-full border rounded-lg p-2 text-sm bg-gray-50">
+                <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Veículo Abastecido?</label>
+                <select id="encerrar-abastecido" class="w-full border rounded-lg p-3 text-base bg-gray-50">
                     <option value="Não">Não</option>
                     <option value="Sim">Sim</option>
                 </select>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Foto do Hodômetro:</label>
-                <input type="file" id="encerrar-foto" accept="image/*" capture="environment" class="w-full border rounded-lg p-2 text-sm bg-gray-50" onchange="comprimirFoto(this)">
-                <span id="status-foto" class="text-xs text-green-600 font-semibold hidden">✅ Foto Compactada OK</span>
+                <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Foto do Hodômetro:</label>
+                <input type="file" id="encerrar-foto" accept="image/*" capture="environment" class="w-full border rounded-lg p-3 text-base bg-gray-50" onchange="comprimirFoto(this)">
+                <span id="status-foto" class="text-sm text-green-600 font-bold hidden mt-1">✅ Foto Compactada OK</span>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Avarias na Chegada:</label>
-                <input type="text" id="encerrar-avarias" value="Nada" class="w-full border rounded-lg p-2 text-sm bg-gray-50">
+                <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Avarias na Chegada:</label>
+                <input type="text" id="encerrar-avarias" value="Nada" class="w-full border rounded-lg p-3 text-base bg-gray-50">
             </div>
 
-            <div class="flex space-x-2 pt-2">
-                <button onclick="fecharModalEncerrar()" class="w-1/2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 rounded-lg text-sm">Cancelar</button>
-                <button onclick="enviarEncerramento()" id="btn-concluir-viagem" class="w-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg text-sm">Concluir</button>
+            <div class="flex space-x-3 pt-2">
+                <button onclick="fecharModalEncerrar()" class="w-1/2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-lg text-base">Cancelar</button>
+                <button onclick="enviarEncerramento()" id="btn-concluir-viagem" class="w-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-base">Concluir</button>
             </div>
         </div>
     </div>
@@ -280,20 +317,20 @@
             document.getElementById('aba-andamento').classList.add('hidden');
             document.getElementById('aba-guincho').classList.add('hidden');
 
-            document.getElementById('nav-saida').className = "flex flex-col items-center text-gray-400";
-            document.getElementById('nav-andamento').className = "flex flex-col items-center text-gray-400";
-            document.getElementById('nav-guincho').className = "flex flex-col items-center text-gray-400";
+            document.getElementById('nav-saida').className = "flex flex-col items-center text-gray-400 font-medium";
+            document.getElementById('nav-andamento').className = "flex flex-col items-center text-gray-400 font-medium";
+            document.getElementById('nav-guincho').className = "flex flex-col items-center text-gray-400 font-medium";
 
             if (aba === 'saida') {
                 document.getElementById('aba-saida').classList.remove('hidden');
-                document.getElementById('nav-saida').className = "flex flex-col items-center text-blue-900";
+                document.getElementById('nav-saida').className = "flex flex-col items-center text-blue-900 font-bold";
             } else if (aba === 'andamento') {
                 document.getElementById('aba-andamento').classList.remove('hidden');
-                document.getElementById('nav-andamento').className = "flex flex-col items-center text-blue-900";
+                document.getElementById('nav-andamento').className = "flex flex-col items-center text-blue-900 font-bold";
                 carregarViagensEmAndamento();
             } else if (aba === 'guincho') {
                 document.getElementById('aba-guincho').classList.remove('hidden');
-                document.getElementById('nav-guincho').className = "flex flex-col items-center text-blue-900";
+                document.getElementById('nav-guincho').className = "flex flex-col items-center text-blue-900 font-bold";
             }
         }
 
@@ -304,7 +341,6 @@
                 
                 dadosGlobais = resultado;
 
-                // Preenche Motoristas
                 let selectM1 = document.getElementById('motorista1');
                 let selectM2 = document.getElementById('motorista2');
                 let selectPerfil = document.getElementById('perfil-nome');
@@ -319,20 +355,18 @@
                     selectPerfil.innerHTML += `<option value="${m}">${m}</option>`;
                 });
 
-                // Preenche Frotas
                 let selectFrota = document.getElementById('frota');
                 selectFrota.innerHTML = '<option value="">Selecione o veículo...</option>';
                 resultado.frotas.forEach(f => {
                     selectFrota.innerHTML += `<option value="${f.frota}">Frota ${f.frota}</option>`;
                 });
 
-                // Preenche Destinos (Checkboxes)
                 let containerDestinos = document.getElementById('container-destinos');
                 containerDestinos.innerHTML = '';
                 resultado.destinos.forEach(d => {
                     containerDestinos.innerHTML += `
-                        <label class="flex items-center space-x-2 text-sm cursor-pointer hover:bg-gray-100 p-1 rounded">
-                            <input type="checkbox" name="destino-check" value="${d}" class="w-4 h-4 text-blue-900 rounded">
+                        <label class="flex items-center space-x-3 text-base cursor-pointer hover:bg-gray-100 p-1.5 rounded">
+                            <input type="checkbox" name="destino-check" value="${d}" class="w-5 h-5 text-blue-900 rounded">
                             <span>${d}</span>
                         </label>
                     `;
@@ -341,7 +375,7 @@
                 carregarPerfilSalvo();
             } catch (erro) {
                 console.error("Erro ao carregar dados:", erro);
-                alert("Erro ao carregar dados da planilha.");
+                alert("DigiFrota diz: Erro ao carregar dados da planilha.");
             }
         }
 
@@ -359,23 +393,38 @@
             let encontrada = dadosGlobais.frotas.find(f => f.frota === frotaSel);
             if (encontrada && encontrada.kmAtual) {
                 document.getElementById('kmSaida').value = encontrada.kmAtual;
+                document.getElementById('kmSaida').dataset.kmUltimo = encontrada.kmAtual;
+            } else {
+                document.getElementById('kmSaida').dataset.kmUltimo = "";
             }
         }
 
         async function enviarSaida(e) {
             e.preventDefault();
             
-            // Coleta múltiplos destinos marcados
             let checkboxes = document.querySelectorAll('input[name="destino-check"]:checked');
             let destinosSelecionados = [];
             checkboxes.forEach(cb => destinosSelecionados.push(cb.value));
 
             if (destinosSelecionados.length === 0) {
-                alert("Por favor, selecione pelo menos um destino.");
+                alert("DigiFrota diz: Por favor, selecione pelo menos um destino.");
                 return;
             }
 
-            // Montagem do Checklist / Observações
+            // Validação do KM de Saída (Menor que o anterior)
+            let kmInput = document.getElementById('kmSaida');
+            let kmAtualDigitado = parseFloat(kmInput.value);
+            let kmUltimoRegistrado = parseFloat(kmInput.dataset.kmUltimo);
+            let alertaKmMenor = "";
+
+            if (!isNaN(kmUltimoRegistrado) && kmAtualDigitado < kmUltimoRegistrado) {
+                let confirmar = confirm(`⚠️ ATENÇÃO: O KM digitado (${kmAtualDigitado}) é MENOR que o último KM registrado desta frota (${kmUltimoRegistrado}). Deseja realmente prosseguir?`);
+                if (!confirmar) {
+                    return;
+                }
+                alertaKmMenor = " [ALERTA: KM DIGITADO MENOR QUE O ANTERIOR]";
+            }
+
             let tudoOk = document.getElementById('check-tudo-ok').checked;
             let obsTexto = document.getElementById('obs-detalhada').value.trim();
             let checklistFinal = "Checklist: Tudo Certo (OK)";
@@ -392,6 +441,10 @@
                 checklistFinal += " | Obs: " + obsTexto;
             }
 
+            if (alertaKmMenor) {
+                checklistFinal += alertaKmMenor;
+            }
+
             let dados = {
                 action: 'registrarSaida',
                 motorista1: document.getElementById('motorista1').value,
@@ -400,7 +453,7 @@
                 dataSaida: document.getElementById('dataSaida').value,
                 horaSaida: document.getElementById('horaSaida').value,
                 destino: destinosSelecionados,
-                kmSaida: document.getElementById('kmSaida').value,
+                kmSaida: kmAtualDigitado,
                 observacoes: checklistFinal
             };
 
@@ -413,7 +466,7 @@
                     method: 'POST',
                     body: JSON.stringify(dados)
                 });
-                alert("Saída registrada com sucesso!");
+                alert("DigiFrota diz: Saída registrada com sucesso!");
                 document.getElementById('form-saida').reset();
                 document.getElementById('check-tudo-ok').checked = true;
                 document.getElementById('detalhes-checklist').classList.add('hidden');
@@ -421,7 +474,7 @@
                 carregarPerfilSalvo();
                 alternarAba('andamento');
             } catch (erro) {
-                alert("Erro ao registrar saída: " + erro);
+                alert("DigiFrota diz: Erro ao registrar saída: " + erro);
             } finally {
                 btn.innerHTML = `<span>Registrar Saída</span>`;
                 btn.disabled = false;
@@ -430,7 +483,7 @@
 
         async function carregarViagensEmAndamento() {
             let container = document.getElementById('lista-viagens-ativas');
-            container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Carregando viagens...</p>';
+            container.innerHTML = '<p class="text-base text-gray-500 text-center py-4">Carregando viagens...</p>';
 
             try {
                 let resposta = await fetch(`${URL_API}?action=obterDadosFrotas`);
@@ -439,7 +492,7 @@
                 let ativas = viagens.filter(v => v.situacao === "EM CURSO");
 
                 if (ativas.length === 0) {
-                    container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Nenhuma viagem em andamento no momento.</p>';
+                    container.innerHTML = '<p class="text-base text-gray-500 text-center py-4">Nenhuma viagem em andamento no momento.</p>';
                     return;
                 }
 
@@ -447,23 +500,23 @@
 
                 container.innerHTML = "";
                 ativas.forEach(v => {
-                    let suaViagemBadge = (v.motorista === motoristaPadrao) ? '<span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded font-semibold ml-2">Sua Viagem</span>' : '';
+                    let suaViagemBadge = (v.motorista === motoristaPadrao) ? '<span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded font-bold ml-2">Sua Viagem</span>' : '';
                     
                     container.innerHTML += `
-                        <div class="border rounded-lg p-3 shadow-sm bg-gray-50 flex justify-between items-center">
+                        <div class="border rounded-xl p-4 shadow-sm bg-gray-50 flex justify-between items-center">
                             <div>
-                                <span class="font-bold text-blue-900">Frota ${v.frota}</span> ${suaViagemBadge}
-                                <p class="text-xs text-gray-600 mt-1">Destino: ${v.destino}</p>
-                                <p class="text-xs text-gray-600">Motorista: ${v.motorista}</p>
+                                <span class="font-bold text-blue-900 text-lg">Frota ${v.frota}</span> ${suaViagemBadge}
+                                <p class="text-sm text-gray-700 mt-1">Destino: ${v.destino}</p>
+                                <p class="text-sm text-gray-700">Motorista: ${v.motorista}</p>
                             </div>
-                            <button onclick="abrirModalEncerrar('${v.frota}')" class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-2 rounded-lg font-bold shadow">
+                            <button onclick="abrirModalEncerrar('${v.frota}')" class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2.5 rounded-lg font-bold shadow">
                                 <i class="fa-solid fa-flag-checkered mr-1"></i> Encerrar
                             </button>
                         </div>
                     `;
                 });
             } catch (erro) {
-                container.innerHTML = '<p class="text-sm text-red-500 text-center py-4">Erro ao carregar viagens ativas.</p>';
+                container.innerHTML = '<p class="text-base text-red-500 text-center py-4">Erro ao carregar viagens ativas.</p>';
             }
         }
 
@@ -512,7 +565,7 @@
             };
 
             if(!dados.kmChegada) {
-                alert("Por favor, informe o KM de chegada.");
+                alert("DigiFrota diz: Por favor, informe o KM de chegada.");
                 return;
             }
 
@@ -525,11 +578,11 @@
                     method: 'POST',
                     body: JSON.stringify(dados)
                 });
-                alert("Viagem encerrada com sucesso!");
+                alert("DigiFrota diz: Viagem encerrada com sucesso!");
                 fecharModalEncerrar();
                 carregarViagensEmAndamento();
             } catch (erro) {
-                alert("Erro ao encerrar viagem: " + erro);
+                alert("DigiFrota diz: Erro ao encerrar viagem: " + erro);
             } finally {
                 btn.innerText = "Concluir";
                 btn.disabled = false;
@@ -548,14 +601,14 @@
             let nome = document.getElementById('perfil-nome').value;
             let tel = document.getElementById('perfil-telefone').value;
             if(!nome) {
-                alert("Selecione um nome.");
+                alert("DigiFrota diz: Selecione um nome.");
                 return;
             }
             localStorage.setItem('digifrota_motorista', nome);
             localStorage.setItem('digifrota_telefone', tel);
             carregarPerfilSalvo();
             fecharModalPerfil();
-            alert("Perfil salvo com sucesso!");
+            alert("DigiFrota diz: Perfil salvo com sucesso!");
         }
 
         function carregarPerfilSalvo() {
