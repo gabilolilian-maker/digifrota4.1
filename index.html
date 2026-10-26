@@ -281,7 +281,7 @@
 
             <div>
                 <label class="block text-sm font-bold text-gray-700 uppercase mb-1">KM de Chegada:</label>
-                <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full border rounded-xl p-3 text-base bg-gray-50 outline-none">
+                <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full border rounded-xl p-3 text-base bg-gray-50 outline-none" oninput="verificarKmEncerramentoDigitado()">
             </div>
 
             <div>
@@ -329,6 +329,7 @@
         let dadosGlobais = { frotas: [], motoristas: [], destinos: [] };
         let fotoBase64 = "";
         let callbackModalConfirm = null;
+        let viagemSelecionadaKmInicial = 0;
 
         function mostrarAlerta(mensagem, tipo = "alert", callback = null) {
             document.getElementById('modal-alerta-mensagem').innerText = mensagem;
@@ -503,7 +504,7 @@
             if (!isNaN(kmUltimoRegistrado) && kmAtualDigitado < kmUltimoRegistrado) {
                 mostrarAlerta(`O KM digitado (${kmAtualDigitado}) é MENOR que o último KM registrado desta frota (${kmUltimoRegistrado}). Deseja realmente prosseguir?`, "confirm", (confirmado) => {
                     if (confirmado) {
-                        processarEnvioSaida(destinosSelecionados, kmAtualDigitado, " [ALERTA: KM DIGITADO MENOR QUE O ANTERIOR]");
+                        processarEnvioSaida(destinosSelecionados, kmAtualDigitado, " [verificar Km]");
                     }
                 });
                 return;
@@ -605,7 +606,7 @@
                                 <p class="text-sm text-gray-700 mt-1 font-medium"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> Destino: ${v.destino}</p>
                                 <p class="text-sm text-gray-600 font-medium"><i class="fa-solid fa-user text-blue-800 mr-1"></i> Motorista: ${v.motorista}</p>
                             </div>
-                            <button onclick="abrirModalEncerrar('${v.frota}')" class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-3 rounded-xl font-bold shadow transition flex items-center space-x-1">
+                            <button onclick="abrirModalEncerrar('${v.frota}', '${v.kmSaida || 0}')" class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-3 rounded-xl font-bold shadow transition flex items-center space-x-1">
                                 <i class="fa-solid fa-flag-checkered mr-1"></i> <span>Encerrar</span>
                             </button>
                         </div>
@@ -616,9 +617,11 @@
             }
         }
 
-        function abrirModalEncerrar(frota) {
+        function abrirModalEncerrar(frota, kmSaida) {
             document.getElementById('encerrar-frota').value = frota;
+            viagemSelecionadaKmInicial = parseFloat(kmSaida) || 0;
             document.getElementById('modal-encerrar-titulo').innerText = `Encerrar - Frota ${frota}`;
+            document.getElementById('encerrar-km').value = ""; // Limpa para o usuário digitar o correto
             document.getElementById('modal-encerrar').classList.remove('hidden');
         }
 
@@ -626,7 +629,6 @@
             document.getElementById('modal-encerrar').classList.add('hidden');
         }
 
-        // COMPRESSÃO OTIMIZADA E LEVE PARA A FOTO DO HODÔMETRO
         function comprimirFoto(input) {
             if (input.files && input.files[0]) {
                 let reader = new FileReader();
@@ -635,16 +637,11 @@
                     img.onload = function () {
                         let canvas = document.createElement('canvas');
                         let ctx = canvas.getContext('2d');
-                        
-                        // Reduz o tamanho máximo para 600px mantendo a proporção ideal para leitura de hodômetro
                         let largura = 600;
                         let altura = (img.height * largura) / img.width;
-                        
                         canvas.width = largura;
                         canvas.height = altura;
                         ctx.drawImage(img, 0, 0, largura, altura);
-                        
-                        // Compacta em JPEG com qualidade 50% para garantir arquivo extremamente leve
                         fotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
                         document.getElementById('status-foto').classList.remove('hidden');
                     }
@@ -655,6 +652,31 @@
         }
 
         async function enviarEncerramento() {
+            let kmChegadaDigitado = parseFloat(document.getElementById('encerrar-km').value);
+
+            if(isNaN(kmChegadaDigitado)) {
+                mostrarAlerta("Por favor, informe o KM de chegada.");
+                return;
+            }
+
+            if (viagemSelecionadaKmInicial > 0 && kmChegadaDigitado < viagemSelecionadaKmInicial) {
+                mostrarAlerta(`O KM de chegada (${kmChegadaDigitado}) é MENOR que o KM de saída (${viagemSelecionadaKmInicial}). Deseja realmente prosseguir?`, "confirm", (confirmado) => {
+                    if (confirmado) {
+                        processarEnvioEncerramento(" [verificar Km]");
+                    }
+                });
+                return;
+            }
+
+            processarEnvioEncerramento("");
+        }
+
+        async function processarEnvioEncerramento(alertaKmMenor) {
+            let avariasDigitadas = document.getElementById('encerrar-avarias').value;
+            if (alertaKmMenor) {
+                avariasDigitadas += alertaKmMenor;
+            }
+
             let dados = {
                 action: 'encerrarViagem',
                 frota: document.getElementById('encerrar-frota').value,
@@ -663,13 +685,8 @@
                 kmChegada: document.getElementById('encerrar-km').value,
                 abastecido: document.getElementById('encerrar-abastecido').value,
                 foto: fotoBase64,
-                avarias: document.getElementById('encerrar-avarias').value
+                avarias: avariasDigitadas
             };
-
-            if(!dados.kmChegada) {
-                mostrarAlerta("Por favor, informe o KM de chegada.");
-                return;
-            }
 
             let btn = document.getElementById('btn-concluir-viagem');
             btn.innerText = "Salvando...";
