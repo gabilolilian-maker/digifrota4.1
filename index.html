@@ -66,14 +66,14 @@
 
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">Selecione o Veículo (Frota):</label>
-                        <select id="saida-frota" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <select id="saida-frota" onchange="atualizarKmAutomatico()" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
                             <option value="">Carregando frotas...</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">KM de Saída (Hodômetro):</label>
-                        <input type="number" id="saida-km" placeholder="Ex: 160001" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <input type="number" id="saida-km" placeholder="Digite ou confirme o KM..." class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
                     </div>
 
                     <div>
@@ -214,6 +214,8 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
 
+        let listaFrotasGlobal = [];
+
         document.addEventListener("DOMContentLoaded", () => {
             carregarDadosIniciais();
         });
@@ -268,6 +270,24 @@
             mostrarAvisoDigiFrota("Perfil salvo com sucesso!");
         }
 
+        function atualizarKmAutomatico() {
+            const selectFrota = document.getElementById("saida-frota");
+            const inputKm = document.getElementById("saida-km");
+            const frotaSelecionada = selectFrota.value;
+
+            if(!frotaSelecionada) {
+                inputKm.value = "";
+                return;
+            }
+
+            const veiculo = listaFrotasGlobal.find(f => f.frota === frotaSelecionada);
+            if(veiculo && veiculo.kmAtual) {
+                inputKm.value = veiculo.kmAtual;
+            } else {
+                inputKm.value = "";
+            }
+        }
+
         async function carregarDadosIniciais() {
             const selectFrota = document.getElementById("saida-frota");
             const selectM1 = document.getElementById("saida-motorista1");
@@ -278,13 +298,19 @@
                 const res = await fetch(`${API_URL}?action=getInicial`);
                 const data = await res.json();
 
+                // Frotas
                 selectFrota.innerHTML = '<option value="">Selecione o veículo...</option>';
                 if(data.frotas && Array.isArray(data.frotas)) {
+                    // Ordena numericamente as frotas
+                    data.frotas.sort((a, b) => parseInt(a.frota) - parseInt(b.frota));
+                    listaFrotasGlobal = data.frotas;
+
                     data.frotas.forEach(item => {
-                        selectFrota.innerHTML += `<option value="${item.frota}">Frota ${item.frota} ${item.placa ? '- '+item.placa : ''}</option>`;
+                        selectFrota.innerHTML += `<option value="${item.frota}">Frota ${item.frota}</option>`;
                     });
                 }
 
+                // Motoristas
                 selectM1.innerHTML = '<option value="">Selecione o motorista principal...</option>';
                 selectM2.innerHTML = '<option value="">Nenhum (Apenas 1 motorista)</option>';
                 selectPerfil.innerHTML = '<option value="">Selecione seu nome...</option>';
@@ -345,6 +371,7 @@
                 document.getElementById("saida-km").value = "";
                 document.getElementById("saida-destino").value = "";
                 document.getElementById("saida-obs").value = "";
+                document.getElementById("saida-frota").value = "";
             } catch(e) {
                 mostrarAvisoDigiFrota("Erro ao conectar com o servidor.");
             } finally {
