@@ -89,7 +89,7 @@
                         </div>
                     </div>
 
-                    <!-- Destinos (Checkboxes Múltiplos) -->
+                    <!-- Destinos (Checkboxes Múltiplos Organizados) -->
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Destino(s) da Viagem (Selecione um ou mais):</label>
                         <div id="container-destinos" class="border rounded-xl p-3 bg-gray-50 max-h-48 overflow-y-auto space-y-2 shadow-inner">
@@ -422,9 +422,37 @@
                     selectFrota.innerHTML += `<option value="${f.frota}">Frota ${f.frota}</option>`;
                 });
 
+                // ORGANIZAÇÃO INTELIGENTE DOS DESTINOS
                 let containerDestinos = document.getElementById('container-destinos');
                 containerDestinos.innerHTML = '';
-                resultado.destinos.forEach(d => {
+
+                let destinos = resultado.destinos || [];
+
+                // Itens que não são nomes de cidades e devem ir para o final
+                const naoCidades = ["OUTROS", "DIVERSOS", "INTERNO", "OFICINA", "LAVAGEM", "MANUTENCAO", "POSTO"];
+
+                // 1. Separa TESTE e CROSS para ficarem no topo exato
+                let fixosTopo = destinos.filter(d => d.toUpperCase() === "TESTE" || d.toUpperCase() === "CROSS");
+                fixosTopo.sort(); // Garante ordem alfabética entre eles se houver ambos
+
+                // 2. Destinos normais (cidades em ordem alfabética, excluindo os fixos e os itens finais)
+                let cidades = destinos.filter(d => {
+                    let upper = d.toUpperCase();
+                    return upper !== "TESTE" && upper !== "CROSS" && !naoCidades.some(nc => upper.includes(nc));
+                });
+                cidades.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+                // 3. Itens que não são cidades (vão para o final)
+                let finalLista = destinos.filter(d => {
+                    let upper = d.toUpperCase();
+                    return upper !== "TESTE" && upper !== "CROSS" && naoCidades.some(nc => upper.includes(nc));
+                });
+                finalLista.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+                // Une tudo na ordem desejada: Topo -> Cidades -> Final
+                let destinosOrdenados = [...fixosTopo, ...cidades, ...finalLista];
+
+                destinosOrdenados.forEach(d => {
                     containerDestinos.innerHTML += `
                         <label class="flex items-center space-x-3 text-base cursor-pointer hover:bg-blue-50 p-2 rounded-xl transition">
                             <input type="checkbox" name="destino-check" value="${d}" class="w-5 h-5 text-blue-900 rounded">
