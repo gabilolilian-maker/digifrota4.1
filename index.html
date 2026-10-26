@@ -231,7 +231,7 @@
 
     <!-- SCRIPT DE INTEGRAÇÃO E LÓGICA -->
     <script>
-        // Substitua abaixo pela URL do seu Web App do Google Apps Script publicado
+        // URL da API do Google Apps Script já configurada
         const URL_API = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
 
         let dadosGlobais = { frotas: [], motoristas: [], destinos: [] };
@@ -514,4 +514,14 @@
                 document.getElementById('label-motorista-padrao').innerText = nomeSalvo;
                 let selectM1 = document.getElementById('motorista1');
                 if(selectM1) selectM1.value = nomeSalvo;
-                let selectPerfil = document.getElementById
+                let selectPerfil = document.getElementById('perfil-nome');
+                if(selectPerfil) selectPerfil.value = nomeSalvo;
+            }
+            let telSalvo = localStorage.getItem('digifrota_telefone');
+            if (telSalvo && document.getElementById('perfil-telefone')) {
+                document.getElementById('perfil-telefone').value = telSalvo;
+            }
+        }
+    </script>
+</body>
+</html>
