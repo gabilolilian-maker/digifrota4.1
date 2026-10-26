@@ -98,7 +98,7 @@
                         <input type="number" id="kmSaida" placeholder="Digite ou confirme o KM..." class="w-full border rounded-lg p-3 text-base bg-gray-50" required>
                     </div>
 
-                    <!-- Checklist / Observações Detalhado em Cascata -->
+                    <!-- Checklist / Observações Detalhado em Cascata (Baseado no histórico real) -->
                     <div class="mb-5 bg-gray-50 p-4 border rounded-xl space-y-4">
                         <label class="block text-sm font-bold text-gray-800 uppercase">Checklist do Veículo:</label>
                         
@@ -112,47 +112,62 @@
                         <div id="detalhes-checklist" class="hidden space-y-3 pt-2 border-t">
                             <p class="text-xs text-red-600 font-bold uppercase">Marque abaixo itens com pendência ou avaria:</p>
                             
-                            <!-- Grupo Pneus -->
+                            <!-- Grupo Pneus e Rodas -->
                             <div class="bg-white p-3 rounded-lg border shadow-sm">
-                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-circle-dot mr-1"></i> Pneus</span>
+                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-circle-dot mr-1"></i> Pneus e Rodas</span>
                                 <div class="grid grid-cols-2 gap-2 text-sm">
                                     <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pneu Furado" class="w-4 h-4"><span>Pneu Furado</span></label>
                                     <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pneu Murcho" class="w-4 h-4"><span>Pneu Murcho</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pneu Gasto/Liso" class="w-4 h-4"><span>Pneu Gasto / Liso</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Estepe ausente/danificado" class="w-4 h-4"><span>Estepe Ruim</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pneu com desgaste excessivo / liso" class="w-4 h-4"><span>Desgaste excessivo/liso</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Barulho de rolamento das rodas" class="w-4 h-4"><span>Barulho rolamento</span></label>
                                 </div>
                             </div>
 
-                            <!-- Grupo Elétrico -->
+                            <!-- Grupo Iluminação e Elétrica -->
                             <div class="bg-white p-3 rounded-lg border shadow-sm">
-                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-bolt mr-1"></i> Elétrico e Iluminação</span>
+                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-bolt mr-1"></i> Iluminação e Parte Elétrica</span>
                                 <div class="grid grid-cols-2 gap-2 text-sm">
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Farol Queimado/Fraco" class="w-4 h-4"><span>Farol Queimado</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Lanterna Queimada" class="w-4 h-4"><span>Lanterna Queimada</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Bateria Fraca" class="w-4 h-4"><span>Bateria Fraca</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Painel com Luz de Anomalia" class="w-4 h-4"><span>Luz no Painel</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Farol dianteiro queimado (baixo/alto)" class="w-4 h-4"><span>Farol Queimado</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Farol (luz baixa) desregulado" class="w-4 h-4"><span>Farol Desregulado</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Lanterna traseira quebrada/apagada" class="w-4 h-4"><span>Lanterna Quebrada</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Seta / pisca com defeito" class="w-4 h-4"><span>Seta / Pisca Defeito</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Luz da placa queimada" class="w-4 h-4"><span>Luz de Placa Queimada</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Problema bateria ou módulo" class="w-4 h-4"><span>Problema Bateria</span></label>
                                 </div>
                             </div>
 
-                            <!-- Grupo Mecânica e Fluidos -->
+                            <!-- Grupo Motor, Mecânica e Fluidos -->
                             <div class="bg-white p-3 rounded-lg border shadow-sm">
-                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-gears mr-1"></i> Mecânica e Fluidos</span>
+                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-gears mr-1"></i> Motor, Mecânica e Fluidos</span>
                                 <div class="grid grid-cols-2 gap-2 text-sm">
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Nível de Óleo Baixo" class="w-4 h-4"><span>Óleo Baixo</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Água do Radiador Baixa" class="w-4 h-4"><span>Água Radiador Baixa</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Vazamento Identificado" class="w-4 h-4"><span>Vazamento</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Ruído no Motor" class="w-4 h-4"><span>Ruído no Motor</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Fumaça saindo do motor" class="w-4 h-4"><span>Fumaça no Motor</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Vazamento de óleo" class="w-4 h-4"><span>Vazamento de Óleo</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Correia com desgaste visível / barulho" class="w-4 h-4"><span>Correia Desgastada</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Nível do óleo precisando completar" class="w-4 h-4"><span>Óleo Baixo</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Câmbio / Dificuldade para engrenar marcha" class="w-4 h-4"><span>Câmbio Ruim</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Ar condicionado sem funcionar" class="w-4 h-4"><span>Ar Condicionado Defeito</span></label>
                                 </div>
                             </div>
 
-                            <!-- Grupo Freios e Direção -->
+                            <!-- Grupo Freios, Suspensão e Direção -->
                             <div class="bg-white p-3 rounded-lg border shadow-sm">
                                 <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-car-burst mr-1"></i> Freios, Suspensão e Direção</span>
                                 <div class="grid grid-cols-2 gap-2 text-sm">
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Freio Esponjoso/Baixo" class="w-4 h-4"><span>Freio Ruim</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Direção Pesada/Puxando" class="w-4 h-4"><span>Direção Puxando</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Vibração Excessiva" class="w-4 h-4"><span>Vibração</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Limpeza Interna Ruim" class="w-4 h-4"><span>Limpeza Interna</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pedal de freio fundo / mole" class="w-4 h-4"><span>Freio Fundo / Mole</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Ruído ao frear" class="w-4 h-4"><span>Ruído ao Frear</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Barulho na suspensão" class="w-4 h-4"><span>Barulho Suspensão</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Veículo puxando para um lado / Direção" class="w-4 h-4"><span>Direção Puxando</span></label>
+                                </div>
+                            </div>
+
+                            <!-- Grupo Carroceria, Vidros e Segurança -->
+                            <div class="bg-white p-3 rounded-lg border shadow-sm">
+                                <span class="font-bold text-sm text-blue-900 block mb-1.5"><i class="fa-solid fa-caravan mr-1"></i> Carroceria, Vidros e Segurança</span>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Para-brisa com trinca ou riscado" class="w-4 h-4"><span>Para-brisa Trincado/Riscado</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Porta com dificuldade de fechar / travada" class="w-4 h-4"><span>Porta Defeito</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Extintor ausente ou vencido" class="w-4 h-4"><span>Extintor Vencido/Ausente</span></label>
+                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Amassado / Arranhão na lataria" class="w-4 h-4"><span>Lataria Danificada</span></label>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +175,7 @@
                         <!-- Observações Adicionais -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">Outras Observações / Avarias (Opcional):</label>
-                            <input type="text" id="obs-detalhada" placeholder="Ex: Pequeno arranhão na porta..." class="w-full border rounded-lg p-3 text-base bg-white">
+                            <input type="text" id="obs-detalhada" placeholder="Ex: Detalhe específico da viagem..." class="w-full border rounded-lg p-3 text-base bg-white">
                         </div>
                     </div>
 
@@ -411,7 +426,7 @@
                 return;
             }
 
-            // Validação do KM de Saída (Menor que o anterior)
+            // Validação inteligente do KM de Saída
             let kmInput = document.getElementById('kmSaida');
             let kmAtualDigitado = parseFloat(kmInput.value);
             let kmUltimoRegistrado = parseFloat(kmInput.dataset.kmUltimo);
