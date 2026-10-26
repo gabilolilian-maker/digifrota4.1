@@ -15,91 +15,103 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { -webkit-tap-highlight-color: transparent; user-select: none; }
+        body { -webkit-tap-highlight-color: transparent; user-select: none; font-size: 1.05rem; }
         .tab-active { color: #1e3a8a; font-weight: 800; border-top: 3px solid #1e3a8a; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col justify-between text-gray-900 font-sans pb-20">
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between text-gray-900 font-sans pb-24">
 
     <header class="bg-blue-900 text-white px-5 py-4 flex justify-between items-center shadow-md sticky top-0 z-30">
         <div class="flex items-center space-x-3">
-            <i class="fa-solid fa-truck-medical text-2xl text-blue-300"></i>
+            <i class="fa-solid fa-truck-medical text-3xl text-blue-300"></i>
             <div>
-                <h1 class="text-lg font-black tracking-wide leading-none">DigiFrota 4.0</h1>
-                <span class="text-[10px] text-blue-200 uppercase font-semibold">Saúde Araçatuba</span>
+                <h1 class="text-xl font-black tracking-wide leading-none">DigiFrota 4.0</h1>
+                <span class="text-xs text-blue-200 uppercase font-semibold">Saúde Araçatuba</span>
             </div>
         </div>
-        <span class="text-xs bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-full shadow-xs">Online</span>
+        <span class="text-sm bg-emerald-500 text-white font-bold px-3 py-1 rounded-full shadow-xs">Online</span>
     </header>
 
-    <div class="bg-white border-b px-5 py-3 flex justify-between items-center shadow-xs">
-        <div class="text-xs">
-            <span class="text-gray-400 font-bold block text-[10px] uppercase">Motorista Padrão (Aparelho):</span>
-            <span id="label-motorista" class="font-black text-blue-900">Não identificado</span>
+    <div class="bg-white border-b px-5 py-3.5 flex justify-between items-center shadow-xs">
+        <div>
+            <span class="text-gray-400 font-bold block text-xs uppercase">Motorista Padrão (Aparelho):</span>
+            <span id="label-motorista" class="font-black text-blue-900 text-base">Não identificado</span>
         </div>
-        <button onclick="abrirModalPerfil()" class="bg-blue-50 text-blue-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-blue-100 shadow-xs flex items-center gap-1.5">
+        <button onclick="abrirModalPerfil()" class="bg-blue-50 text-blue-900 text-sm font-bold px-4 py-2 rounded-xl border border-blue-100 shadow-xs flex items-center gap-2">
             <i class="fa-solid fa-user-gear"></i> Perfil
         </button>
     </div>
 
     <main class="p-4 flex-1">
         <section id="aba-saida" class="space-y-4">
-            <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
-                <h2 class="font-black text-sm uppercase text-blue-900 border-b pb-2 flex items-center gap-2">
+            <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-5">
+                <h2 class="font-black text-base uppercase text-blue-900 border-b pb-2 flex items-center gap-2">
                     <i class="fa-solid fa-compass text-blue-600"></i> Registrar Saída
                 </h2>
 
-                <div class="space-y-3 text-xs">
+                <div class="space-y-4 text-sm">
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">Motorista Principal (Motorista 1):</label>
-                        <select id="saida-motorista1" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <select id="saida-motorista1" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3.5 font-bold text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-600 text-base">
                             <option value="">Carregando motoristas...</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">Segundo Motorista / Acompanhante (Opcional):</label>
-                        <select id="saida-motorista2" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <select id="saida-motorista2" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3.5 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 text-base">
                             <option value="">Nenhum (Apenas 1 motorista)</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">Selecione o Veículo (Frota):</label>
-                        <select id="saida-frota" onchange="atualizarKmAutomatico()" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <select id="saida-frota" onchange="atualizarKmAutomatico()" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3.5 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 text-base">
                             <option value="">Carregando frotas...</option>
                         </select>
                     </div>
 
+                    <!-- LETRA MAIOR NA PARTE DE KM -->
                     <div>
-                        <label class="font-bold text-gray-700 block mb-1">KM de Saída (Hodômetro):</label>
-                        <input type="number" id="saida-km" placeholder="Digite ou confirme o KM..." class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <label class="font-bold text-gray-700 block mb-1 text-base">KM de Saída (Hodômetro):</label>
+                        <input type="number" id="saida-km" placeholder="Digite ou confirme o KM..." class="w-full bg-blue-50/50 border-2 border-blue-300 rounded-xl p-4 font-black text-blue-900 text-xl focus:outline-none focus:ring-2 focus:ring-blue-600">
                     </div>
 
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">Destino:</label>
-                        <select id="saida-destino" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <select id="saida-destino" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3.5 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600 text-base">
                             <option value="">Carregando destinos...</option>
                         </select>
                     </div>
 
-                    <!-- CHECKLIST EM FORMATO DE LEQUE (SANFONA) -->
+                    <!-- CHECKLIST COM O BOTÃO DE BOM ESTADO NO TOPO (LOCAL INDICADO A LÁPIS) -->
                     <div class="pt-2">
-                        <label class="font-bold text-gray-700 block mb-2"><i class="fa-solid fa-list-check text-blue-600"></i> Checklist do Veículo (Tudo OK por padrão):</label>
+                        <label class="font-bold text-gray-700 block mb-2 text-base"><i class="fa-solid fa-list-check text-blue-600"></i> Checklist do Veículo:</label>
                         
-                        <div class="space-y-2 bg-gray-50 p-3 rounded-2xl border border-gray-200">
+                        <div class="space-y-3 bg-gray-50 p-4 rounded-2xl border border-gray-200">
                             
+                            <!-- BOTÃO RÁPIDO DE BOM ESTADO (LOCAL DA MARCAÇÃO A LÁPIS) -->
+                            <div class="bg-emerald-50 border-2 border-emerald-500 p-3.5 rounded-xl flex items-center justify-between shadow-xs">
+                                <div class="flex items-center gap-2.5 text-emerald-900 font-black">
+                                    <i class="fa-solid fa-circle-check text-xl text-emerald-600"></i>
+                                    <span>Veículo em bom estado de conservação</span>
+                                </div>
+                                <button type="button" onclick="marcarTudoOk()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs px-3 py-2 rounded-lg shadow">
+                                    Aplicar OK Geral
+                                </button>
+                            </div>
+
                             <!-- ITEM 1: MECÂNICA -->
-                            <div class="bg-white p-2.5 rounded-xl border border-gray-200">
+                            <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-gray-800">🛠️ Mecânica: <span id="status-mecanica" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
-                                    <button type="button" onclick="alternarLeque('leque-mecanica')" class="text-blue-700 font-bold text-[11px] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                                        <i class="fa-solid fa-sliders"></i> Alterar / Detalhar
+                                    <button type="button" onclick="alternarLeque('leque-mecanica')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                        <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-mecanica" class="hidden mt-2 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-[10px]">Selecione a anomalia (se houver):</label>
-                                    <select id="chk-mecanica" onchange="atualizarStatusTexto('chk-mecanica', 'status-mecanica')" class="w-full bg-gray-50 border rounded-lg p-2 text-xs font-semibold text-gray-800">
+                                <div id="leque-mecanica" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
+                                    <select id="chk-mecanica" onchange="atualizarStatusTexto('chk-mecanica', 'status-mecanica')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
                                         <option value="Normal / OK">Nenhum problema (Tudo Certo)</option>
                                         <option value="Ruídos na suspensão (estalos ou batidas secas)">Ruídos na suspensão (estalos ou batidas secas)</option>
                                         <option value="Defeitos nos freios (assobio, pedal baixo ou trepidação)">Defeitos nos freios (assobio, pedal baixo ou trepidação)</option>
@@ -110,16 +122,16 @@
                             </div>
 
                             <!-- ITEM 2: FLUIDOS E LUBRIFICANTES -->
-                            <div class="bg-white p-2.5 rounded-xl border border-gray-200">
+                            <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-gray-800">🛢️ Fluidos: <span id="status-fluidos" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
-                                    <button type="button" onclick="alternarLeque('leque-fluidos')" class="text-blue-700 font-bold text-[11px] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                                        <i class="fa-solid fa-sliders"></i> Alterar / Detalhar
+                                    <button type="button" onclick="alternarLeque('leque-fluidos')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                        <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-fluidos" class="hidden mt-2 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-[10px]">Selecione a anomalia (se houver):</label>
-                                    <select id="chk-fluidos" onchange="atualizarStatusTexto('chk-fluidos', 'status-fluidos')" class="w-full bg-gray-50 border rounded-lg p-2 text-xs font-semibold text-gray-800">
+                                <div id="leque-fluidos" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
+                                    <select id="chk-fluidos" onchange="atualizarStatusTexto('chk-fluidos', 'status-fluidos')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
                                         <option value="Níveis normais / OK">Nenhum problema (Tudo Certo)</option>
                                         <option value="Óleo do motor baixo ou vencido">Óleo do motor baixo ou vencido</option>
                                         <option value="Líquido de arrefecimento baixo ou sujo">Líquido de arrefecimento baixo ou sujo</option>
@@ -130,16 +142,16 @@
                             </div>
 
                             <!-- ITEM 3: ELÉTRICA -->
-                            <div class="bg-white p-2.5 rounded-xl border border-gray-200">
+                            <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-gray-800">⚡ Elétrica: <span id="status-eletrica" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
-                                    <button type="button" onclick="alternarLeque('leque-eletrica')" class="text-blue-700 font-bold text-[11px] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                                        <i class="fa-solid fa-sliders"></i> Alterar / Detalhar
+                                    <button type="button" onclick="alternarLeque('leque-eletrica')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                        <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-eletrica" class="hidden mt-2 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-[10px]">Selecione a anomalia (se houver):</label>
-                                    <select id="chk-eletrica" onchange="atualizarStatusTexto('chk-eletrica', 'status-eletrica')" class="w-full bg-gray-50 border rounded-lg p-2 text-xs font-semibold text-gray-800">
+                                <div id="leque-eletrica" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
+                                    <select id="chk-eletrica" onchange="atualizarStatusTexto('chk-eletrica', 'status-eletrica')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
                                         <option value="Tudo funcionando / OK">Nenhum problema (Tudo Certo)</option>
                                         <option value="Bateria com zinabre nos polos ou partida pesada">Bateria com zinabre nos polos ou partida pesada</option>
                                         <option value="Luzes de advertência acesas no painel (injeção, óleo, etc.)">Luzes de advertência acesas no painel</option>
@@ -150,16 +162,16 @@
                             </div>
 
                             <!-- ITEM 4: ILUMINAÇÃO -->
-                            <div class="bg-white p-2.5 rounded-xl border border-gray-200">
+                            <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-gray-800">💡 Iluminação: <span id="status-iluminacao" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
-                                    <button type="button" onclick="alternarLeque('leque-iluminacao')" class="text-blue-700 font-bold text-[11px] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                                        <i class="fa-solid fa-sliders"></i> Alterar / Detalhar
+                                    <button type="button" onclick="alternarLeque('leque-iluminacao')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                        <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-iluminacao" class="hidden mt-2 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-[10px]">Selecione a anomalia (se houver):</label>
-                                    <select id="chk-iluminacao" onchange="atualizarStatusTexto('chk-iluminacao', 'status-iluminacao')" class="w-full bg-gray-50 border rounded-lg p-2 text-xs font-semibold text-gray-800">
+                                <div id="leque-iluminacao" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
+                                    <select id="chk-iluminacao" onchange="atualizarStatusTexto('chk-iluminacao', 'status-iluminacao')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
                                         <option value="Tudo acendendo / OK">Nenhum problema (Tudo Certo)</option>
                                         <option value="Faróis e lanternas queimados (alto, baixo, posição e placa)">Faróis e lanternas queimados</option>
                                         <option value="Setas/piscas piscando rápido ou luz de ré queimada">Setas/piscas piscando rápido ou luz de ré queimada</option>
@@ -170,16 +182,16 @@
                             </div>
 
                             <!-- ITEM 5: FUNILARIA E PINTURA -->
-                            <div class="bg-white p-2.5 rounded-xl border border-gray-200">
+                            <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-gray-800">🎨 Funilaria: <span id="status-funilaria" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
-                                    <button type="button" onclick="alternarLeque('leque-funilaria')" class="text-blue-700 font-bold text-[11px] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                                        <i class="fa-solid fa-sliders"></i> Alterar / Detalhar
+                                    <button type="button" onclick="alternarLeque('leque-funilaria')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                        <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-funilaria" class="hidden mt-2 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-[10px]">Selecione a anomalia (se houver):</label>
-                                    <select id="chk-funilaria" onchange="atualizarStatusTexto('chk-funilaria', 'status-funilaria')" class="w-full bg-gray-50 border rounded-lg p-2 text-xs font-semibold text-gray-800">
+                                <div id="leque-funilaria" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
+                                    <select id="chk-funilaria" onchange="atualizarStatusTexto('chk-funilaria', 'status-funilaria')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
                                         <option value="Sem avarias / OK">Nenhum problema (Tudo Certo)</option>
                                         <option value="Riscos profundos, amassados ou arranhões visíveis">Riscos profundos, amassados ou arranhões visíveis</option>
                                         <option value="Portas, capô ou porta-malas desalinhados">Portas, capô ou porta-malas desalinhados</option>
@@ -190,16 +202,16 @@
                             </div>
 
                             <!-- ITEM 6: VIDROS -->
-                            <div class="bg-white p-2.5 rounded-xl border border-gray-200">
+                            <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-gray-800">🪟 Vidros: <span id="status-vidros" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
-                                    <button type="button" onclick="alternarLeque('leque-vidros')" class="text-blue-700 font-bold text-[11px] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                                        <i class="fa-solid fa-sliders"></i> Alterar / Detalhar
+                                    <button type="button" onclick="alternarLeque('leque-vidros')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                        <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-vidros" class="hidden mt-2 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-[10px]">Selecione a anomalia (se houver):</label>
-                                    <select id="chk-vidros" onchange="atualizarStatusTexto('chk-vidros', 'status-vidros')" class="w-full bg-gray-50 border rounded-lg p-2 text-xs font-semibold text-gray-800">
+                                <div id="leque-vidros" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
+                                    <select id="chk-vidros" onchange="atualizarStatusTexto('chk-vidros', 'status-vidros')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
                                         <option value="Integros / OK">Nenhum problema (Tudo Certo)</option>
                                         <option value="Parabrisa ou vidros com trincas e rachaduras">Parabrisa ou vidros com trincas e rachaduras</option>
                                         <option value="Palhetas do limpador ressecadas ou rasgadas">Palhetas do limpador ressecadas ou rasgadas</option>
@@ -209,16 +221,16 @@
                             </div>
 
                             <!-- ITEM 7: AR CONDICIONADO -->
-                            <div class="bg-white p-2.5 rounded-xl border border-gray-200">
+                            <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-gray-800">❄️ Ar Condicionado: <span id="status-ar" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
-                                    <button type="button" onclick="alternarLeque('leque-ar')" class="text-blue-700 font-bold text-[11px] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                                        <i class="fa-solid fa-sliders"></i> Alterar / Detalhar
+                                    <button type="button" onclick="alternarLeque('leque-ar')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                        <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-ar" class="hidden mt-2 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-[10px]">Selecione a anomalia (se houver):</label>
-                                    <select id="chk-ar" onchange="atualizarStatusTexto('chk-ar', 'status-ar')" class="w-full bg-gray-50 border rounded-lg p-2 text-xs font-semibold text-gray-800">
+                                <div id="leque-ar" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
+                                    <select id="chk-ar" onchange="atualizarStatusTexto('chk-ar', 'status-ar')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
                                         <option value="Funcionando bem / OK">Nenhum problema (Tudo Certo)</option>
                                         <option value="Ar não gela ou demora muito para resfriar">Ar não gela ou demora muito para resfriar</option>
                                         <option value="Mau cheiro (mofo/poeira) ao ligar o sistema">Mau cheiro (mofo/poeira) ao ligar o sistema</option>
@@ -228,16 +240,16 @@
                             </div>
 
                             <!-- ITEM 8: CINTOS DE SEGURANÇA -->
-                            <div class="bg-white p-2.5 rounded-xl border border-gray-200">
+                            <div class="bg-white p-3 rounded-xl border border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-gray-800">🛡️ Cintos: <span id="status-cintos" class="text-emerald-600 font-extrabold">Tudo Certo (OK)</span></span>
-                                    <button type="button" onclick="alternarLeque('leque-cintos')" class="text-blue-700 font-bold text-[11px] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                                        <i class="fa-solid fa-sliders"></i> Alterar / Detalhar
+                                    <button type="button" onclick="alternarLeque('leque-cintos')" class="text-blue-700 font-bold text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                        <i class="fa-solid fa-sliders"></i> Alterar se houver problema
                                     </button>
                                 </div>
-                                <div id="leque-cintos" class="hidden mt-2 pt-2 border-t border-gray-100 space-y-1">
-                                    <label class="block font-semibold text-gray-500 text-[10px]">Selecione a anomalia (se houver):</label>
-                                    <select id="chk-cintos" onchange="atualizarStatusTexto('chk-cintos', 'status-cintos')" class="w-full bg-gray-50 border rounded-lg p-2 text-xs font-semibold text-gray-800">
+                                <div id="leque-cintos" class="hidden mt-3 pt-2 border-t border-gray-100 space-y-1">
+                                    <label class="block font-semibold text-gray-500 text-xs">Selecione o problema encontrado:</label>
+                                    <select id="chk-cintos" onchange="atualizarStatusTexto('chk-cintos', 'status-cintos')" class="w-full bg-gray-50 border rounded-xl p-2.5 text-sm font-semibold text-gray-800">
                                         <option value="Seguros / OK">Nenhum problema (Tudo Certo)</option>
                                         <option value="Falha no travamento do fecho ou no recuo do cinto">Falha no travamento do fecho ou recuo</option>
                                         <option value="Tiras de tecido desfiadas ou rasgadas">Tiras de tecido desfiadas ou rasgadas</option>
@@ -247,14 +259,14 @@
                             </div>
 
                             <!-- Observações livres adicionais -->
-                            <div class="pt-1">
-                                <textarea id="saida-obs" placeholder="Outras observações adicionais (opcional)..." class="w-full bg-white border border-gray-200 rounded-xl p-2.5 text-xs text-gray-700"></textarea>
+                            <div class="pt-2">
+                                <textarea id="saida-obs" placeholder="Outras observações adicionais (opcional)..." class="w-full bg-white border border-gray-300 rounded-xl p-3 text-sm text-gray-700"></textarea>
                             </div>
 
                         </div>
                     </div>
 
-                    <button onclick="enviarSaida()" id="btn-enviar-saida" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-black py-3.5 rounded-2xl shadow-md text-sm flex justify-center items-center gap-2">
+                    <button onclick="enviarSaida()" id="btn-enviar-saida" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-black py-4 rounded-2xl shadow-md text-base flex justify-center items-center gap-2">
                         <i class="fa-solid fa-paper-plane"></i> Registrar Saída
                     </button>
                 </div>
@@ -264,46 +276,46 @@
         <section id="aba-andamento" class="hidden space-y-4">
             <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
                 <div class="flex justify-between items-center border-b pb-2">
-                    <h2 class="font-black text-sm uppercase text-blue-900 flex items-center gap-2">
+                    <h2 class="font-black text-base uppercase text-blue-900 flex items-center gap-2">
                         <i class="fa-solid fa-truck-fast text-blue-600"></i> Viagens em Andamento
                     </h2>
-                    <button onclick="carregarViagensAtivas()" class="text-xs text-blue-700 font-bold"><i class="fa-solid fa-rotate"></i> Atualizar</button>
+                    <button onclick="carregarViagensAtivas()" class="text-sm text-blue-700 font-bold"><i class="fa-solid fa-rotate"></i> Atualizar</button>
                 </div>
-                <div id="lista-viagens-ativas" class="space-y-3 text-xs text-gray-600">
+                <div id="lista-viagens-ativas" class="space-y-3 text-sm text-gray-600">
                     Carregando viagens ativas...
                 </div>
             </div>
         </section>
 
         <section id="aba-seguro" class="hidden space-y-4">
-            <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4 text-center">
-                <i class="fa-solid fa-shield-halved text-4xl text-red-600"></i>
-                <h2 class="font-black text-base text-gray-900">Contatos de Emergência</h2>
-                <div class="space-y-3 text-xs">
-                    <div class="bg-red-50 p-3 rounded-2xl border border-red-100">
+            <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-5 text-center">
+                <i class="fa-solid fa-shield-halved text-5xl text-red-600"></i>
+                <h2 class="font-black text-lg text-gray-900">Contatos de Emergência</h2>
+                <div class="space-y-3 text-sm">
+                    <div class="bg-red-50 p-4 rounded-2xl border border-red-100">
                         <span class="block font-bold text-red-900">Guincho / Assistência 24h</span>
-                        <a href="tel:08000000000" class="text-sm font-black text-red-700 underline block mt-1">0800 000 0000</a>
+                        <a href="tel:08000000000" class="text-base font-black text-red-700 underline block mt-1">0800 000 0000</a>
                     </div>
-                    <div class="bg-blue-50 p-3 rounded-2xl border border-blue-100">
+                    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100">
                         <span class="block font-bold text-blue-900">Central do Transporte SMSA</span>
-                        <a href="tel:1836000000" class="text-sm font-black text-blue-800 underline block mt-1">(18) 3600-0000</a>
+                        <a href="tel:1836000000" class="text-base font-black text-blue-800 underline block mt-1">(18) 3600-0000</a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-30 shadow-lg">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-3 z-30 shadow-lg">
         <button onclick="mudarAba('saida')" id="btn-tab-saida" class="flex flex-col items-center text-xs tab-active py-1 px-3">
-            <i class="fa-solid fa-compass text-lg mb-0.5"></i>
+            <i class="fa-solid fa-compass text-xl mb-0.5"></i>
             <span>Saída</span>
         </button>
         <button onclick="mudarAba('andamento')" id="btn-tab-andamento" class="flex flex-col items-center text-xs text-gray-400 py-1 px-3">
-            <i class="fa-solid fa-truck-fast text-lg mb-0.5"></i>
+            <i class="fa-solid fa-truck-fast text-xl mb-0.5"></i>
             <span>Em Andamento</span>
         </button>
         <button onclick="mudarAba('seguro')" id="btn-tab-seguro" class="flex flex-col items-center text-xs text-red-500 py-1 px-3">
-            <i class="fa-solid fa-shield-halved text-lg mb-0.5"></i>
+            <i class="fa-solid fa-shield-halved text-xl mb-0.5"></i>
             <span>Seguro / Guincho</span>
         </button>
     </nav>
@@ -313,18 +325,18 @@
             <h3 class="font-black text-base text-blue-900 border-b pb-2 flex items-center gap-2">
                 <i class="fa-solid fa-address-card"></i> Configurar Perfil Padrão
             </h3>
-            <div class="space-y-3 text-xs">
+            <div class="space-y-3 text-sm">
                 <div>
                     <label class="font-bold text-gray-700 block mb-1">Seu Nome:</label>
-                    <select id="perfil-nome" class="w-full bg-gray-50 border rounded-xl p-2.5 font-semibold text-gray-800">
+                    <select id="perfil-nome" class="w-full bg-gray-50 border rounded-xl p-3 font-semibold text-gray-800 text-sm">
                         <option value="">Selecione na lista...</option>
                     </select>
                 </div>
                 <div>
                     <label class="font-bold text-gray-700 block mb-1">Telefone / WhatsApp:</label>
-                    <input type="tel" id="perfil-tel" placeholder="(18) 99999-9999" class="w-full bg-gray-50 border rounded-xl p-2.5 font-semibold">
+                    <input type="tel" id="perfil-tel" placeholder="(18) 99999-9999" class="w-full bg-gray-50 border rounded-xl p-3 font-semibold text-sm">
                 </div>
-                <button onclick="salvarPerfil()" class="w-full bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow">Salvar Perfil</button>
+                <button onclick="salvarPerfil()" class="w-full bg-blue-700 text-white font-bold py-3 rounded-xl shadow text-sm">Salvar Perfil</button>
             </div>
         </div>
     </div>
@@ -334,25 +346,25 @@
             <h3 class="font-black text-base text-blue-900 border-b pb-2 flex items-center gap-2">
                 <i class="fa-solid fa-flag-checkered"></i> Encerrar - Frota <span id="encerrar-frota-num">-</span>
             </h3>
-            <div class="space-y-3 text-xs">
+            <div class="space-y-3 text-sm">
                 <input type="hidden" id="encerrar-row-id">
                 <div>
                     <label class="font-bold text-gray-700 block mb-1">KM de Chegada:</label>
-                    <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full bg-gray-50 border border-emerald-500 rounded-xl p-2.5 font-black text-gray-900 text-base">
+                    <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full bg-gray-50 border border-emerald-500 rounded-xl p-3 font-black text-gray-900 text-lg">
                 </div>
                 <div>
                     <label class="font-bold text-gray-700 block mb-1">Foto do Hodômetro:</label>
-                    <button type="button" id="btn-foto-hodometro" onclick="simularFoto()" class="w-full bg-blue-50 text-blue-800 font-bold p-3 rounded-xl border border-dashed border-blue-300 flex justify-center items-center gap-2">
+                    <button type="button" id="btn-foto-hodometro" onclick="simularFoto()" class="w-full bg-blue-50 text-blue-800 font-bold p-3.5 rounded-xl border border-dashed border-blue-300 flex justify-center items-center gap-2">
                         <i class="fa-solid fa-camera"></i> <span id="label-foto">Tirar Foto / Anexar</span>
                     </button>
                 </div>
                 <div>
                     <label class="font-bold text-gray-700 block mb-1">Avarias na Chegada:</label>
-                    <input type="text" id="encerrar-avarias" value="Nada" class="w-full bg-gray-50 border rounded-xl p-2.5 font-semibold">
+                    <input type="text" id="encerrar-avarias" value="Nada" class="w-full bg-gray-50 border rounded-xl p-3 font-semibold">
                 </div>
                 <div class="flex gap-2 pt-2">
-                    <button onclick="fecharModalEncerrar()" class="w-1/2 bg-gray-200 text-gray-700 font-bold py-2.5 rounded-xl">Cancelar</button>
-                    <button onclick="confirmarEncerramento()" id="btn-confirmar-encerrar" class="w-1/2 bg-emerald-600 text-white font-bold py-2.5 rounded-xl shadow">Concluir</button>
+                    <button onclick="fecharModalEncerrar()" class="w-1/2 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl text-sm">Cancelar</button>
+                    <button onclick="confirmarEncerramento()" id="btn-confirmar-encerrar" class="w-1/2 bg-emerald-600 text-white font-bold py-3 rounded-xl shadow text-sm">Concluir</button>
                 </div>
             </div>
         </div>
@@ -364,10 +376,10 @@
                 <i class="fa-solid fa-circle-info text-blue-600"></i>
                 <span>DigiFrota <span class="text-xs font-normal text-gray-500">diz:</span></span>
             </div>
-            <p id="modal-digifrota-texto" class="text-sm font-bold text-gray-800 py-2">
+            <p id="modal-digifrota-texto" class="text-base font-bold text-gray-800 py-2">
                 Mensagem aqui...
             </p>
-            <button onclick="fecharModalDigiFrota()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl text-sm shadow-md">
+            <button onclick="fecharModalDigiFrota()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-sm shadow-md">
                 OK
             </button>
         </div>
@@ -398,6 +410,25 @@
             } else {
                 el.classList.add('hidden');
             }
+        }
+
+        function marcarTudoOk() {
+            document.getElementById("chk-mecanica").selectedIndex = 0;
+            document.getElementById("chk-fluidos").selectedIndex = 0;
+            document.getElementById("chk-eletrica").selectedIndex = 0;
+            document.getElementById("chk-iluminacao").selectedIndex = 0;
+            document.getElementById("chk-funilaria").selectedIndex = 0;
+            document.getElementById("chk-vidros").selectedIndex = 0;
+            document.getElementById("chk-ar").selectedIndex = 0;
+            document.getElementById("chk-cintos").selectedIndex = 0;
+
+            ['mecanica', 'fluidos', 'eletrica', 'iluminacao', 'funilaria', 'vidros', 'ar', 'cintos'].forEach(item => {
+                const span = document.getElementById(`status-${item}`);
+                span.textContent = "Tudo Certo (OK)";
+                span.className = "text-emerald-600 font-extrabold";
+            });
+
+            mostrarAvisoDigiFrota("Veículo marcado como em bom estado de conservação (Tudo OK)!");
         }
 
         function atualizarStatusTexto(selectId, spanId) {
@@ -527,7 +558,6 @@
             const m1 = document.getElementById("saida-motorista1").value;
             const m2 = document.getElementById("saida-motorista2").value;
             
-            // Recolhe os valores do checklist em leque
             const mecanica = document.getElementById("chk-mecanica").value;
             const fluidos = document.getElementById("chk-fluidos").value;
             const eletrica = document.getElementById("chk-eletrica").value;
@@ -602,11 +632,11 @@
                     div.innerHTML += `
                         <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex justify-between items-center">
                             <div>
-                                <span class="font-black text-blue-900 text-sm">Frota ${v.frota}</span>
-                                <div class="text-gray-700"><strong>Destino:</strong> ${v.destino}</div>
-                                <div class="text-gray-500 text-[10px]">Motorista: ${v.motorista}</div>
+                                <span class="font-black text-blue-900 text-base">Frota ${v.frota}</span>
+                                <div class="text-gray-700 text-sm"><strong>Destino:</strong> ${v.destino}</div>
+                                <div class="text-gray-500 text-xs">Motorista: ${v.motorista}</div>
                             </div>
-                            <button onclick="abrirModalEncerrar('${v.frota}', '${v.rowId || ''}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl shadow flex items-center gap-1">
+                            <button onclick="abrirModalEncerrar('${v.frota}', '${v.rowId || ''}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl shadow flex items-center gap-1.5 text-sm">
                                 <i class="fa-solid fa-flag-checkered"></i> Encerrar
                             </button>
                         </div>
@@ -629,7 +659,7 @@
 
         function simularFoto() {
             document.getElementById("label-foto").textContent = "Foto OK ✓";
-            document.getElementById("btn-foto-hodometro").className = "w-full bg-emerald-50 text-emerald-800 font-bold p-3 rounded-xl border border-emerald-300 flex justify-center items-center gap-2";
+            document.getElementById("btn-foto-hodometro").className = "w-full bg-emerald-50 text-emerald-800 font-bold p-3.5 rounded-xl border border-emerald-300 flex justify-center items-center gap-2 text-sm";
         }
 
         async function confirmarEncerramento() {
