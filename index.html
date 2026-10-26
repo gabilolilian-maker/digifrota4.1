@@ -227,9 +227,9 @@
             </div>
 
             <div>
-                <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Foto do Hodômetro:</label>
-                <input type="file" id="encerrar-foto" accept="image/*" capture="environment" class="w-full border rounded-xl p-3 text-base bg-gray-50 outline-none" onchange="comprimirFoto(this)">
-                <span id="status-foto" class="text-sm text-green-600 font-bold hidden mt-1">✅ Foto Compactada OK</span>
+                <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Foto do Hodômetro (Obrigatório):</label>
+                <input type="file" id="encerrar-foto" accept="image/*" capture="environment" class="w-full border rounded-xl p-3 text-base bg-gray-50 outline-none" onchange="comprimirFoto(this)" required>
+                <span id="status-foto" class="text-sm text-green-600 font-bold hidden mt-1">✅ Foto Anexada e OK</span>
             </div>
 
             <div>
@@ -514,6 +514,9 @@
             viagemSelecionadaKmInicial = parseFloat(kmSaida) || 0;
             document.getElementById('modal-encerrar-titulo').innerText = `Encerrar - Frota ${frota}`;
             document.getElementById('encerrar-km').value = "";
+            document.getElementById('encerrar-foto').value = "";
+            fotoBase64 = "";
+            document.getElementById('status-foto').classList.add('hidden');
             document.getElementById('modal-encerrar').classList.remove('hidden');
         }
 
@@ -548,6 +551,11 @@
 
             if(isNaN(kmChegadaDigitado)) {
                 mostrarAlerta("Por favor, informe o KM de chegada.");
+                return;
+            }
+
+            if (!fotoBase64) {
+                mostrarAlerta("A foto do hodômetro é obrigatória para encerrar a viagem!");
                 return;
             }
 
