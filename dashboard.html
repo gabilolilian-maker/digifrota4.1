@@ -194,16 +194,14 @@
 
         async function carregarDados() {
             try {
-                // Buscar dados gerais do painel
+                // 1. Carregar resumo do Dashboard
                 const res = await fetch(`${API_URL}?action=getDashboard`);
                 const dados = await res.json();
 
-                // Preencher totais
                 document.getElementById("stat-total").textContent = dados.total || 0;
                 document.getElementById("stat-trocar").textContent = dados.trocar || 0;
                 document.getElementById("stat-atencao").textContent = dados.atencao || 0;
 
-                // Alertas de Óleo e Tabela de Frotas
                 const alertasDiv = document.getElementById("dash-alertas-frota");
                 const dashAlertas = document.getElementById("tabela-frotas-corpo");
                 alertasDiv.innerHTML = "";
@@ -233,7 +231,7 @@
                 }
                 if(alertasDiv.innerHTML === "") alertasDiv.innerHTML = '<p class="text-xs text-emerald-600 font-bold">Nenhum alerta pendente.</p>';
 
-                // Buscar Viagens e calcular o Ranking por SOMA DE KM RODADO nas utilizações
+                // 2. Carregar Viagens e Calcular Ranking pela Soma dos KM Rodados
                 const resV = await fetch(`${API_URL}?action=obterDadosFrotas`);
                 const viagens = await resV.json();
 
@@ -282,7 +280,7 @@
 
                 if(recViagensDiv.innerHTML === "") recViagensDiv.innerHTML = '<p class="text-xs text-gray-400">Sem registos de viagens.</p>';
 
-                // Montar o Ranking por SOMA de km rodado nas utilizações
+                // Montar o Ranking baseado na SOMA dos KM rodados
                 let rankingArray = Object.keys(kmRodadoPorFrota).map(frota => {
                     return { frota: frota, totalKm: kmRodadoPorFrota[frota] };
                 });
