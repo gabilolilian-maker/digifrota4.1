@@ -72,7 +72,6 @@
                         </select>
                     </div>
 
-                    <!-- DATA E HORA DE SAÍDA SELECIONÁVEL -->
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="font-bold text-gray-700 block mb-1 text-sm">Data de Saída:</label>
@@ -343,7 +342,7 @@
         </div>
     </div>
 
-    <!-- MODAL ENCERRAMENTO COM DATA, HORA E FOTO COMPACTADA -->
+    <!-- MODAL ENCERRAMENTO -->
     <div id="modal-encerrar" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full space-y-4 shadow-2xl">
             <h3 class="font-black text-base text-blue-900 border-b pb-2 flex items-center gap-2">
@@ -352,7 +351,6 @@
             <div class="space-y-3 text-sm">
                 <input type="hidden" id="encerrar-row-id">
                 
-                <!-- DATA E HORA DE CHEGADA SELECIONÁVEL -->
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="font-bold text-gray-700 block mb-1 text-xs">Data de Chegada:</label>
@@ -368,6 +366,16 @@
                     <label class="font-bold text-gray-700 block mb-1 text-base">KM de Chegada:</label>
                     <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full bg-emerald-50/50 border-2 border-emerald-500 rounded-xl p-3.5 font-black text-gray-900 text-xl">
                 </div>
+
+                <!-- CAMPO DE ABASTECIMENTO -->
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1 text-sm">Veículo Abastecido?</label>
+                    <select id="encerrar-abastecido" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 text-sm">
+                        <option value="Não">Não</option>
+                        <option value="Sim">Sim</option>
+                    </select>
+                </div>
+
                 <div>
                     <label class="font-bold text-gray-700 block mb-1">Foto do Hodômetro:</label>
                     <input type="file" id="input-foto-hodometro" accept="image/*" capture="environment" class="hidden" onchange="processarFotoHodometro(event)">
@@ -398,7 +406,7 @@
             <p id="modal-digifrota-texto" class="text-base font-bold text-gray-800 py-2">
                 Mensagem aqui...
             </p>
-            <button onclick="fecharModalDigiFrota()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-sm shadow-md">
+            <button onclick="fecharAvisoEContinuar()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-sm shadow-md">
                 OK
             </button>
         </div>
@@ -409,6 +417,7 @@
 
         let listaFrotasGlobal = [];
         let fotoHodometroBase64 = "";
+        let acaoAposAviso = null;
 
         document.addEventListener("DOMContentLoaded", () => {
             carregarDadosIniciais();
@@ -427,13 +436,18 @@
             document.getElementById("saida-hora").value = `${hora}:${min}`;
         }
 
-        function mostrarAvisoDigiFrota(mensagem) {
+        function mostrarAvisoDigiFrota(mensagem, callback = null) {
             document.getElementById("modal-digifrota-texto").textContent = mensagem;
+            acaoAposAviso = callback;
             document.getElementById("modal-digifrota").classList.remove("hidden");
         }
 
-        function fecharModalDigiFrota() {
+        function fecharAvisoEContinuar() {
             document.getElementById("modal-digifrota").classList.add("hidden");
+            if (typeof acaoAposAviso === 'function') {
+                acaoAposAviso();
+                acaoAposAviso = null;
+            }
         }
 
         function alternarLeque(id) {
@@ -608,13 +622,18 @@
                     })
                 });
 
-                mostrarAvisoDigiFrota("Saída registrada com sucesso!");
                 document.getElementById("saida-km").value = "";
                 document.getElementById("saida-destino").value = "";
                 document.getElementById("saida-obs").value = "";
                 document.getElementById("saida-frota").value = "";
                 document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
                 preencherDataHoraAtual();
+
+                // Após fechar o aviso, muda automaticamente para a página de encerramento (Em Andamento)
+                mostrarAvisoDigiFrota("Saída registrada com sucesso!", () => {
+                    mudarAba('andamento');
+                });
+
             } catch(e) {
                 mostrarAvisoDigiFrota("Erro ao conectar com o servidor.");
             } finally {
@@ -670,11 +689,11 @@
             document.getElementById("encerrar-row-id").value = rowId;
             document.getElementById("encerrar-km").value = "";
             document.getElementById("encerrar-avarias").value = "Nada";
+            document.getElementById("encerrar-abastecido").value = "Não";
             fotoHodometroBase64 = "";
             document.getElementById("label-foto").textContent = "Tirar Foto / Anexar";
             document.getElementById("btn-foto-hodometro").className = "w-full bg-blue-50 text-blue-800 font-bold p-3.5 rounded-xl border border-dashed border-blue-300 flex justify-center items-center gap-2 text-sm";
             
-            // Preenche data e hora atuais no encerramento automaticamente
             const agora = new Date();
             const ano = agora.getFullYear();
             const mes = String(agora.getMonth() + 1).padStart(2, '0');
@@ -738,6 +757,7 @@
             const dataChegada = document.getElementById("encerrar-data").value;
             const horaChegada = document.getElementById("encerrar-hora").value;
             const kmChegada = document.getElementById("encerrar-km").value;
+            const abastecido = document.getElementById("encerrar-abastecido").value;
             const avarias = document.getElementById("encerrar-avarias").value;
 
             if(!kmChegada || !dataChegada || !horaChegada) {
@@ -760,6 +780,7 @@
                         dataChegada: dataChegada,
                         horaChegada: horaChegada,
                         kmChegada: kmChegada,
+                        abastecido: abastecido,
                         avarias: avarias,
                         foto: fotoHodometroBase64
                     })
