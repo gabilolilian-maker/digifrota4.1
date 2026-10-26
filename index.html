@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigiFrota 4.0 - Saúde Araçatuba</title>
-    <!-- Ícone do Web App / Atalho -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
-    <!-- Tailwind CSS para design responsivo e moderno -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-100 font-sans text-base pb-24">
 
-    <!-- Cabeçalho Principal -->
     <header class="bg-blue-900 text-white p-5 shadow-lg flex justify-between items-center border-b-4 border-blue-700">
         <div class="flex items-center space-x-3">
             <div class="bg-white p-2 rounded-xl text-blue-900 shadow">
@@ -34,7 +30,6 @@
         </div>
     </header>
 
-    <!-- Informações do Motorista Padrão no Aparelho -->
     <div class="bg-white border-b px-5 py-3 text-base text-gray-700 flex justify-between items-center shadow-sm">
         <div>
             <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Motorista Padrão (Aparelho):</span>
@@ -42,7 +37,6 @@
         </div>
     </div>
 
-    <!-- Container Principal / Conteúdo das Abas -->
     <main class="p-4 max-w-xl mx-auto">
 
         <!-- ABA 1: REGISTRAR SAÍDA -->
@@ -53,7 +47,6 @@
                 </h2>
 
                 <form id="form-saida" onsubmit="enviarSaida(event)">
-                    <!-- Motorista Principal -->
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Motorista Principal (Motorista 1):</label>
                         <select id="motorista1" class="w-full border rounded-xl p-3 text-base bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-900 outline-none transition" required>
@@ -61,7 +54,6 @@
                         </select>
                     </div>
 
-                    <!-- Segundo Motorista -->
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Segundo Motorista / Acompanhante (Opcional):</label>
                         <select id="motorista2" class="w-full border rounded-xl p-3 text-base bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-900 outline-none transition">
@@ -69,7 +61,6 @@
                         </select>
                     </div>
 
-                    <!-- Seleção de Frota -->
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Selecione o Veículo (Frota):</label>
                         <select id="frota" class="w-full border rounded-xl p-3 text-base bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-900 outline-none transition" required onchange="atualizarKmSaida()">
@@ -77,7 +68,6 @@
                         </select>
                     </div>
 
-                    <!-- Data e Hora de Saída -->
                     <div class="grid grid-cols-2 gap-3 mb-4">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Data de Saída:</label>
@@ -89,7 +79,6 @@
                         </div>
                     </div>
 
-                    <!-- Destinos (Checkboxes Múltiplos Organizados) -->
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-gray-700 uppercase mb-1">Destino(s) da Viagem (Selecione um ou mais):</label>
                         <div id="container-destinos" class="border rounded-xl p-3 bg-gray-50 max-h-48 overflow-y-auto space-y-2 shadow-inner">
@@ -97,27 +86,22 @@
                         </div>
                     </div>
 
-                    <!-- KM de Saída -->
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-gray-700 uppercase mb-1">KM de Saída (Hodômetro):</label>
                         <input type="number" id="kmSaida" placeholder="Digite ou confirme o KM..." class="w-full border rounded-xl p-3 text-base bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-900 outline-none transition" required>
                     </div>
 
-                    <!-- Checklist / Observações Detalhado em Cascata -->
                     <div class="mb-5 bg-gray-50 p-4 border rounded-2xl space-y-4 shadow-sm">
                         <label class="block text-sm font-extrabold text-gray-800 uppercase">Checklist do Veículo:</label>
                         
-                        <!-- Atalho Tudo Certo -->
                         <div class="flex items-center bg-green-50 border border-green-300 p-3.5 rounded-xl shadow-sm">
                             <input type="checkbox" id="check-tudo-ok" checked onchange="alternarChecklistGeral(this)" class="w-5 h-5 text-green-600 rounded cursor-pointer">
                             <label for="check-tudo-ok" class="ml-3 text-base font-bold text-green-900 cursor-pointer">✅ Veículo 100% OK / Sem Observações</label>
                         </div>
 
-                        <!-- Detalhes do Checklist em Cascata por Grupo -->
                         <div id="detalhes-checklist" class="hidden space-y-3 pt-2 border-t">
                             <p class="text-xs text-red-600 font-bold uppercase tracking-wider">Marque abaixo itens com pendência ou avaria:</p>
                             
-                            <!-- Grupo Pneus e Rodas -->
                             <div class="bg-white p-3.5 rounded-xl border shadow-sm">
                                 <span class="font-bold text-sm text-blue-900 block mb-2"><i class="fa-solid fa-circle-dot mr-1 text-blue-700"></i> Pneus e Rodas</span>
                                 <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
@@ -128,7 +112,6 @@
                                 </div>
                             </div>
 
-                            <!-- Grupo Iluminação e Elétrica -->
                             <div class="bg-white p-3.5 rounded-xl border shadow-sm">
                                 <span class="font-bold text-sm text-blue-900 block mb-2"><i class="fa-solid fa-bolt mr-1 text-blue-700"></i> Iluminação e Parte Elétrica</span>
                                 <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
@@ -136,48 +119,10 @@
                                     <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Farol (luz baixa) desregulado" class="w-4 h-4 text-blue-900 rounded"><span>Farol Desregulado</span></label>
                                     <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Lanterna traseira quebrada/apagada" class="w-4 h-4 text-blue-900 rounded"><span>Lanterna Quebrada</span></label>
                                     <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Seta / pisca com defeito" class="w-4 h-4 text-blue-900 rounded"><span>Seta / Pisca Defeito</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Luz da placa queimada" class="w-4 h-4 text-blue-900 rounded"><span>Luz de Placa Queimada</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Problema bateria ou módulo" class="w-4 h-4 text-blue-900 rounded"><span>Problema Bateria</span></label>
-                                </div>
-                            </div>
-
-                            <!-- Grupo Motor, Mecânica e Fluidos -->
-                            <div class="bg-white p-3.5 rounded-xl border shadow-sm">
-                                <span class="font-bold text-sm text-blue-900 block mb-2"><i class="fa-solid fa-gears mr-1 text-blue-700"></i> Motor, Mecânica e Fluidos</span>
-                                <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Fumaça saindo do motor" class="w-4 h-4 text-blue-900 rounded"><span>Fumaça no Motor</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Vazamento de óleo" class="w-4 h-4 text-blue-900 rounded"><span>Vazamento de Óleo</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Correia com desgaste visível / barulho" class="w-4 h-4 text-blue-900 rounded"><span>Correia Desgastada</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Nível do óleo precisando completar" class="w-4 h-4 text-blue-900 rounded"><span>Óleo Baixo</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Câmbio / Dificuldade para engrenar marcha" class="w-4 h-4 text-blue-900 rounded"><span>Câmbio Ruim</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Ar condicionado sem funcionar" class="w-4 h-4 text-blue-900 rounded"><span>Ar Condicionado Defeito</span></label>
-                                </div>
-                            </div>
-
-                            <!-- Grupo Freios, Suspensão e Direção -->
-                            <div class="bg-white p-3.5 rounded-xl border shadow-sm">
-                                <span class="font-bold text-sm text-blue-900 block mb-2"><i class="fa-solid fa-car-burst mr-1 text-blue-700"></i> Freios, Suspensão e Direção</span>
-                                <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pedal de freio fundo / mole" class="w-4 h-4 text-blue-900 rounded"><span>Freio Fundo / Mole</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Ruído ao frear" class="w-4 h-4 text-blue-900 rounded"><span>Ruído ao Frear</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Barulho na suspensão" class="w-4 h-4 text-blue-900 rounded"><span>Barulho Suspensão</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Veículo puxando para um lado / Direção" class="w-4 h-4 text-blue-900 rounded"><span>Direção Puxando</span></label>
-                                </div>
-                            </div>
-
-                            <!-- Grupo Carroceria, Vidros e Segurança -->
-                            <div class="bg-white p-3.5 rounded-xl border shadow-sm">
-                                <span class="font-bold text-sm text-blue-900 block mb-2"><i class="fa-solid fa-caravan mr-1 text-blue-700"></i> Carroceria, Vidros e Segurança</span>
-                                <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Para-brisa com trinca ou riscado" class="w-4 h-4 text-blue-900 rounded"><span>Para-brisa Trincado/Riscado</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Porta com dificuldade de fechar / travada" class="w-4 h-4 text-blue-900 rounded"><span>Porta Defeito</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Extintor ausente ou vencido" class="w-4 h-4 text-blue-900 rounded"><span>Extintor Vencido/Ausente</span></label>
-                                    <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Amassado / Arranhão na lataria" class="w-4 h-4 text-blue-900 rounded"><span>Lataria Danificada</span></label>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Observações Adicionais -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">Outras Observações / Avarias (Opcional):</label>
                             <input type="text" id="obs-detalhada" placeholder="Ex: Detalhe específico da viagem..." class="w-full border rounded-xl p-3 text-base bg-white focus:ring-2 focus:ring-blue-900 outline-none">
@@ -215,7 +160,7 @@
                     <i class="fa-solid fa-shield-halved text-4xl"></i>
                 </div>
                 <h2 class="text-xl font-bold text-gray-800">Assistência e Guincho 24h</h2>
-                <p class="text-base text-gray-600">Em caso de pane mecânica, acidente ou necessidade de guincho na estrada, utilize o botão abaixo para contato direto com a central.</p>
+                <p class="text-base text-gray-600">Em caso de pane mecânica ou acidente, utilize o botão abaixo para contato direto.</p>
                 <a href="https://wa.me/555199931300?text=Olá,%20preciso%20de%20suporte%20de%20guincho%20para%20o%20veículo%20da%20Saúde%20de%20Araçatuba." target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl shadow-lg text-center text-lg transition">
                     <i class="fa-brands fa-whatsapp text-2xl mr-2"></i> Chamar Guincho (51 9993-1300)
                 </a>
@@ -224,7 +169,6 @@
 
     </main>
 
-    <!-- MENU INFERIOR FIXO -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 shadow-2xl z-40">
         <button onclick="alternarAba('saida')" id="nav-saida" class="flex flex-col items-center text-blue-900 font-bold transition">
             <i class="fa-solid fa-compass text-2xl"></i>
@@ -261,7 +205,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE ENCERRAMENTO DE VIAGEM -->
+    <!-- MODAL DE ENCERRAMENTO -->
     <div id="modal-encerrar" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl max-h-screen overflow-y-auto">
             <h3 id="modal-encerrar-titulo" class="text-lg font-bold text-blue-900 border-b pb-2">Encerrar Viagem</h3>
@@ -281,7 +225,7 @@
 
             <div>
                 <label class="block text-sm font-bold text-gray-700 uppercase mb-1">KM de Chegada:</label>
-                <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full border rounded-xl p-3 text-base bg-gray-50 outline-none" oninput="verificarKmEncerramentoDigitado()">
+                <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full border rounded-xl p-3 text-base bg-gray-50 outline-none">
             </div>
 
             <div>
@@ -310,7 +254,7 @@
         </div>
     </div>
 
-    <!-- MODAL PERSONALIZADO (DIGIFROTA DIZ) -->
+    <!-- MODAL DE ALERTA -->
     <div id="modal-alerta" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center border-t-4 border-blue-900">
             <div class="text-blue-900 text-4xl mb-1"><i class="fa-solid fa-circle-info"></i></div>
@@ -322,7 +266,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT DE INTEGRAÇÃO E LÓGICA -->
     <script>
         const URL_API = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
 
@@ -334,7 +277,6 @@
         function mostrarAlerta(mensagem, tipo = "alert", callback = null) {
             document.getElementById('modal-alerta-mensagem').innerText = mensagem;
             callbackModalConfirm = callback;
-            
             let botoesDiv = document.getElementById('modal-alerta-botoes');
             if (tipo === "confirm") {
                 botoesDiv.innerHTML = `
@@ -367,7 +309,6 @@
             const agora = new Date();
             const dataIso = agora.toISOString().split('T')[0];
             const horaIso = agora.toTimeString().substring(0, 5);
-            
             if(document.getElementById('dataSaida')) document.getElementById('dataSaida').value = dataIso;
             if(document.getElementById('horaSaida')) document.getElementById('horaSaida').value = horaIso;
             if(document.getElementById('encerrar-data')) document.getElementById('encerrar-data').value = dataIso;
@@ -400,7 +341,6 @@
             try {
                 let resposta = await fetch(`${URL_API}?action=getInicial`);
                 let resultado = await resposta.json();
-                
                 dadosGlobais = resultado;
 
                 let selectM1 = document.getElementById('motorista1');
@@ -425,31 +365,10 @@
 
                 let containerDestinos = document.getElementById('container-destinos');
                 containerDestinos.innerHTML = '';
+                let destinos = [...new Set(resultado.destinos || [])];
+                destinos.sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-                let destinosBrutos = resultado.destinos || [];
-                let destinos = [...new Set(destinosBrutos)];
-
-                const termosFinais = ["OUTROS", "DIVERSOS", "INTERNO", "OFICINA", "LAVAGEM", "MANUTENCAO", "POSTO", "MECANICA"];
-
-                let topoLista = [];
-                if (destinos.some(d => d.toUpperCase() === "TESTE")) topoLista.push("TESTE");
-                if (destinos.some(d => d.toUpperCase() === "CROSS")) topoLista.push("CROSS");
-
-                let cidades = destinos.filter(d => {
-                    let u = d.toUpperCase();
-                    return u !== "TESTE" && u !== "CROSS" && !termosFinais.some(termo => u.includes(termo));
-                });
-                cidades.sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-                let fimLista = destinos.filter(d => {
-                    let u = d.toUpperCase();
-                    return u !== "TESTE" && u !== "CROSS" && termosFinais.some(termo => u.includes(termo));
-                });
-                fimLista.sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-                let destinosFinais = [...topoLista, ...cidades, ...fimLista];
-
-                destinosFinais.forEach(d => {
+                destinos.forEach(d => {
                     containerDestinos.innerHTML += `
                         <label class="flex items-center space-x-3 text-base cursor-pointer hover:bg-blue-50 p-2 rounded-xl transition">
                             <input type="checkbox" name="destino-check" value="${d}" class="w-5 h-5 text-blue-900 rounded">
@@ -457,11 +376,9 @@
                         </label>
                     `;
                 });
-
                 carregarPerfilSalvo();
             } catch (erro) {
                 console.error("Erro ao carregar dados:", erro);
-                mostrarAlerta("Erro ao carregar dados da planilha.");
             }
         }
 
@@ -476,7 +393,7 @@
 
         function atualizarKmSaida() {
             let frotaSel = document.getElementById('frota').value;
-            let encontrada = dadosGlobais.frotas.find(f => f.frota === frotaSel);
+            let encontrada = dadosGlobais.frotas.find(f => f.frota == frotaSel);
             if (encontrada && encontrada.kmAtual) {
                 document.getElementById('kmSaida').value = encontrada.kmAtual;
                 document.getElementById('kmSaida').dataset.kmUltimo = encontrada.kmAtual;
@@ -487,7 +404,6 @@
 
         async function enviarSaida(e) {
             e.preventDefault();
-            
             let checkboxes = document.querySelectorAll('input[name="destino-check"]:checked');
             let destinosSelecionados = [];
             checkboxes.forEach(cb => destinosSelecionados.push(cb.value));
@@ -509,7 +425,6 @@
                 });
                 return;
             }
-
             processarEnvioSaida(destinosSelecionados, kmAtualDigitado, "");
         }
 
@@ -526,13 +441,8 @@
                 checklistFinal = "Checklist com pendências: " + (itensMarcados.length > 0 ? itensMarcados.join(", ") : "Nenhum item marcado");
             }
 
-            if (obsTexto) {
-                checklistFinal += " | Obs: " + obsTexto;
-            }
-
-            if (alertaKmMenor) {
-                checklistFinal += alertaKmMenor;
-            }
+            if (obsTexto) checklistFinal += " | Obs: " + obsTexto;
+            if (alertaKmMenor) checklistFinal += alertaKmMenor;
 
             let dados = {
                 action: 'registrarSaida',
@@ -551,10 +461,7 @@
             btn.disabled = true;
 
             try {
-                await fetch(URL_API, {
-                    method: 'POST',
-                    body: JSON.stringify(dados)
-                });
+                await fetch(URL_API, { method: 'POST', body: JSON.stringify(dados) });
                 mostrarAlerta("Saída registrada com sucesso!");
                 document.getElementById('form-saida').reset();
                 document.getElementById('check-tudo-ok').checked = true;
@@ -586,12 +493,7 @@
                 }
 
                 let motoristaPadrao = localStorage.getItem('digifrota_motorista') || "";
-
-                ativas.sort((a, b) => {
-                    let aEhMeu = (a.motorista === motoristaPadrao) ? 1 : 0;
-                    let bEhMeu = (b.motorista === motoristaPadrao) ? 1 : 0;
-                    return bEhMeu - aEhMeu;
-                });
+                ativas.sort((a, b) => ((b.motorista === motoristaPadrao) ? 1 : 0) - ((a.motorista === motoristaPadrao) ? 1 : 0));
 
                 container.innerHTML = "";
                 ativas.forEach(v => {
@@ -621,7 +523,7 @@
             document.getElementById('encerrar-frota').value = frota;
             viagemSelecionadaKmInicial = parseFloat(kmSaida) || 0;
             document.getElementById('modal-encerrar-titulo').innerText = `Encerrar - Frota ${frota}`;
-            document.getElementById('encerrar-km').value = ""; // Limpa para o usuário digitar o correto
+            document.getElementById('encerrar-km').value = "";
             document.getElementById('modal-encerrar').classList.remove('hidden');
         }
 
@@ -667,15 +569,12 @@
                 });
                 return;
             }
-
             processarEnvioEncerramento("");
         }
 
         async function processarEnvioEncerramento(alertaKmMenor) {
             let avariasDigitadas = document.getElementById('encerrar-avarias').value;
-            if (alertaKmMenor) {
-                avariasDigitadas += alertaKmMenor;
-            }
+            if (alertaKmMenor) avariasDigitadas += alertaKmMenor;
 
             let dados = {
                 action: 'encerrarViagem',
@@ -693,14 +592,8 @@
             btn.disabled = true;
 
             try {
-                let resposta = await fetch(URL_API, {
-                    method: 'POST',
-                    body: JSON.stringify(dados)
-                });
-                
-                if (!resposta.ok) {
-                    throw new Error("Erro de comunicação com o servidor.");
-                }
+                let resposta = await fetch(URL_API, { method: 'POST', body: JSON.stringify(dados) });
+                if (!resposta.ok) throw new Error("Erro de comunicação com o servidor.");
 
                 mostrarAlerta("Viagem encerrada com sucesso!");
                 fecharModalEncerrar();
