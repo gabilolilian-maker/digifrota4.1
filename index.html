@@ -422,37 +422,30 @@
                     selectFrota.innerHTML += `<option value="${f.frota}">Frota ${f.frota}</option>`;
                 });
 
-                // ORDENAÇÃO RIGOROSA DOS DESTINOS (TESTE E CROSS NO TOPO)
                 let containerDestinos = document.getElementById('container-destinos');
                 containerDestinos.innerHTML = '';
 
                 let destinosBrutos = resultado.destinos || [];
-                // Remove duplicadas caso haja na planilha
                 let destinos = [...new Set(destinosBrutos)];
 
-                // Identifica o que NÃO é cidade (termos genéricos / internos) para mandar ao final
                 const termosFinais = ["OUTROS", "DIVERSOS", "INTERNO", "OFICINA", "LAVAGEM", "MANUTENCAO", "POSTO", "MECANICA"];
 
-                // 1. Extrai TESTE e CROSS para ficarem no topo absoluto exato
                 let topoLista = [];
                 if (destinos.some(d => d.toUpperCase() === "TESTE")) topoLista.push("TESTE");
                 if (destinos.some(d => d.toUpperCase() === "CROSS")) topoLista.push("CROSS");
 
-                // 2. Destinos do meio (cidades em ordem alfabética limpa)
                 let cidades = destinos.filter(d => {
                     let u = d.toUpperCase();
                     return u !== "TESTE" && u !== "CROSS" && !termosFinais.some(termo => u.includes(termo));
                 });
                 cidades.sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-                // 3. Termos que vão para o final da lista
                 let fimLista = destinos.filter(d => {
                     let u = d.toUpperCase();
                     return u !== "TESTE" && u !== "CROSS" && termosFinais.some(termo => u.includes(termo));
                 });
                 fimLista.sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-                // Junta rigorosamente na ordem desejada
                 let destinosFinais = [...topoLista, ...cidades, ...fimLista];
 
                 destinosFinais.forEach(d => {
@@ -498,236 +491,4 @@
             let destinosSelecionados = [];
             checkboxes.forEach(cb => destinosSelecionados.push(cb.value));
 
-            if (destinosSelecionados.length === 0) {
-                mostrarAlerta("Por favor, selecione pelo menos um destino.");
-                return;
-            }
-
-            let kmInput = document.getElementById('kmSaida');
-            let kmAtualDigitado = parseFloat(kmInput.value);
-            let kmUltimoRegistrado = parseFloat(kmInput.dataset.kmUltimo);
-
-            if (!isNaN(kmUltimoRegistrado) && kmAtualDigitado < kmUltimoRegistrado) {
-                mostrarAlerta(`O KM digitado (${kmAtualDigitado}) é MENOR que o último KM registrado desta frota (${kmUltimoRegistrado}). Deseja realmente prosseguir?`, "confirm", (confirmado) => {
-                    if (confirmado) {
-                        processarEnvioSaida(destinosSelecionados, kmAtualDigitado, " [ALERTA: KM DIGITADO MENOR QUE O ANTERIOR]");
-                    }
-                });
-                return;
-            }
-
-            processarEnvioSaida(destinosSelecionados, kmAtualDigitado, "");
-        }
-
-        async function processarEnvioSaida(destinosSelecionados, kmAtualDigitado, alertaKmMenor) {
-            let tudoOk = document.getElementById('check-tudo-ok').checked;
-            let obsTexto = document.getElementById('obs-detalhada').value.trim();
-            let checklistFinal = "Checklist: Tudo Certo (OK)";
-
-            if (!tudoOk) {
-                let itensMarcados = [];
-                document.querySelectorAll('input[name="item-check"]:checked').forEach(el => {
-                    itensMarcados.push(el.value);
-                });
-                checklistFinal = "Checklist com pendências: " + (itensMarcados.length > 0 ? itensMarcados.join(", ") : "Nenhum item marcado");
-            }
-
-            if (obsTexto) {
-                checklistFinal += " | Obs: " + obsTexto;
-            }
-
-            if (alertaKmMenor) {
-                checklistFinal += alertaKmMenor;
-            }
-
-            let dados = {
-                action: 'registrarSaida',
-                motorista1: document.getElementById('motorista1').value,
-                motorista2: document.getElementById('motorista2').value,
-                frota: document.getElementById('frota').value,
-                dataSaida: document.getElementById('dataSaida').value,
-                horaSaida: document.getElementById('horaSaida').value,
-                destino: destinosSelecionados,
-                kmSaida: kmAtualDigitado,
-                observacoes: checklistFinal
-            };
-
-            let btn = document.getElementById('btn-registrar');
-            btn.innerHTML = `<span>Registrando...</span>`;
-            btn.disabled = true;
-
-            try {
-                await fetch(URL_API, {
-                    method: 'POST',
-                    body: JSON.stringify(dados)
-                });
-                mostrarAlerta("Saída registrada com sucesso!");
-                document.getElementById('form-saida').reset();
-                document.getElementById('check-tudo-ok').checked = true;
-                document.getElementById('detalhes-checklist').classList.add('hidden');
-                preencherDataHoraAtual();
-                carregarPerfilSalvo();
-                alternarAba('andamento');
-            } catch (erro) {
-                mostrarAlerta("Erro ao registrar saída: " + erro);
-            } finally {
-                btn.innerHTML = `<span>Registrar Saída</span>`;
-                btn.disabled = false;
-            }
-        }
-
-        async function carregarViagensEmAndamento() {
-            let container = document.getElementById('lista-viagens-ativas');
-            container.innerHTML = '<p class="text-base text-gray-500 text-center py-4">Carregando viagens...</p>';
-
-            try {
-                let resposta = await fetch(`${URL_API}?action=obterDadosFrotas`);
-                let viagens = await resposta.json();
-                
-                let ativas = viagens.filter(v => v.situacao === "EM CURSO");
-
-                if (ativas.length === 0) {
-                    container.innerHTML = '<p class="text-base text-gray-500 text-center py-4">Nenhuma viagem em andamento no momento.</p>';
-                    return;
-                }
-
-                let motoristaPadrao = localStorage.getItem('digifrota_motorista') || "";
-
-                ativas.sort((a, b) => {
-                    let aEhMeu = (a.motorista === motoristaPadrao) ? 1 : 0;
-                    let bEhMeu = (b.motorista === motoristaPadrao) ? 1 : 0;
-                    return bEhMeu - aEhMeu;
-                });
-
-                container.innerHTML = "";
-                ativas.forEach(v => {
-                    let ehMinha = (v.motorista === motoristaPadrao);
-                    let suaViagemBadge = ehMinha ? '<span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-bold ml-2 shadow-sm">Sua Viagem</span>' : '';
-                    let estiloCard = ehMinha ? 'border-2 border-blue-600 bg-blue-50 shadow-md' : 'border border-gray-200 bg-white shadow-sm';
-                    
-                    container.innerHTML += `
-                        <div class="rounded-2xl p-4 ${estiloCard} flex justify-between items-center mb-3 transition">
-                            <div>
-                                <span class="font-extrabold text-blue-900 text-lg">Frota ${v.frota}</span> ${suaViagemBadge}
-                                <p class="text-sm text-gray-700 mt-1 font-medium"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> Destino: ${v.destino}</p>
-                                <p class="text-sm text-gray-600 font-medium"><i class="fa-solid fa-user text-blue-800 mr-1"></i> Motorista: ${v.motorista}</p>
-                            </div>
-                            <button onclick="abrirModalEncerrar('${v.frota}')" class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-3 rounded-xl font-bold shadow transition flex items-center space-x-1">
-                                <i class="fa-solid fa-flag-checkered mr-1"></i> <span>Encerrar</span>
-                            </button>
-                        </div>
-                    `;
-                });
-            } catch (erro) {
-                container.innerHTML = '<p class="text-base text-red-500 text-center py-4">Erro ao carregar viagens ativas.</p>';
-            }
-        }
-
-        function abrirModalEncerrar(frota) {
-            document.getElementById('encerrar-frota').value = frota;
-            document.getElementById('modal-encerrar-titulo').innerText = `Encerrar - Frota ${frota}`;
-            document.getElementById('modal-encerrar').classList.remove('hidden');
-        }
-
-        function fecharModalEncerrar() {
-            document.getElementById('modal-encerrar').classList.add('hidden');
-        }
-
-        function comprimirFoto(input) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-                reader.onload = function (e) {
-                    let img = new Image();
-                    img.onload = function () {
-                        let canvas = document.createElement('canvas');
-                        let ctx = canvas.getContext('2d');
-                        let largura = 800;
-                        let altura = (img.height * largura) / img.width;
-                        canvas.width = largura;
-                        canvas.height = altura;
-                        ctx.drawImage(img, 0, 0, largura, altura);
-                        fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                        document.getElementById('status-foto').classList.remove('hidden');
-                    }
-                    img.src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        async function enviarEncerramento() {
-            let dados = {
-                action: 'encerrarViagem',
-                frota: document.getElementById('encerrar-frota').value,
-                dataChegada: document.getElementById('encerrar-data').value,
-                horaChegada: document.getElementById('encerrar-hora').value,
-                kmChegada: document.getElementById('encerrar-km').value,
-                abastecido: document.getElementById('encerrar-abastecido').value,
-                foto: fotoBase64,
-                avarias: document.getElementById('encerrar-avarias').value
-            };
-
-            if(!dados.kmChegada) {
-                mostrarAlerta("Por favor, informe o KM de chegada.");
-                return;
-            }
-
-            let btn = document.getElementById('btn-concluir-viagem');
-            btn.innerText = "Salvando...";
-            btn.disabled = true;
-
-            try {
-                await fetch(URL_API, {
-                    method: 'POST',
-                    body: JSON.stringify(dados)
-                });
-                mostrarAlerta("Viagem encerrada com sucesso!");
-                fecharModalEncerrar();
-                carregarViagensEmAndamento();
-            } catch (erro) {
-                mostrarAlerta("Erro ao encerrar viagem: " + erro);
-            } finally {
-                btn.innerText = "Concluir";
-                btn.disabled = false;
-            }
-        }
-
-        function abrirModalPerfil() {
-            document.getElementById('modal-perfil').classList.remove('hidden');
-        }
-
-        function fecharModalPerfil() {
-            document.getElementById('modal-perfil').classList.add('hidden');
-        }
-
-        function salvarPerfil() {
-            let nome = document.getElementById('perfil-nome').value;
-            let tel = document.getElementById('perfil-telefone').value;
-            if(!nome) {
-                mostrarAlerta("Selecione um nome.");
-                return;
-            }
-            localStorage.setItem('digifrota_motorista', nome);
-            localStorage.setItem('digifrota_telefone', tel);
-            carregarPerfilSalvo();
-            fecharModalPerfil();
-            mostrarAlerta("Perfil salvo com sucesso!");
-        }
-
-        function carregarPerfilSalvo() {
-            let nomeSalvo = localStorage.getItem('digifrota_motorista');
-            if (nomeSalvo) {
-                document.getElementById('label-motorista-padrao').innerText = nomeSalvo;
-                let selectM1 = document.getElementById('motorista1');
-                if(selectM1) selectM1.value = nomeSalvo;
-                let selectPerfil = document.getElementById('perfil-nome');
-                if(selectPerfil) selectPerfil.value = nomeSalvo;
-            }
-            let telSalvo = localStorage.getItem('digifrota_telefone');
-            if (telSalvo && document.getElementById('perfil-telefone')) {
-                document.getElementById('perfil-telefone').value = telSalvo;
-            }
-        }
-    </script>
-</body>
-</html>
+            if (destinosSelecionados.length ===
