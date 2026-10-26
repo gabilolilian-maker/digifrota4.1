@@ -422,37 +422,40 @@
                     selectFrota.innerHTML += `<option value="${f.frota}">Frota ${f.frota}</option>`;
                 });
 
-                // ORGANIZAÇÃO INTELIGENTE DOS DESTINOS
+                // ORDENAÇÃO RIGOROSA DOS DESTINOS (TESTE E CROSS NO TOPO)
                 let containerDestinos = document.getElementById('container-destinos');
                 containerDestinos.innerHTML = '';
 
-                let destinos = resultado.destinos || [];
+                let destinosBrutos = resultado.destinos || [];
+                // Remove duplicadas caso haja na planilha
+                let destinos = [...new Set(destinosBrutos)];
 
-                // Itens que não são nomes de cidades e devem ir para o final
-                const naoCidades = ["OUTROS", "DIVERSOS", "INTERNO", "OFICINA", "LAVAGEM", "MANUTENCAO", "POSTO"];
+                // Identifica o que NÃO é cidade (termos genéricos / internos) para mandar ao final
+                const termosFinais = ["OUTROS", "DIVERSOS", "INTERNO", "OFICINA", "LAVAGEM", "MANUTENCAO", "POSTO", "MECANICA"];
 
-                // 1. Separa TESTE e CROSS para ficarem no topo exato
-                let fixosTopo = destinos.filter(d => d.toUpperCase() === "TESTE" || d.toUpperCase() === "CROSS");
-                fixosTopo.sort(); // Garante ordem alfabética entre eles se houver ambos
+                // 1. Extrai TESTE e CROSS para ficarem no topo absoluto exato
+                let topoLista = [];
+                if (destinos.some(d => d.toUpperCase() === "TESTE")) topoLista.push("TESTE");
+                if (destinos.some(d => d.toUpperCase() === "CROSS")) topoLista.push("CROSS");
 
-                // 2. Destinos normais (cidades em ordem alfabética, excluindo os fixos e os itens finais)
+                // 2. Destinos do meio (cidades em ordem alfabética limpa)
                 let cidades = destinos.filter(d => {
-                    let upper = d.toUpperCase();
-                    return upper !== "TESTE" && upper !== "CROSS" && !naoCidades.some(nc => upper.includes(nc));
+                    let u = d.toUpperCase();
+                    return u !== "TESTE" && u !== "CROSS" && !termosFinais.some(termo => u.includes(termo));
                 });
                 cidades.sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-                // 3. Itens que não são cidades (vão para o final)
-                let finalLista = destinos.filter(d => {
-                    let upper = d.toUpperCase();
-                    return upper !== "TESTE" && upper !== "CROSS" && naoCidades.some(nc => upper.includes(nc));
+                // 3. Termos que vão para o final da lista
+                let fimLista = destinos.filter(d => {
+                    let u = d.toUpperCase();
+                    return u !== "TESTE" && u !== "CROSS" && termosFinais.some(termo => u.includes(termo));
                 });
-                finalLista.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+                fimLista.sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-                // Une tudo na ordem desejada: Topo -> Cidades -> Final
-                let destinosOrdenados = [...fixosTopo, ...cidades, ...finalLista];
+                // Junta rigorosamente na ordem desejada
+                let destinosFinais = [...topoLista, ...cidades, ...fimLista];
 
-                destinosOrdenados.forEach(d => {
+                destinosFinais.forEach(d => {
                     containerDestinos.innerHTML += `
                         <label class="flex items-center space-x-3 text-base cursor-pointer hover:bg-blue-50 p-2 rounded-xl transition">
                             <input type="checkbox" name="destino-check" value="${d}" class="w-5 h-5 text-blue-900 rounded">
