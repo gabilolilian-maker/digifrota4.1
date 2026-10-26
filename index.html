@@ -84,13 +84,13 @@
                         </div>
                     </div>
 
-                    <!-- Destinos Múltiplos -->
+                    <!-- Destinos (Checkboxes Múltiplos) -->
                     <div class="mb-3">
                         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Destino(s) da Viagem (Selecione um ou mais):</label>
-                        <select id="destino" class="w-full border rounded-lg p-2 text-sm bg-gray-50" multiple size="4" style="height: auto; min-height: 100px;" required>
-                            <option value="">Carregando destinos...</option>
-                        </select>
-                        <p class="text-xs text-gray-500 mt-1">💡 Dica: No celular ou PC, segure Ctrl (ou toque em vários) para selecionar múltiplos destinos. Eles serão salvos na planilha separados por " / ".</p>
+                        <div id="container-destinos" class="border rounded-lg p-3 bg-gray-50 max-h-44 overflow-y-auto space-y-2">
+                            <p class="text-xs text-gray-500">Carregando destinos...</p>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">💡 Marque uma ou mais cidades. Serão gravadas separadas por " / ".</p>
                     </div>
 
                     <!-- KM de Saída -->
@@ -99,10 +99,32 @@
                         <input type="number" id="kmSaida" placeholder="Digite ou confirme o KM..." class="w-full border rounded-lg p-2 text-sm bg-gray-50" required>
                     </div>
 
-                    <!-- Checklist / Observações -->
-                    <div class="mb-4">
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Checklist / Observações:</label>
-                        <textarea id="observacoes" rows="2" class="w-full border rounded-lg p-2 text-sm bg-gray-50" placeholder="Ex: Checklist: Tudo Certo (OK) | Obs: ...">Checklist: Tudo Certo (OK)</textarea>
+                    <!-- Checklist / Observações Integrado -->
+                    <div class="mb-4 bg-gray-50 p-3 border rounded-lg space-y-3">
+                        <label class="block text-xs font-bold text-gray-700 uppercase">Checklist do Veículo:</label>
+                        
+                        <!-- Atalho Tudo Certo -->
+                        <div class="flex items-center bg-green-50 border border-green-200 p-2.5 rounded-lg">
+                            <input type="checkbox" id="check-tudo-ok" checked onchange="alternarChecklistGeral(this)" class="w-4 h-4 text-green-600 rounded">
+                            <label for="check-tudo-ok" class="ml-2 text-sm font-bold text-green-800 cursor-pointer">✅ Veículo 100% OK / Sem Observações</label>
+                        </div>
+
+                        <!-- Detalhes do Checklist (Oculto se tudo estiver OK) -->
+                        <div id="detalhes-checklist" class="hidden space-y-2 pt-2 border-t">
+                            <p class="text-xs text-gray-600 font-semibold">Marque itens com pendência ou observação:</p>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Pneus OK"><span>Pneus</span></label>
+                                <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Lanternas/Faróis OK"><span>Faróis / Lanternas</span></label>
+                                <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Nível de Óleo/Água OK"><span>Óleo / Água</span></label>
+                                <label class="flex items-center space-x-2"><input type="checkbox" name="item-check" value="Limpeza Interna OK"><span>Limpeza Interna</span></label>
+                            </div>
+                        </div>
+
+                        <!-- Campo de Observações Adicionais -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Observações / Avarias (Opcional):</label>
+                            <input type="text" id="obs-detalhada" placeholder="Ex: Farol esquerdo queimado..." class="w-full border rounded-lg p-2 text-xs bg-white">
+                        </div>
                     </div>
 
                     <button type="submit" id="btn-registrar" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg shadow transition flex justify-center items-center">
@@ -231,7 +253,6 @@
 
     <!-- SCRIPT DE INTEGRAÇÃO E LÓGICA -->
     <script>
-        // URL da API do Google Apps Script já configurada
         const URL_API = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
 
         let dadosGlobais = { frotas: [], motoristas: [], destinos: [] };
@@ -305,17 +326,31 @@
                     selectFrota.innerHTML += `<option value="${f.frota}">Frota ${f.frota}</option>`;
                 });
 
-                // Preenche Destinos (múltiplos)
-                let selectDestino = document.getElementById('destino');
-                selectDestino.innerHTML = '';
+                // Preenche Destinos (Checkboxes)
+                let containerDestinos = document.getElementById('container-destinos');
+                containerDestinos.innerHTML = '';
                 resultado.destinos.forEach(d => {
-                    selectDestino.innerHTML += `<option value="${d}">${d}</option>`;
+                    containerDestinos.innerHTML += `
+                        <label class="flex items-center space-x-2 text-sm cursor-pointer hover:bg-gray-100 p-1 rounded">
+                            <input type="checkbox" name="destino-check" value="${d}" class="w-4 h-4 text-blue-900 rounded">
+                            <span>${d}</span>
+                        </label>
+                    `;
                 });
 
                 carregarPerfilSalvo();
             } catch (erro) {
                 console.error("Erro ao carregar dados:", erro);
                 alert("Erro ao carregar dados da planilha.");
+            }
+        }
+
+        function alternarChecklistGeral(checkbox) {
+            let detalhes = document.getElementById('detalhes-checklist');
+            if (checkbox.checked) {
+                detalhes.classList.add('hidden');
+            } else {
+                detalhes.classList.remove('hidden');
             }
         }
 
@@ -330,18 +365,31 @@
         async function enviarSaida(e) {
             e.preventDefault();
             
-            // Coleta múltiplos destinos selecionados
-            let selectDestinos = document.getElementById('destino');
+            // Coleta múltiplos destinos marcados
+            let checkboxes = document.querySelectorAll('input[name="destino-check"]:checked');
             let destinosSelecionados = [];
-            for (let i = 0; i < selectDestinos.options.length; i++) {
-                if (selectDestinos.options[i].selected) {
-                    destinosSelecionados.push(selectDestinos.options[i].value);
-                }
-            }
+            checkboxes.forEach(cb => destinosSelecionados.push(cb.value));
 
             if (destinosSelecionados.length === 0) {
                 alert("Por favor, selecione pelo menos um destino.");
                 return;
+            }
+
+            // Montagem do Checklist / Observações
+            let tudoOk = document.getElementById('check-tudo-ok').checked;
+            let obsTexto = document.getElementById('obs-detalhada').value.trim();
+            let checklistFinal = "Checklist: Tudo Certo (OK)";
+
+            if (!tudoOk) {
+                let itensMarcados = [];
+                document.querySelectorAll('input[name="item-check"]:checked').forEach(el => {
+                    itensMarcados.push(el.value);
+                });
+                checklistFinal = "Checklist com pendências: " + (itensMarcados.length > 0 ? itensMarcados.join(", ") : "Nenhum item marcado");
+            }
+
+            if (obsTexto) {
+                checklistFinal += " | Obs: " + obsTexto;
             }
 
             let dados = {
@@ -351,9 +399,9 @@
                 frota: document.getElementById('frota').value,
                 dataSaida: document.getElementById('dataSaida').value,
                 horaSaida: document.getElementById('horaSaida').value,
-                destino: destinosSelecionados, // Envia array de destinos
+                destino: destinosSelecionados,
                 kmSaida: document.getElementById('kmSaida').value,
-                observacoes: document.getElementById('observacoes').value
+                observacoes: checklistFinal
             };
 
             let btn = document.getElementById('btn-registrar');
@@ -367,6 +415,8 @@
                 });
                 alert("Saída registrada com sucesso!");
                 document.getElementById('form-saida').reset();
+                document.getElementById('check-tudo-ok').checked = true;
+                document.getElementById('detalhes-checklist').classList.add('hidden');
                 preencherDataHoraAtual();
                 carregarPerfilSalvo();
                 alternarAba('andamento');
