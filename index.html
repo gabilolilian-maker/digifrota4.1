@@ -32,8 +32,8 @@
 
     <div class="bg-white border-b px-5 py-3 text-base text-gray-700 flex justify-between items-center shadow-sm">
         <div>
-            <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Motorista Padrão (Aparelho):</span>
-            <span id="label-motorista-padrao" class="font-bold text-blue-900 text-lg">Não identificado</span>
+            <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Perfil Cadastrado (Aparelho):</span>
+            <span id="label-motorista-padrao" class="font-bold text-blue-900 text-lg">Não configurado</span>
         </div>
     </div>
 
@@ -394,6 +394,14 @@
 
         async function enviarSaida(e) {
             e.preventDefault();
+
+            let nomePerfil = localStorage.getItem('digifrota_motorista');
+            if (!nomePerfil) {
+                mostrarAlerta("Por favor, configure seu Perfil no botão superior antes de registrar viagens.");
+                abrirModalPerfil();
+                return;
+            }
+
             let checkboxes = document.querySelectorAll('input[name="destino-check"]:checked');
             let destinosSelecionados = [];
             checkboxes.forEach(cb => destinosSelecionados.push(cb.value));
@@ -419,6 +427,10 @@
         }
 
         async function processarEnvioSaida(destinosSelecionados, kmAtualDigitado, alertaKmMenor) {
+            let nomePerfil = localStorage.getItem('digifrota_motorista') || "Desconhecido";
+            let telPerfil = localStorage.getItem('digifrota_telefone') || "Sem tel";
+            let perfilIdFixo = `${nomePerfil} (${telPerfil})`;
+
             let tudoOk = document.getElementById('check-tudo-ok').checked;
             let obsTexto = document.getElementById('obs-detalhada').value.trim();
             let checklistFinal = "Checklist: Tudo Certo (OK)";
@@ -436,6 +448,7 @@
 
             let dados = {
                 action: 'registrarSaida',
+                perfilId: perfilIdFixo,
                 motorista1: document.getElementById('motorista1').value,
                 motorista2: document.getElementById('motorista2').value,
                 frota: document.getElementById('frota').value,
@@ -628,14 +641,14 @@
 
         function carregarPerfilSalvo() {
             let nomeSalvo = localStorage.getItem('digifrota_motorista');
+            let telSalvo = localStorage.getItem('digifrota_telefone');
+            
             if (nomeSalvo) {
-                document.getElementById('label-motorista-padrao').innerText = nomeSalvo;
-                let selectM1 = document.getElementById('motorista1');
-                if(selectM1) selectM1.value = nomeSalvo;
+                let textoPerfil = nomeSalvo + (telSalvo ? ` (${telSalvo})` : "");
+                document.getElementById('label-motorista-padrao').innerText = textoPerfil;
                 let selectPerfil = document.getElementById('perfil-nome');
                 if(selectPerfil) selectPerfil.value = nomeSalvo;
             }
-            let telSalvo = localStorage.getItem('digifrota_telefone');
             if (telSalvo && document.getElementById('perfil-telefone')) {
                 document.getElementById('perfil-telefone').value = telSalvo;
             }
