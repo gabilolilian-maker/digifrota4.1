@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DigiFrota 4.0</title>
 
-    <!-- Ícone Personalizado para o Atalho no Celular -->
     <link rel="icon" type="image/png" sizes="192x192" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="mobile-web-app-capable" content="yes">
@@ -22,7 +21,6 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col justify-between text-gray-900 font-sans pb-20">
 
-    <!-- CABEÇALHO -->
     <header class="bg-blue-900 text-white px-5 py-4 flex justify-between items-center shadow-md sticky top-0 z-30">
         <div class="flex items-center space-x-3">
             <i class="fa-solid fa-truck-medical text-2xl text-blue-300"></i>
@@ -34,10 +32,9 @@
         <span class="text-xs bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-full shadow-xs">Online</span>
     </header>
 
-    <!-- ÁREA DE PERFIL / MOTORISTA -->
     <div class="bg-white border-b px-5 py-3 flex justify-between items-center shadow-xs">
         <div class="text-xs">
-            <span class="text-gray-400 font-bold block text-[10px] uppercase">Motorista Principal (Aparelho):</span>
+            <span class="text-gray-400 font-bold block text-[10px] uppercase">Motorista Padrão (Aparelho):</span>
             <span id="label-motorista" class="font-black text-blue-900">Não identificado</span>
         </div>
         <button onclick="abrirModalPerfil()" class="bg-blue-50 text-blue-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-blue-100 shadow-xs flex items-center gap-1.5">
@@ -45,10 +42,7 @@
         </button>
     </div>
 
-    <!-- CONTEÚDO DAS ABAS -->
     <main class="p-4 flex-1">
-
-        <!-- ABA 1: REGISTRAR SAÍDA -->
         <section id="aba-saida" class="space-y-4">
             <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
                 <h2 class="font-black text-sm uppercase text-blue-900 border-b pb-2 flex items-center gap-2">
@@ -56,11 +50,18 @@
                 </h2>
 
                 <div class="space-y-3 text-xs">
-                    <!-- CAMPO DE MOTORISTA NA SAÍDA (Permite alterar ou colocar outro motorista no lançamento) -->
                     <div>
-                        <label class="font-bold text-gray-700 block mb-1">Motorista da Viagem (Responsável):</label>
-                        <input type="text" id="saida-motorista" placeholder="Nome do motorista..." class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                        <span class="text-[10px] text-gray-400 mt-0.5 block">Se estiver a lançar por outro colega, altere o nome aqui.</span>
+                        <label class="font-bold text-gray-700 block mb-1">Motorista Principal (Motorista 1):</label>
+                        <select id="saida-motorista1" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <option value="">Carregando motoristas...</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="font-bold text-gray-700 block mb-1">Segundo Motorista / Acompanhante (Opcional):</label>
+                        <select id="saida-motorista2" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <option value="">Nenhum (Apenas 1 motorista)</option>
+                        </select>
                     </div>
 
                     <div>
@@ -98,7 +99,6 @@
             </div>
         </section>
 
-        <!-- ABA 2: EM ANDAMENTO (ENCERRAR) -->
         <section id="aba-andamento" class="hidden space-y-4">
             <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
                 <div class="flex justify-between items-center border-b pb-2">
@@ -107,14 +107,12 @@
                     </h2>
                     <button onclick="carregarViagensAtivas()" class="text-xs text-blue-700 font-bold"><i class="fa-solid fa-rotate"></i> Atualizar</button>
                 </div>
-
                 <div id="lista-viagens-ativas" class="space-y-3 text-xs text-gray-600">
                     Carregando viagens ativas...
                 </div>
             </div>
         </section>
 
-        <!-- ABA 3: SEGURO / GUINCHO -->
         <section id="aba-seguro" class="hidden space-y-4">
             <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4 text-center">
                 <i class="fa-solid fa-shield-halved text-4xl text-red-600"></i>
@@ -131,10 +129,8 @@
                 </div>
             </div>
         </section>
-
     </main>
 
-    <!-- NAVEGAÇÃO INFERIOR -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-30 shadow-lg">
         <button onclick="mudarAba('saida')" id="btn-tab-saida" class="flex flex-col items-center text-xs tab-active py-1 px-3">
             <i class="fa-solid fa-compass text-lg mb-0.5"></i>
@@ -150,19 +146,20 @@
         </button>
     </nav>
 
-    <!-- MODAL PERFIL -->
     <div id="modal-perfil" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full space-y-4 shadow-2xl">
             <h3 class="font-black text-base text-blue-900 border-b pb-2 flex items-center gap-2">
-                <i class="fa-solid fa-address-card"></i> Configurar Perfil
+                <i class="fa-solid fa-address-card"></i> Configurar Perfil Padrão
             </h3>
             <div class="space-y-3 text-xs">
                 <div>
-                    <label class="font-bold text-gray-700 block mb-1">Seu Nome Completo:</label>
-                    <input type="text" id="perfil-nome" placeholder="Digite seu nome..." class="w-full bg-gray-50 border rounded-xl p-2.5 font-semibold">
+                    <label class="font-bold text-gray-700 block mb-1">Seu Nome:</label>
+                    <select id="perfil-nome" class="w-full bg-gray-50 border rounded-xl p-2.5 font-semibold text-gray-800">
+                        <option value="">Selecione na lista...</option>
+                    </select>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-700 block mb-1">Seu Telefone / WhatsApp:</label>
+                    <label class="font-bold text-gray-700 block mb-1">Telefone / WhatsApp:</label>
                     <input type="tel" id="perfil-tel" placeholder="(18) 99999-9999" class="w-full bg-gray-50 border rounded-xl p-2.5 font-semibold">
                 </div>
                 <button onclick="salvarPerfil()" class="w-full bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow">Salvar Perfil</button>
@@ -170,7 +167,6 @@
         </div>
     </div>
 
-    <!-- MODAL ENCERRAMENTO DE VIAGEM -->
     <div id="modal-encerrar" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full space-y-4 shadow-2xl">
             <h3 class="font-black text-base text-blue-900 border-b pb-2 flex items-center gap-2">
@@ -200,7 +196,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE AVISO "DigiFrota diz" -->
     <div id="modal-digifrota" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full text-center space-y-4 shadow-2xl transform transition-all scale-100">
             <div class="text-blue-900 font-black text-lg border-b pb-2 flex justify-center items-center gap-1.5">
@@ -220,8 +215,7 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
 
         document.addEventListener("DOMContentLoaded", () => {
-            carregarPerfilLocal();
-            carregarListaFrotas();
+            carregarDadosIniciais();
         });
 
         function mostrarAvisoDigiFrota(mensagem) {
@@ -248,8 +242,8 @@
             const nome = localStorage.getItem("digifrota_nome") || "";
             const tel = localStorage.getItem("digifrota_tel") || "";
             if (nome) {
-                document.getElementById("label-motorista").textContent = `${nome} (${tel})`;
-                document.getElementById("saida-motorista").value = nome; // Pré-preenche o motorista no formulário de saída
+                document.getElementById("label-motorista").textContent = `${nome} ${tel ? '('+tel+')' : ''}`;
+                document.getElementById("saida-motorista1").value = nome;
             } else {
                 document.getElementById("label-motorista").textContent = "Não identificado";
                 abrirModalPerfil();
@@ -263,30 +257,50 @@
         }
 
         function salvarPerfil() {
-            const nome = document.getElementById("perfil-nome").value.trim();
+            const nome = document.getElementById("perfil-nome").value;
             const tel = document.getElementById("perfil-tel").value.trim();
-            if(!nome) { mostrarAvisoDigiFrota("Por favor, preencha seu nome."); return; }
+            if(!nome) { mostrarAvisoDigiFrota("Por favor, selecione seu nome."); return; }
             localStorage.setItem("digifrota_nome", nome);
             localStorage.setItem("digifrota_tel", tel);
-            document.getElementById("label-motorista").textContent = `${nome} (${tel})`;
-            document.getElementById("saida-motorista").value = nome; // Atualiza também no campo de saída
+            document.getElementById("label-motorista").textContent = `${nome} ${tel ? '('+tel+')' : ''}`;
+            document.getElementById("saida-motorista1").value = nome;
             document.getElementById("modal-perfil").classList.add("hidden");
             mostrarAvisoDigiFrota("Perfil salvo com sucesso!");
         }
 
-        async function carregarListaFrotas() {
+        async function carregarDadosIniciais() {
+            const selectFrota = document.getElementById("saida-frota");
+            const selectM1 = document.getElementById("saida-motorista1");
+            const selectM2 = document.getElementById("saida-motorista2");
+            const selectPerfil = document.getElementById("perfil-nome");
+
             try {
-                const res = await fetch(`${API_URL}?action=getDashboard`);
+                const res = await fetch(`${API_URL}?action=getInicial`);
                 const data = await res.json();
-                const select = document.getElementById("saida-frota");
-                select.innerHTML = '<option value="">Selecione o veículo...</option>';
-                if(data.ranking) {
-                    data.ranking.forEach(item => {
-                        select.innerHTML += `<option value="${item.frota}">Frota ${item.frota}</option>`;
+
+                selectFrota.innerHTML = '<option value="">Selecione o veículo...</option>';
+                if(data.frotas && Array.isArray(data.frotas)) {
+                    data.frotas.forEach(item => {
+                        selectFrota.innerHTML += `<option value="${item.frota}">Frota ${item.frota} ${item.placa ? '- '+item.placa : ''}</option>`;
                     });
                 }
+
+                selectM1.innerHTML = '<option value="">Selecione o motorista principal...</option>';
+                selectM2.innerHTML = '<option value="">Nenhum (Apenas 1 motorista)</option>';
+                selectPerfil.innerHTML = '<option value="">Selecione seu nome...</option>';
+
+                if(data.motoristas && Array.isArray(data.motoristas)) {
+                    data.motoristas.forEach(m => {
+                        selectM1.innerHTML += `<option value="${m}">${m}</option>`;
+                        selectM2.innerHTML += `<option value="${m}">${m}</option>`;
+                        selectPerfil.innerHTML += `<option value="${m}">${m}</option>`;
+                    });
+                }
+
+                carregarPerfilLocal();
+
             } catch(e) {
-                mostrarAvisoDigiFrota("Erro ao carregar lista de veículos.");
+                mostrarAvisoDigiFrota("Erro ao carregar dados da planilha.");
             }
         }
 
@@ -294,9 +308,14 @@
             const frota = document.getElementById("saida-frota").value;
             const km = document.getElementById("saida-km").value;
             const destino = document.getElementById("saida-destino").value;
-            const motorista = document.getElementById("saida-motorista").value.trim() || localStorage.getItem("digifrota_nome") || "Não identificado";
+            const m1 = document.getElementById("saida-motorista1").value;
+            const m2 = document.getElementById("saida-motorista2").value;
             const obs = document.getElementById("saida-obs").value;
 
+            if(!m1) {
+                mostrarAvisoDigiFrota("Selecione o Motorista Principal.");
+                return;
+            }
             if(!frota || !km || !destino) {
                 mostrarAvisoDigiFrota("Preencha todos os campos obrigatórios (Frota, KM e Destino).");
                 return;
@@ -316,7 +335,8 @@
                         frota: frota,
                         kmSaida: km,
                         destino: destino,
-                        motorista: motorista,
+                        motorista1: m1,
+                        motorista2: m2,
                         observacoes: obs
                     })
                 });
