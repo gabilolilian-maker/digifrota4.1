@@ -303,12 +303,52 @@
         </div>
     </div>
 
+    <!-- MODAL PERSONALIZADO (DIGIFROTA DIZ) - ELIMINA O NOME DO GITHUB -->
+    <div id="modal-alerta" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
+        <div class="bg-white rounded-xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center border-t-4 border-blue-900">
+            <div class="text-blue-900 text-4xl mb-1"><i class="fa-solid fa-circle-info"></i></div>
+            <h3 class="text-lg font-bold text-blue-900">DigiFrota diz</h3>
+            <p id="modal-alerta-mensagem" class="text-base text-gray-700"></p>
+            <div id="modal-alerta-botoes" class="flex space-x-3 pt-2">
+                <button id="modal-btn-ok" onclick="fecharModalAlerta(true)" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-base">OK</button>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPT DE INTEGRAÇÃO E LÓGICA -->
     <script>
         const URL_API = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
 
         let dadosGlobais = { frotas: [], motoristas: [], destinos: [] };
         let fotoBase64 = "";
+        let callbackModalConfirm = null;
+
+        // Função customizada para substituir o alert padrão do navegador
+        function mostrarAlerta(mensagem, tipo = "alert", callback = null) {
+            document.getElementById('modal-alerta-mensagem').innerText = mensagem;
+            callbackModalConfirm = callback;
+            
+            let botoesDiv = document.getElementById('modal-alerta-botoes');
+            if (tipo === "confirm") {
+                botoesDiv.innerHTML = `
+                    <button onclick="fecharModalAlerta(false)" class="w-1/2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-lg text-base">Cancelar</button>
+                    <button onclick="fecharModalAlerta(true)" class="w-1/2 bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-base">Confirmar</button>
+                `;
+            } else {
+                botoesDiv.innerHTML = `
+                    <button onclick="fecharModalAlerta(true)" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-base">OK</button>
+                `;
+            }
+            document.getElementById('modal-alerta').classList.remove('hidden');
+        }
+
+        function fecharModalAlerta(resultado) {
+            document.getElementById('modal-alerta').classList.add('hidden');
+            if (callbackModalConfirm) {
+                callbackModalConfirm(resultado);
+                callbackModalConfirm = null;
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", () => {
             carregarDadosIniciais();
@@ -390,7 +430,7 @@
                 carregarPerfilSalvo();
             } catch (erro) {
                 console.error("Erro ao carregar dados:", erro);
-                alert("DigiFrota diz: Erro ao carregar dados da planilha.");
+                mostrarAlerta("Erro ao carregar dados da planilha.");
             }
         }
 
@@ -422,24 +462,28 @@
             checkboxes.forEach(cb => destinosSelecionados.push(cb.value));
 
             if (destinosSelecionados.length === 0) {
-                alert("DigiFrota diz: Por favor, selecione pelo menos um destino.");
+                mostrarAlerta("Por favor, selecione pelo menos um destino.");
                 return;
             }
 
-            // Validação do KM de Saída
+            // Validação do KM de Saída com Modal Customizado
             let kmInput = document.getElementById('kmSaida');
             let kmAtualDigitado = parseFloat(kmInput.value);
             let kmUltimoRegistrado = parseFloat(kmInput.dataset.kmUltimo);
-            let alertaKmMenor = "";
 
             if (!isNaN(kmUltimoRegistrado) && kmAtualDigitado < kmUltimoRegistrado) {
-                let confirmar = confirm(`DigiFrota diz: O KM digitado (${kmAtualDigitado}) é MENOR que o último KM registrado desta frota (${kmUltimoRegistrado}). Deseja realmente prosseguir?`);
-                if (!confirmar) {
-                    return;
-                }
-                alertaKmMenor = " [ALERTA: KM DIGITADO MENOR QUE O ANTERIOR]";
+                mostrarAlerta(`O KM digitado (${kmAtualDigitado}) é MENOR que o último KM registrado desta frota (${kmUltimoRegistrado}). Deseja realmente prosseguir?`, "confirm", (confirmado) => {
+                    if (confirmado) {
+                        processarEnvioSaida(destinosSelecionados, kmAtualDigitado, " [ALERTA: KM DIGITADO MENOR QUE O ANTERIOR]");
+                    }
+                });
+                return;
             }
 
+            processarEnvioSaida(destinosSelecionados, kmAtualDigitado, "");
+        }
+
+        async function processarEnvioSaida(destinosSelecionados, kmAtualDigitado, alertaKmMenor) {
             let tudoOk = document.getElementById('check-tudo-ok').checked;
             let obsTexto = document.getElementById('obs-detalhada').value.trim();
             let checklistFinal = "Checklist: Tudo Certo (OK)";
@@ -481,7 +525,7 @@
                     method: 'POST',
                     body: JSON.stringify(dados)
                 });
-                alert("DigiFrota diz: Saída registrada com sucesso!");
+                mostrarAlerta("Saída registrada com sucesso!");
                 document.getElementById('form-saida').reset();
                 document.getElementById('check-tudo-ok').checked = true;
                 document.getElementById('detalhes-checklist').classList.add('hidden');
@@ -489,7 +533,7 @@
                 carregarPerfilSalvo();
                 alternarAba('andamento');
             } catch (erro) {
-                alert("DigiFrota diz: Erro ao registrar saída: " + erro);
+                mostrarAlerta("Erro ao registrar saída: " + erro);
             } finally {
                 btn.innerHTML = `<span>Registrar Saída</span>`;
                 btn.disabled = false;
@@ -580,7 +624,7 @@
             };
 
             if(!dados.kmChegada) {
-                alert("DigiFrota diz: Por favor, informe o KM de chegada.");
+                mostrarAlerta("Por favor, informe o KM de chegada.");
                 return;
             }
 
@@ -593,11 +637,11 @@
                     method: 'POST',
                     body: JSON.stringify(dados)
                 });
-                alert("DigiFrota diz: Viagem encerrada com sucesso!");
+                mostrarAlerta("Viagem encerrada com sucesso!");
                 fecharModalEncerrar();
                 carregarViagensEmAndamento();
             } catch (erro) {
-                alert("DigiFrota diz: Erro ao encerrar viagem: " + erro);
+                mostrarAlerta("Erro ao encerrar viagem: " + erro);
             } finally {
                 btn.innerText = "Concluir";
                 btn.disabled = false;
@@ -616,14 +660,14 @@
             let nome = document.getElementById('perfil-nome').value;
             let tel = document.getElementById('perfil-telefone').value;
             if(!nome) {
-                alert("DigiFrota diz: Selecione um nome.");
+                mostrarAlerta("Selecione um nome.");
                 return;
             }
             localStorage.setItem('digifrota_motorista', nome);
             localStorage.setItem('digifrota_telefone', tel);
             carregarPerfilSalvo();
             fecharModalPerfil();
-            alert("DigiFrota diz: Perfil salvo com sucesso!");
+            mostrarAlerta("Perfil salvo com sucesso!");
         }
 
         function carregarPerfilSalvo() {
