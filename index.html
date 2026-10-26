@@ -78,7 +78,9 @@
 
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">Destino:</label>
-                        <input type="text" id="saida-destino" placeholder="Ex: UBS Centro, PA, São Paulo..." class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <select id="saida-destino" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <option value="">Carregando destinos...</option>
+                        </select>
                     </div>
 
                     <div class="pt-2">
@@ -292,16 +294,16 @@
             const selectFrota = document.getElementById("saida-frota");
             const selectM1 = document.getElementById("saida-motorista1");
             const selectM2 = document.getElementById("saida-motorista2");
+            const selectDestino = document.getElementById("saida-destino");
             const selectPerfil = document.getElementById("perfil-nome");
 
             try {
                 const res = await fetch(`${API_URL}?action=getInicial`);
                 const data = await res.json();
 
-                // Frotas
+                // Frotas (Apenas em operação, sem placa)
                 selectFrota.innerHTML = '<option value="">Selecione o veículo...</option>';
                 if(data.frotas && Array.isArray(data.frotas)) {
-                    // Ordena numericamente as frotas
                     data.frotas.sort((a, b) => parseInt(a.frota) - parseInt(b.frota));
                     listaFrotasGlobal = data.frotas;
 
@@ -320,6 +322,14 @@
                         selectM1.innerHTML += `<option value="${m}">${m}</option>`;
                         selectM2.innerHTML += `<option value="${m}">${m}</option>`;
                         selectPerfil.innerHTML += `<option value="${m}">${m}</option>`;
+                    });
+                }
+
+                // Destinos
+                selectDestino.innerHTML = '<option value="">Selecione o destino...</option>';
+                if(data.destinos && Array.isArray(data.destinos)) {
+                    data.destinos.forEach(d => {
+                        selectDestino.innerHTML += `<option value="${d}">${d}</option>`;
                     });
                 }
 
