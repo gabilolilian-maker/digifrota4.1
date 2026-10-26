@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DigiFrota 4.0</title>
 
-    <!-- Configuração de Ícone para Tela Inicial (Android / iOS / PWA) -->
+    <!-- Configuração de Ícone para Tela Inicial -->
     <link rel="icon" type="image/png" sizes="192x192" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="mobile-web-app-capable" content="yes">
@@ -34,14 +34,14 @@
         <span class="text-xs bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-full shadow-xs">Online</span>
     </header>
 
-    <!-- ÁREA DE PERFIL DO MOTORISTA -->
+    <!-- ÁREA DE PERFIL DO MOTORISTA (COM OPÇÃO DE ALTERAR) -->
     <div class="bg-white border-b px-5 py-3 flex justify-between items-center shadow-xs">
         <div class="text-xs">
-            <span class="text-gray-400 font-bold block text-[10px] uppercase">Motorista / Aparelho:</span>
-            <span id="label-motorista" class="font-black text-blue-900">Não identificado</span>
+            <span class="text-gray-400 font-bold block text-[10px] uppercase">Motorista Atual (Aparelho):</span>
+            <span id="label-motorista" class="font-black text-blue-900 text-sm">Carregando...</span>
         </div>
-        <button onclick="abrirModalPerfil()" class="bg-blue-50 text-blue-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-blue-100 shadow-xs flex items-center gap-1.5">
-            <i class="fa-solid fa-user-gear"></i> Perfil
+        <button onclick="abrirModalPerfil()" class="bg-blue-50 hover:bg-blue-100 text-blue-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-blue-200 shadow-xs flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-user-pen"></i> Alterar Motorista
         </button>
     </div>
 
@@ -59,7 +59,7 @@
                     <div>
                         <label class="font-bold text-gray-700 block mb-1">Selecione o Veículo (Frota):</label>
                         <select id="saida-frota" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                            <option value="">Carregando frotas...</option>
+                            <option value="">Carregando todos os veículos...</option>
                         </select>
                     </div>
 
@@ -143,22 +143,26 @@
         </button>
     </nav>
 
-    <!-- MODAL PERFIL -->
+    <!-- MODAL PERFIL (PARA ALTERAR MOTORISTA OU REGISTAR DE OUTRO) -->
     <div id="modal-perfil" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full space-y-4 shadow-2xl">
             <h3 class="font-black text-base text-blue-900 border-b pb-2 flex items-center gap-2">
-                <i class="fa-solid fa-address-card"></i> Configurar Perfil
+                <i class="fa-solid fa-address-card"></i> Identificação do Motorista
             </h3>
+            <p class="text-[11px] text-gray-500">Defina quem está realizando este lançamento (útil caso esteja a registar por outro motorista).</p>
             <div class="space-y-3 text-xs">
                 <div>
-                    <label class="font-bold text-gray-700 block mb-1">Seu Nome Completo:</label>
-                    <input type="text" id="perfil-nome" placeholder="Digite seu nome..." class="w-full bg-gray-50 border rounded-xl p-2.5 font-semibold">
+                    <label class="font-bold text-gray-700 block mb-1">Nome do Motorista:</label>
+                    <input type="text" id="perfil-nome" placeholder="Digite o nome..." class="w-full bg-gray-50 border rounded-xl p-2.5 font-semibold">
                 </div>
                 <div>
-                    <label class="font-bold text-gray-700 block mb-1">Seu Telefone / WhatsApp:</label>
+                    <label class="font-bold text-gray-700 block mb-1">Telefone / WhatsApp:</label>
                     <input type="tel" id="perfil-tel" placeholder="(18) 99999-9999" class="w-full bg-gray-50 border rounded-xl p-2.5 font-semibold">
                 </div>
-                <button onclick="salvarPerfil()" class="w-full bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow">Salvar Perfil</button>
+                <div class="flex gap-2 pt-2">
+                    <button onclick="fecharModalPerfil()" class="w-1/2 bg-gray-200 text-gray-700 font-bold py-2.5 rounded-xl">Cancelar</button>
+                    <button onclick="salvarPerfil()" class="w-1/2 bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow">Salvar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -212,15 +216,11 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
 
-        // Lista de Frotas Padrão para garantir funcionamento imediato
-        const FROTAS_PADRAO = ["338", "347", "386", "387", "449", "454", "487", "492", "496", "514", "537", "552"];
-
         document.addEventListener("DOMContentLoaded", () => {
             carregarPerfilLocal();
             carregarListaFrotas();
         });
 
-        // Alerta Personalizado DigiFrota
         function mostrarAvisoDigiFrota(mensagem) {
             document.getElementById("modal-digifrota-texto").textContent = mensagem;
             document.getElementById("modal-digifrota").classList.remove("hidden");
@@ -245,8 +245,10 @@
             const nome = localStorage.getItem("digifrota_nome") || "";
             const tel = localStorage.getItem("digifrota_tel") || "";
             if (nome) {
-                document.getElementById("label-motorista").textContent = `${nome} (${tel})`;
+                document.getElementById("label-motorista").textContent = `${nome} ${tel ? '('+tel+')' : ''}`;
             } else {
+                // Se não tiver nome gravado, abre o modal automaticamente na primeira vez
+                document.getElementById("label-motorista").textContent = "Não identificado";
                 abrirModalPerfil();
             }
         }
@@ -257,39 +259,40 @@
             document.getElementById("modal-perfil").classList.remove("hidden");
         }
 
+        function fecharModalPerfil() {
+            document.getElementById("modal-perfil").classList.add("hidden");
+        }
+
         function salvarPerfil() {
             const nome = document.getElementById("perfil-nome").value.trim();
             const tel = document.getElementById("perfil-tel").value.trim();
-            if(!nome) { mostrarAvisoDigiFrota("Por favor, preencha seu nome."); return; }
+            if(!nome) { mostrarAvisoDigiFrota("Por favor, preencha o nome do motorista."); return; }
             localStorage.setItem("digifrota_nome", nome);
             localStorage.setItem("digifrota_tel", tel);
-            document.getElementById("label-motorista").textContent = `${nome} (${tel})`;
-            document.getElementById("modal-perfil").classList.add("hidden");
-            mostrarAvisoDigiFrota("Perfil salvo com sucesso!");
-        }
-
-        function preencherSelectFrotas(listaFrotas) {
-            const select = document.getElementById("saida-frota");
-            select.innerHTML = '<option value="">Selecione o veículo...</option>';
-            listaFrotas.forEach(f => {
-                select.innerHTML += `<option value="${f}">Frota ${f}</option>`;
-            });
+            document.getElementById("label-motorista").textContent = `${nome} ${tel ? '('+tel+')' : ''}`;
+            fecharModalPerfil();
+            mostrarAvisoDigiFrota("Motorista atualizado com sucesso!");
         }
 
         async function carregarListaFrotas() {
+            const select = document.getElementById("saida-frota");
             try {
                 const res = await fetch(`${API_URL}?action=getDashboard`);
                 const data = await res.json();
                 
-                if (data && data.ranking && Array.isArray(data.ranking) && data.ranking.length > 0) {
-                    const frotasDaApi = data.ranking.map(item => item.frota);
-                    preencherSelectFrotas(frotasDaApi);
+                select.innerHTML = '<option value="">Selecione o veículo...</option>';
+                if (data && data.ranking && Array.isArray(data.ranking)) {
+                    // Ordena numericamente as frotas para ficarem em ordem certa
+                    data.ranking.sort((a, b) => parseInt(a.frota) - parseInt(b.frota));
+                    
+                    data.ranking.forEach(item => {
+                        select.innerHTML += `<option value="${item.frota}">Frota ${item.frota} - ${item.placa} (${item.tipo})</option>`;
+                    });
                 } else {
-                    preencherSelectFrotas(FROTAS_PADRAO);
+                    select.innerHTML = '<option value="">Erro ao carregar lista de frotas</option>';
                 }
             } catch(e) {
-                // Em caso de falha de conexão, carrega imediatamente a lista padrão
-                preencherSelectFrotas(FROTAS_PADRAO);
+                select.innerHTML = '<option value="">Erro de conexão com a planilha</option>';
             }
         }
 
