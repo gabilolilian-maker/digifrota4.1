@@ -7,107 +7,152 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 font-sans text-base pb-12">
+<body class="bg-gray-100 font-sans text-base min-h-screen flex flex-col md:flex-row">
 
-    <!-- HEADER -->
-    <header class="bg-blue-900 text-white p-5 shadow-lg flex justify-between items-center border-b-4 border-blue-700">
-        <div class="flex items-center space-x-3">
-            <div class="bg-white p-2 rounded-xl text-blue-900 shadow">
-                <i class="fa-solid fa-chart-pie text-2xl"></i>
+    <!-- MENU LATERAL (SIDEBAR) -->
+    <aside id="sidebar" class="bg-blue-900 text-white w-full md:w-64 flex-shrink-0 flex flex-col justify-between p-4 shadow-xl">
+        <div>
+            <!-- LOGO / TÍTULO -->
+            <div class="flex items-center space-x-3 p-2 mb-6 border-b border-blue-800">
+                <div class="bg-white p-2 rounded-xl text-blue-900 shadow">
+                    <i class="fa-solid fa-chart-pie text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-wide">DigiFrota</h1>
+                    <p class="text-xs text-blue-200 uppercase font-semibold">Painel Gestão</p>
+                </div>
             </div>
-            <div>
-                <h1 class="text-xl font-extrabold tracking-wide">Dashboard DigiFrota</h1>
-                <p class="text-xs text-blue-200 uppercase font-semibold">PAINEL ADMINISTRATIVO</p>
-            </div>
+
+            <!-- OPÇÕES DO MENU -->
+            <nav class="space-y-2">
+                <button onclick="navegarPara('geral')" id="nav-geral" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm bg-blue-800 text-white shadow hover:bg-blue-700 transition">
+                    <i class="fa-solid fa-house w-5"></i>
+                    <span>Visão Geral</span>
+                </button>
+
+                <button onclick="navegarPara('oleo')" id="nav-oleo" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-blue-200 hover:bg-blue-800 hover:text-white transition">
+                    <i class="fa-solid fa-oil-can w-5"></i>
+                    <span>Troca de Óleo</span>
+                </button>
+
+                <button onclick="navegarPara('frotas')" id="nav-frotas" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-blue-200 hover:bg-blue-800 hover:text-white transition">
+                    <i class="fa-solid fa-truck w-5"></i>
+                    <span>KM por Frota</span>
+                </button>
+
+                <button onclick="navegarPara('motoristas')" id="nav-motoristas" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-blue-200 hover:bg-blue-800 hover:text-white transition">
+                    <i class="fa-solid fa-id-card w-5"></i>
+                    <span>KM por Motorista</span>
+                </button>
+            </nav>
         </div>
-        <div class="flex items-center space-x-3">
-            <span id="data-hoje" class="text-xs bg-blue-800 text-blue-200 px-3 py-1.5 rounded-xl font-medium hidden md:inline-block"></span>
-            <button id="btn-atualizar" class="bg-blue-800 hover:bg-blue-700 text-sm px-4 py-2 rounded-xl flex items-center space-x-2 font-semibold shadow transition text-white">
+
+        <!-- RODAPÉ DO MENU -->
+        <div class="pt-4 border-t border-blue-800 text-xs text-blue-300 text-center">
+            <p id="data-hoje" class="font-medium mb-2"></p>
+            <button id="btn-atualizar" class="w-full bg-blue-800 hover:bg-blue-700 text-white py-2 rounded-xl font-semibold flex items-center justify-center space-x-2 transition shadow">
                 <i class="fa-solid fa-rotate"></i>
-                <span>Atualizar</span>
+                <span>Atualizar Dados</span>
             </button>
         </div>
-    </header>
+    </aside>
 
-    <main class="p-6 max-w-7xl mx-auto space-y-6">
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-grow p-6 overflow-y-auto max-w-7xl mx-auto w-full">
 
-        <!-- CARDS PRINCIPAIS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- CARD 1: VIAGENS EM ANDAMENTO -->
-            <div id="card-em-curso" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Frotas em Operação</span>
-                        <h2 id="qtd-em-curso" class="text-3xl font-extrabold text-blue-900 mt-1">-</h2>
+        <!-- SEÇÃO 1: VISÃO GERAL -->
+        <section id="sec-geral" class="space-y-6">
+            <h2 class="text-xl font-bold text-blue-900 border-b pb-2">Visão Geral da Frota</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- CARD 1: VIAGENS EM ANDAMENTO -->
+                <div id="card-em-curso" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Frotas em Operação</span>
+                            <h2 id="qtd-em-curso" class="text-3xl font-extrabold text-blue-900 mt-1">-</h2>
+                        </div>
+                        <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl">
+                            <i class="fa-solid fa-truck-fast text-2xl"></i>
+                        </div>
                     </div>
-                    <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl">
-                        <i class="fa-solid fa-truck-fast text-2xl"></i>
-                    </div>
+                    <p class="text-xs text-blue-600 font-semibold mt-4 flex items-center">
+                        <i class="fa-solid fa-circle-info mr-1"></i> Clique para ver detalhes dos trajetos
+                    </p>
                 </div>
-                <p class="text-xs text-blue-600 font-semibold mt-4 flex items-center">
-                    <i class="fa-solid fa-circle-info mr-1"></i> Clique para ver detalhes dos trajetos
-                </p>
-            </div>
 
-            <!-- CARD 2: TOTAL DE KM RODADO GERAL -->
-            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-green-600">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Total KM Rodado (Frota)</span>
-                        <h2 id="total-km-geral" class="text-3xl font-extrabold text-green-700 mt-1">-</h2>
+                <!-- CARD 2: TOTAL DE KM RODADO GERAL -->
+                <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-green-600">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Total KM Rodado</span>
+                            <h2 id="total-km-geral" class="text-3xl font-extrabold text-green-700 mt-1">-</h2>
+                        </div>
+                        <div class="bg-green-50 text-green-700 p-4 rounded-2xl">
+                            <i class="fa-solid fa-road text-2xl"></i>
+                        </div>
                     </div>
-                    <div class="bg-green-50 text-green-700 p-4 rounded-2xl">
-                        <i class="fa-solid fa-road text-2xl"></i>
-                    </div>
+                    <p class="text-xs text-gray-500 font-medium mt-4">Soma das viagens concluídas</p>
                 </div>
-                <p class="text-xs text-gray-500 font-medium mt-4">Soma acumulada de viagens concluídas</p>
-            </div>
 
-            <!-- CARD 3: ALERTAS DE TROCA DE ÓLEO -->
+                <!-- CARD 3: ALERTAS DE ÓLEO -->
+                <div onclick="navegarPara('oleo')" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-red-600 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Trocas de Óleo Pendentes</span>
+                            <h2 id="qtd-alertas-oleo" class="text-3xl font-extrabold text-red-600 mt-1">-</h2>
+                        </div>
+                        <div class="bg-red-50 text-red-600 p-4 rounded-2xl">
+                            <i class="fa-solid fa-oil-can text-2xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-red-600 font-semibold mt-4 flex items-center">
+                        <i class="fa-solid fa-arrow-right mr-1"></i> Ver veículos no menu Troca de Óleo
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: DEDICADA A TROCA DE ÓLEO -->
+        <section id="sec-oleo" class="space-y-6 hidden">
+            <h2 class="text-xl font-bold text-red-600 border-b pb-2 flex items-center">
+                <i class="fa-solid fa-triangle-exclamation mr-2"></i> Relatório de Manutenção e Troca de Óleo
+            </h2>
             <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-red-600">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Alertas Troca de Óleo</span>
-                        <h2 id="qtd-alertas-oleo" class="text-3xl font-extrabold text-red-600 mt-1">-</h2>
-                    </div>
-                    <div class="bg-red-50 text-red-600 p-4 rounded-2xl">
-                        <i class="fa-solid fa-oil-can text-2xl"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-red-500 font-semibold mt-4">Veículos com status TROCAR na planilha</p>
-            </div>
-
-        </div>
-
-        <!-- RANKING E ALERTAS -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            <!-- RANKING DE KM POR MOTORISTA -->
-            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900">
-                <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
-                    <i class="fa-solid fa-trophy text-yellow-500 mr-2"></i> Ranking KM Rodado por Motorista
-                </h3>
-                <div id="lista-ranking" class="space-y-3 max-h-80 overflow-y-auto pr-2">
-                    <p class="text-sm text-gray-500 text-center py-4">A carregar ranking...</p>
-                </div>
-            </div>
-
-            <!-- TABELA DE ALERTAS DE ÓLEO -->
-            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-red-600">
-                <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
-                    <i class="fa-solid fa-triangle-exclamation text-red-600 mr-2"></i> Veículos para Troca de Óleo
-                </h3>
-                <div id="lista-alertas-oleo" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                <p class="text-sm text-gray-600 mb-4">Abaixo estão listados todos os veículos que necessitam de intervenção imediata de óleo:</p>
+                <div id="lista-alertas-oleo-pagina" class="space-y-3">
                     <p class="text-sm text-gray-500 text-center py-4">A carregar alertas...</p>
                 </div>
             </div>
+        </section>
 
-        </div>
+        <!-- SEÇÃO 3: KM POR FROTA -->
+        <section id="sec-frotas" class="space-y-6 hidden">
+            <h2 class="text-xl font-bold text-blue-900 border-b pb-2 flex items-center">
+                <i class="fa-solid fa-truck mr-2"></i> Detalhamento de KM Rodado por Frota
+            </h2>
+            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900">
+                <div id="lista-km-frota" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                    <p class="text-sm text-gray-500 text-center py-4">A carregar frotas...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: KM POR MOTORISTA -->
+        <section id="sec-motoristas" class="space-y-6 hidden">
+            <h2 class="text-xl font-bold text-blue-900 border-b pb-2 flex items-center">
+                <i class="fa-solid fa-trophy text-yellow-500 mr-2"></i> Ranking de KM Rodado por Motorista
+            </h2>
+            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900">
+                <div id="lista-ranking-pagina" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                    <p class="text-sm text-gray-500 text-center py-4">A carregar ranking...</p>
+                </div>
+            </div>
+        </section>
 
     </main>
 
-    <!-- MODAL CORRIGIDO DE FROTAS EM OPERAÇÃO -->
+    <!-- MODAL FROTAS EM OPERAÇÃO (COM FIXAÇÃO DE TAMANHO) -->
     <div id="modal-ativas" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh] relative">
             
@@ -151,13 +196,30 @@
 
                     var alertas = dados.alertasOleo || [];
                     document.getElementById('qtd-alertas-oleo').innerText = alertas.length;
+                    
                     renderizarAlertasOleo(alertas);
-
                     renderizarRanking(dados.ranking || []);
+                    renderizarKmFrota(dados.kmPorFrota || []);
                 })
                 .catch(function(erro) {
                     console.error("Erro ao carregar dados do dashboard:", erro);
                 });
+        }
+
+        function navegarPara(secao) {
+            ['geral', 'oleo', 'frotas', 'motoristas'].forEach(function(s) {
+                document.getElementById('sec-' + s).classList.add('hidden');
+                var navBtn = document.getElementById('nav-' + s);
+                if (navBtn) {
+                    navBtn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-blue-200 hover:bg-blue-800 hover:text-white transition";
+                }
+            });
+
+            document.getElementById('sec-' + secao).classList.remove('hidden');
+            var btnAtivo = document.getElementById('nav-' + secao);
+            if (btnAtivo) {
+                btnAtivo.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm bg-blue-800 text-white shadow transition";
+            }
         }
 
         function abrirModalAtivas() {
@@ -189,11 +251,11 @@
         }
 
         function renderizarRanking(ranking) {
-            var container = document.getElementById('lista-ranking');
+            var container = document.getElementById('lista-ranking-pagina');
             container.innerHTML = "";
 
             if (ranking.length === 0) {
-                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Nenhum registo de KM encontrado.</p>';
+                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Nenhum registro de KM encontrado.</p>';
                 return;
             }
 
@@ -209,8 +271,26 @@
             });
         }
 
+        function renderizarKmFrota(frotas) {
+            var container = document.getElementById('lista-km-frota');
+            container.innerHTML = "";
+
+            if (frotas.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Nenhum registro por frota encontrado.</p>';
+                return;
+            }
+
+            frotas.forEach(function(item) {
+                container.innerHTML += 
+                    '<div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl border">' +
+                        '<span class="font-bold text-blue-900 text-sm"><i class="fa-solid fa-truck text-blue-700 mr-2"></i>Frota ' + item.frota + '</span>' +
+                        '<span class="bg-blue-100 text-blue-900 font-extrabold text-xs px-3 py-1 rounded-full">' + Math.round(item.km).toLocaleString('pt-BR') + ' km</span>' +
+                    '</div>';
+            });
+        }
+
         function renderizarAlertasOleo(alertas) {
-            var container = document.getElementById('lista-alertas-oleo');
+            var container = document.getElementById('lista-alertas-oleo-pagina');
             container.innerHTML = "";
 
             if (alertas.length === 0) {
@@ -239,18 +319,12 @@
             document.getElementById('btn-fechar-modal').addEventListener('click', fecharModalAtivas);
             document.getElementById('btn-fechar-modal-x').addEventListener('click', fecharModalAtivas);
 
-            // Fechar ao clicar fora do modal
             document.getElementById('modal-ativas').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    fecharModalAtivas();
-                }
+                if (e.target === this) fecharModalAtivas();
             });
 
-            // Fechar ao pressionar a tecla ESC
             document.addEventListener('keydown', function(e) {
-                if (e.key === "Escape") {
-                    fecharModalAtivas();
-                }
+                if (e.key === "Escape") fecharModalAtivas();
             });
 
             carregarDadosDashboard();
