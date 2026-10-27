@@ -1,309 +1,136 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DigiFrota 4.0 - Painel Administrativo</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Dashboard - DigiFrota 4.1</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .sidebar-icon { transition: all 0.2s ease; }
-        .sidebar-icon:hover { transform: scale(1.1); }
-    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex text-gray-900 font-sans">
+<body class="bg-gray-100 font-sans text-base pb-12">
 
-    <!-- MENU LATERAL -->
-    <aside class="w-20 bg-white border-r border-gray-200 flex flex-col items-center py-5 space-y-6 z-30 sticky top-0 h-screen shadow-sm">
-        <div class="bg-blue-900 p-3 rounded-2xl text-white shadow-md">
-            <i class="fa-solid fa-truck-medical text-xl"></i>
+    <!-- HEADER -->
+    <header class="bg-blue-900 text-white p-5 shadow-lg flex justify-between items-center border-b-4 border-blue-700">
+        <div class="flex items-center space-x-3">
+            <div class="bg-white p-2 rounded-xl text-blue-900 shadow">
+                <i class="fa-solid fa-chart-pie text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold tracking-wide">Dashboard DigiFrota</h1>
+                <p class="text-xs text-blue-200 uppercase font-semibold">PAINEL ADMINISTRATIVO</p>
+            </div>
         </div>
-        <nav class="flex flex-col space-y-4 w-full px-3">
-            <button onclick="mudarSecao('dashboard')" id="nav-btn-dashboard" class="sidebar-icon p-3 rounded-xl bg-blue-50 text-blue-800 flex justify-center text-lg shadow-sm"><i class="fa-solid fa-chart-pie"></i></button>
-            <button onclick="mudarSecao('viagens')" id="nav-btn-viagens" class="sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg"><i class="fa-solid fa-map-location-dot"></i></button>
-            <button onclick="mudarSecao('frotas')" id="nav-btn-frotas" class="sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg"><i class="fa-solid fa-truck"></i></button>
-            <button onclick="mudarSecao('motoristas')" id="nav-btn-motoristas" class="sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg"><i class="fa-solid fa-users"></i></button>
-            <button onclick="mudarSecao('checklist')" id="nav-btn-checklist" class="sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg"><i class="fa-solid fa-list-check"></i></button>
-        </nav>
-    </aside>
+        <div class="flex items-center space-x-3">
+            <span id="data-hoje" class="text-xs bg-blue-800 text-blue-200 px-3 py-1.5 rounded-xl font-medium hidden md:inline-block"></span>
+            <button onclick="carregarDadosDashboard()" class="bg-blue-800 hover:bg-blue-700 text-sm px-4 py-2 rounded-xl flex items-center space-x-2 font-semibold shadow transition text-white">
+                <i class="fa-solid fa-rotate"></i>
+                <span>Atualizar</span>
+            </button>
+        </div>
+    </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <div class="flex-1 flex flex-col min-w-0">
-        
-        <!-- CABEÇALHO SUPERIOR -->
-        <header class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center sticky top-0 z-20 shadow-xs">
-            <div class="flex items-center space-x-4">
-                <h1 id="titulo-secao" class="text-xl font-black text-blue-900 tracking-wide">Dashboard</h1>
-                <span class="text-xs text-gray-400 italic hidden md:inline">“Tudo o que a tua mão encontrar para fazer, faze-o com todo o teu poder.” — Ec 9:10</span>
-            </div>
+    <main class="p-6 max-w-7xl mx-auto space-y-6">
+
+        <!-- LINHA SUPERIOR: CARDS PRINCIPAIS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            <div class="flex items-center space-x-4">
-                <span id="data-atual" class="text-xs bg-gray-100 px-3 py-1.5 rounded-lg font-bold text-gray-600">--</span>
-                <button onclick="carregarDados()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-xs font-black shadow flex items-center gap-2">
-                    <i class="fa-solid fa-rotate"></i> Atualizar
-                </button>
+            <!-- CARD 1: VIAGENS EM ANDAMENTO (Clicável) -->
+            <div onclick="abrirModalAtivas()" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Frotas em Operação</span>
+                        <h2 id="qtd-em-curso" class="text-3xl font-extrabold text-blue-900 mt-1">-</h2>
+                    </div>
+                    <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl">
+                        <i class="fa-solid fa-truck-fast text-2xl"></i>
+                    </div>
+                </div>
+                <p class="text-xs text-blue-600 font-semibold mt-4 flex items-center">
+                    <i class="fa-solid fa-circle-info mr-1"></i> Clique para ver detalhes dos trajetos
+                </p>
             </div>
-        </header>
 
-        <!-- CORPO DAS SECÇÕES -->
-        <main class="p-6 space-y-6 flex-1 overflow-y-auto">
-
-            <!-- SECÇÃO 1: DASHBOARD (VISÃO GERAL) -->
-            <section id="secao-dashboard" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Viagens Recentes -->
-                    <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3">
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-map-location-dot text-blue-600 mr-2"></i> Viagens Recentes</h2>
-                            <button onclick="mudarSecao('viagens')" class="text-xs text-blue-700 font-bold hover:underline">Ver todas →</button>
-                        </div>
-                        <div id="dash-viagens-recentes" class="space-y-2 text-xs text-gray-600">A carregar viagens...</div>
+            <!-- CARD 2: TOTAL DE KM RODADO GERAL -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-green-600">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Total KM Rodado (Frota)</span>
+                        <h2 id="total-km-geral" class="text-3xl font-extrabold text-green-700 mt-1">-</h2>
                     </div>
-
-                    <!-- Ranking KM Rodado nas Utilizações -->
-                    <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3">
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-ranking-star text-amber-500 mr-2"></i> Ranking KM Rodado (Utilizações)</h2>
-                        </div>
-                        <div id="dash-ranking-km" class="space-y-2 text-xs text-gray-600">A calcular ranking...</div>
+                    <div class="bg-green-50 text-green-700 p-4 rounded-2xl">
+                        <i class="fa-solid fa-road text-2xl"></i>
                     </div>
                 </div>
+                <p class="text-xs text-gray-500 font-medium mt-4">Soma acumulada de viagens concluídas</p>
+            </div>
 
-                <!-- Visão Geral da Frota e Alertas -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3 md:col-span-2">
-                        <h2 class="font-black text-sm uppercase text-gray-800 border-b pb-2"><i class="fa-solid fa-chart-line text-emerald-600 mr-2"></i> Visão Geral da Frota Municipal</h2>
-                        <div class="grid grid-cols-3 gap-4 text-center py-4">
-                            <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100">
-                                <span class="block text-[10px] uppercase font-bold text-blue-600">Total Frotas</span>
-                                <span id="stat-total" class="text-2xl font-black text-blue-900">-</span>
-                            </div>
-                            <div class="bg-red-50 p-4 rounded-2xl border border-red-100">
-                                <span class="block text-[10px] uppercase font-bold text-red-600">Troca Óleo Vencida</span>
-                                <span id="stat-trocar" class="text-2xl font-black text-red-700">-</span>
-                            </div>
-                            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100">
-                                <span class="block text-[10px] uppercase font-bold text-amber-600">Em Atenção</span>
-                                <span id="stat-atencao" class="text-2xl font-black text-amber-700">-</span>
-                            </div>
-                        </div>
+            <!-- CARD 3: ALERTAS DE TROCA DE ÓLEO -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-red-600">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Alertas Troca de Óleo</span>
+                        <h2 id="qtd-alertas-oleo" class="text-3xl font-extrabold text-red-600 mt-1">-</h2>
                     </div>
-
-                    <!-- Alertas Frota -->
-                    <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-3">
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <h2 class="font-black text-sm uppercase text-gray-800"><i class="fa-solid fa-triangle-exclamation text-red-600 mr-2"></i> Alertas Frota</h2>
-                            <button onclick="mudarSecao('frotas')" class="text-xs text-blue-700 font-bold hover:underline">Ver frotas →</button>
-                        </div>
-                        <div id="dash-alertas-frota" class="space-y-2 text-xs text-gray-600 max-h-48 overflow-y-auto">A carregar alertas...</div>
+                    <div class="bg-red-50 text-red-600 p-4 rounded-2xl">
+                        <i class="fa-solid fa-oil-can text-2xl"></i>
                     </div>
                 </div>
-            </section>
+                <p class="text-xs text-red-500 font-semibold mt-4">Veículos com status TROCAR na planilha</p>
+            </div>
 
-            <!-- SECÇÃO 2: VIAGENS -->
-            <section id="secao-viagens" class="hidden space-y-4">
-                <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
-                    <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-map-location-dot mr-2"></i> Registo Completo de Viagens</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-gray-50 text-gray-600 uppercase">
-                                <tr>
-                                    <th class="p-3">Data Saída</th>
-                                    <th class="p-3">Motorista</th>
-                                    <th class="p-3">Frota</th>
-                                    <th class="p-3">Destino</th>
-                                    <th class="p-3">Situação</th>
-                                    <th class="p-3">KM Chegada</th>
-                                    <th class="p-3">KM Rodado</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-viagens-corpo" class="divide-y divide-gray-100 text-gray-700">
-                                <tr><td colspan="7" class="text-center py-6 text-gray-400">A carregar...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+        </div>
+
+        <!-- SEGUNDA LINHA: RANKING E ALERTAS -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- RANKING DE KM POR MOTORISTA -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900">
+                <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
+                    <i class="fa-solid fa-trophy text-yellow-500 mr-2"></i> Ranking KM Rodado por Motorista
+                </h3>
+                <div id="lista-ranking" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                    <p class="text-sm text-gray-500 text-center py-4">A carregar ranking...</p>
                 </div>
-            </section>
+            </div>
 
-            <!-- SECÇÃO 3: FROTAS -->
-            <section id="secao-frotas" class="hidden space-y-4">
-                <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
-                    <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-truck mr-2"></i> Gestão de Frotas e Manutenção</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-gray-50 text-gray-600 uppercase">
-                                <tr>
-                                    <th class="p-3">Frota</th>
-                                    <th class="p-3">Placa</th>
-                                    <th class="p-3">Tipo</th>
-                                    <th class="p-3">Situação</th>
-                                    <th class="p-3">KM Atual</th>
-                                    <th class="p-3">Alerta Óleo</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-frotas-corpo" class="divide-y divide-gray-100 text-gray-700">
-                                <tr><td colspan="6" class="text-center py-6 text-gray-400">A carregar...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <!-- TABELA DE ALERTAS DE ÓLEO -->
+            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-red-600">
+                <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
+                    <i class="fa-solid fa-triangle-exclamation text-red-600 mr-2"></i> Veículos para Troca de Óleo
+                </h3>
+                <div id="lista-alertas-oleo" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                    <p class="text-sm text-gray-500 text-center py-4">A carregar alertas...</p>
                 </div>
-            </section>
+            </div>
 
-            <!-- SECÇÃO 4: MOTORISTAS -->
-            <section id="secao-motoristas" class="hidden space-y-4">
-                <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
-                    <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-users mr-2"></i> Desempenho de Motoristas</h2>
-                    <div class="text-xs text-gray-600">Dados baseados nas escalas e viagens registadas no sistema.</div>
-                </div>
-            </section>
+        </div>
 
-            <!-- SECÇÃO 5: CHECKLIST -->
-            <section id="secao-checklist" class="hidden space-y-4">
-                <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm space-y-4">
-                    <h2 class="font-black text-base text-blue-900 border-b pb-3"><i class="fa-solid fa-list-check mr-2"></i> Registo de Avarias e Checklist</h2>
-                    <div class="text-xs text-gray-600">Histórico de vistorias realizadas nas saídas e chegadas.</div>
-                </div>
-            </section>
+    </main>
 
-        </main>
+    <!-- MODAL DE VIAGENS EM ANDAMENTO -->
+    <div id="modal-ativas" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-bold text-blue-900 flex items-center">
+                    <i class="fa-solid fa-truck-fast mr-2"></i> Frotas em Operação (Em Curso)
+                </h3>
+                <button onclick="fecharModalAtivas()" class="text-gray-400 hover:text-gray-700 text-xl font-bold">&times;</button>
+            </div>
+            <div id="modal-lista-conteudo" class="space-y-3">
+                <p class="text-sm text-gray-500 text-center py-4">A carregar...</p>
+            </div>
+            <div class="pt-2 text-right">
+                <button onclick="fecharModalAtivas()" class="bg-blue-900 hover:bg-blue-800 text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow">Fechar</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
+        const URL_API = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
+        
+        let viagensAtivasCache = [];
 
         document.addEventListener("DOMContentLoaded", () => {
-            const dias = ["dom.", "seg.", "ter.", "qua.", "qui.", "sex.", "sáb."];
-            const meses = ["jan.", "fev.", "mar.", "abr.", "mai.", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."];
-            const agora = new Date();
-            document.getElementById("data-atual").textContent = `${dias[agora.getDay()]}, ${agora.getDate()} de ${meses[agora.getMonth()]} de ${agora.getFullYear()}`;
-            
-            carregarDados();
-        });
-
-        function mudarSecao(secao) {
-            ['dashboard', 'viagens', 'frotas', 'motoristas', 'checklist'].forEach(s => {
-                document.getElementById(`secao-${s}`).classList.add('hidden');
-                document.getElementById(`nav-btn-${s}`).className = "sidebar-icon p-3 rounded-xl text-gray-500 hover:bg-gray-100 flex justify-center text-lg";
-            });
-            document.getElementById(`secao-${secao}`).classList.remove('hidden');
-            document.getElementById(`nav-btn-${secao}`).className = "sidebar-icon p-3 rounded-xl bg-blue-50 text-blue-800 flex justify-center text-lg shadow-sm";
-            
-            const titulos = { dashboard: "Dashboard", viagens: "Viagens", frotas: "Frotas", motoristas: "Motoristas", checklist: "Checklist" };
-            document.getElementById("titulo-secao").textContent = titulos[secao];
-        }
-
-        async function carregarDados() {
-            try {
-                // 1. Carregar resumo do Dashboard
-                const res = await fetch(`${API_URL}?action=getDashboard`);
-                const dados = await res.json();
-
-                document.getElementById("stat-total").textContent = dados.total || 0;
-                document.getElementById("stat-trocar").textContent = dados.trocar || 0;
-                document.getElementById("stat-atencao").textContent = dados.atencao || 0;
-
-                const alertasDiv = document.getElementById("dash-alertas-frota");
-                const dashAlertas = document.getElementById("tabela-frotas-corpo");
-                alertasDiv.innerHTML = "";
-                dashAlertas.innerHTML = "";
-
-                if (dados.ranking && Array.isArray(dados.ranking)) {
-                    dados.ranking.forEach(v => {
-                        let alertaTexto = v.alerta ? v.alerta.toString().toUpperCase() : "OK";
-                        if(alertaTexto === "TROCAR" || alertaTexto.includes("VENCIDA")) {
-                            alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-red-50 border border-red-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-red-700">TROCAR</span></div>`;
-                        } else if(alertaTexto === "ATENÇÃO") {
-                            alertasDiv.innerHTML += `<div class="flex justify-between items-center p-2 bg-amber-50 border border-amber-100 rounded-xl"><span>Frota ${v.frota}</span> <span class="font-bold text-amber-700">ATENÇÃO</span></div>`;
-                        }
-                        
-                        let kmAtualNum = parseFloat(v.kmAtual) || 0;
-                        dashAlertas.innerHTML += `
-                            <tr class="hover:bg-gray-50 border-b">
-                                <td class="p-3 font-bold">${v.frota || '-'}</td>
-                                <td class="p-3">${v.placa || '-'}</td>
-                                <td class="p-3">${v.tipo || '-'}</td>
-                                <td class="p-3">${v.situacao || '-'}</td>
-                                <td class="p-3 font-semibold">${kmAtualNum.toLocaleString('pt-BR')}</td>
-                                <td class="p-3"><span class="px-2 py-1 rounded font-bold ${alertaTexto==='TROCAR'?'bg-red-100 text-red-800':'bg-emerald-100 text-emerald-800'}">${alertaTexto}</span></td>
-                            </tr>
-                        `;
-                    });
-                }
-                if(alertasDiv.innerHTML === "") alertasDiv.innerHTML = '<p class="text-xs text-emerald-600 font-bold">Nenhum alerta pendente.</p>';
-
-                // 2. Carregar Viagens e Calcular Ranking pela Soma dos KM Rodados
-                const resV = await fetch(`${API_URL}?action=obterDadosFrotas`);
-                const viagens = await resV.json();
-
-                const recViagensDiv = document.getElementById("dash-viagens-recentes");
-                const tabelaViagens = document.getElementById("tabela-viagens-corpo");
-                recViagensDiv.innerHTML = "";
-                tabelaViagens.innerHTML = "";
-
-                let kmRodadoPorFrota = {};
-
-                if (Array.isArray(viagens)) {
-                    viagens.forEach(v => {
-                        let kmRodadoNum = parseFloat(v.kmRodado) || 0;
-                        let nomeFrota = v.frota ? v.frota.toString().trim() : "Desconhecida";
-                        
-                        if (!kmRodadoPorFrota[nomeFrota]) {
-                            kmRodadoPorFrota[nomeFrota] = 0;
-                        }
-                        kmRodadoPorFrota[nomeFrota] += kmRodadoNum;
-
-                        tabelaViagens.innerHTML += `
-                            <tr class="hover:bg-gray-50 border-b">
-                                <td class="p-3">${v.saida || '-'}</td>
-                                <td class="p-3 font-bold">${v.motorista || '-'}</td>
-                                <td class="p-3">${v.frota || '-'}</td>
-                                <td class="p-3">${v.destino || '-'}</td>
-                                <td class="p-3">${v.situacao || '-'}</td>
-                                <td class="p-3">${v.kmChegada || '-'}</td>
-                                <td class="p-3 font-semibold text-blue-900">${v.kmRodado ? v.kmRodado + ' KM' : '-'}</td>
-                            </tr>
-                        `;
-                    });
-
-                    viagens.slice(0, 5).forEach(v => {
-                        recViagensDiv.innerHTML += `
-                            <div class="p-2.5 bg-gray-50 rounded-xl flex justify-between items-center border">
-                                <div>
-                                    <span class="font-black text-blue-900">Frota ${v.frota || '-'}</span> → <span class="text-gray-700">${v.destino || '-'}</span>
-                                    <div class="text-[10px] text-gray-400">Motorista: ${v.motorista || '-'}</div>
-                                </div>
-                                <span class="text-xs font-bold text-gray-600">${v.kmRodado ? v.kmRodado + ' KM' : 'Em curso'}</span>
-                            </div>
-                        `;
-                    });
-                }
-
-                if(recViagensDiv.innerHTML === "") recViagensDiv.innerHTML = '<p class="text-xs text-gray-400">Sem registos de viagens.</p>';
-
-                // Montar o Ranking baseado na SOMA dos KM rodados
-                let rankingArray = Object.keys(kmRodadoPorFrota).map(frota => {
-                    return { frota: frota, totalKm: kmRodadoPorFrota[frota] };
-                });
-                rankingArray.sort((a, b) => b.totalKm - a.totalKm);
-
-                const rankingDiv = document.getElementById("dash-ranking-km");
-                rankingDiv.innerHTML = "";
-                rankingArray.slice(0, 5).forEach((item, index) => {
-                    rankingDiv.innerHTML += `
-                        <div class="flex justify-between items-center p-2.5 bg-gray-50 rounded-xl border">
-                            <span class="font-bold text-gray-800"><strong>#${index+1}</strong> Frota ${item.frota}</span> 
-                            <span class="font-black text-blue-900">${item.totalKm.toLocaleString('pt-BR')} KM rodados</span>
-                        </div>
-                    `;
-                });
-                if(rankingArray.length === 0 || rankingArray[0].totalKm === 0) {
-                    rankingDiv.innerHTML = '<p class="text-xs text-gray-400">Ainda sem quilometragem registada nas utilizações.</p>';
-                }
-
-            } catch (err) {
-                console.error("Erro ao carregar dados:", err);
-            }
-        }
-    </script>
-</body>
-</html>
+            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            document.getElementById('data-hoje').innerText = new Date().toLocaleDateString('pt-BR', options);
+            carregarDadosDashboard();
