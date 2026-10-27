@@ -22,7 +22,7 @@
         </div>
         <div class="flex items-center space-x-3">
             <span id="data-hoje" class="text-xs bg-blue-800 text-blue-200 px-3 py-1.5 rounded-xl font-medium hidden md:inline-block"></span>
-            <button onclick="carregarDadosDashboard()" class="bg-blue-800 hover:bg-blue-700 text-sm px-4 py-2 rounded-xl flex items-center space-x-2 font-semibold shadow transition text-white">
+            <button id="btn-atualizar" class="bg-blue-800 hover:bg-blue-700 text-sm px-4 py-2 rounded-xl flex items-center space-x-2 font-semibold shadow transition text-white">
                 <i class="fa-solid fa-rotate"></i>
                 <span>Atualizar</span>
             </button>
@@ -31,11 +31,11 @@
 
     <main class="p-6 max-w-7xl mx-auto space-y-6">
 
-        <!-- LINHA SUPERIOR: CARDS PRINCIPAIS -->
+        <!-- CARDS PRINCIPAIS -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             <!-- CARD 1: VIAGENS EM ANDAMENTO -->
-            <div onclick="abrirModalAtivas()" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+            <div id="card-em-curso" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
                 <div class="flex justify-between items-center">
                     <div>
                         <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Frotas em Operação</span>
@@ -80,7 +80,7 @@
 
         </div>
 
-        <!-- SEGUNDA LINHA: RANKING E ALERTAS -->
+        <!-- RANKING E ALERTAS -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             <!-- RANKING DE KM POR MOTORISTA -->
@@ -107,84 +107,78 @@
 
     </main>
 
-    <!-- MODAL DE VIAGENS EM ANDAMENTO -->
-    <div id="modal-ativas" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b pb-3">
+    <!-- MODAL CORRIGIDO DE FROTAS EM OPERAÇÃO -->
+    <div id="modal-ativas" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh] relative">
+            
+            <!-- CABEÇALHO DO MODAL -->
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
                 <h3 class="text-lg font-bold text-blue-900 flex items-center">
-                    <i class="fa-solid fa-truck-fast mr-2"></i> Frotas em Operação (Em Curso)
+                    <i class="fa-solid fa-truck-fast mr-2"></i> Frotas em Operação
                 </h3>
-                <button onclick="fecharModalAtivas()" class="text-gray-400 hover:text-gray-700 text-xl font-bold">&times;</button>
+                <button id="btn-fechar-modal-x" class="text-gray-400 hover:text-red-600 text-2xl font-bold px-2 py-1 transition">&times;</button>
             </div>
-            <div id="modal-lista-conteudo" class="space-y-3">
+
+            <!-- CONTEÚDO COM ROLAGEM -->
+            <div id="modal-lista-conteudo" class="space-y-3 overflow-y-auto pr-2 flex-grow">
                 <p class="text-sm text-gray-500 text-center py-4">A carregar...</p>
             </div>
-            <div class="pt-2 text-right">
-                <button onclick="fecharModalAtivas()" class="bg-blue-900 hover:bg-blue-800 text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow">Fechar</button>
+
+            <!-- RODAPÉ DO MODAL -->
+            <div class="pt-4 border-t mt-4 flex justify-end">
+                <button id="btn-fechar-modal" class="bg-blue-900 hover:bg-blue-800 text-white font-bold px-6 py-2 rounded-xl text-sm shadow transition">
+                    Fechar
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
-        
-        let viagensAtivasCache = [];
+        var URL_API = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
+        var viagensAtivasCache = [];
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-            document.getElementById('data-hoje').innerText = new Date().toLocaleDateString('pt-BR', options);
-            carregarDadosDashboard();
-        });
+        function carregarDadosDashboard() {
+            fetch(URL_API + "?action=obterDadosDashboard")
+                .then(function(resposta) {
+                    return resposta.json();
+                })
+                .then(function(dados) {
+                    viagensAtivasCache = dados.viagensEmCurso || [];
+                    document.getElementById('qtd-em-curso').innerText = viagensAtivasCache.length;
 
-        async function carregarDadosDashboard() {
-            try {
-                let resposta = await fetch(`${URL_API}?action=obterDadosDashboard`, {
-                    method: "GET",
-                    redirect: "follow"
+                    var totalKm = dados.totalKmGeral || 0;
+                    document.getElementById('total-km-geral').innerText = totalKm.toLocaleString('pt-BR') + " km";
+
+                    var alertas = dados.alertasOleo || [];
+                    document.getElementById('qtd-alertas-oleo').innerText = alertas.length;
+                    renderizarAlertasOleo(alertas);
+
+                    renderizarRanking(dados.ranking || []);
+                })
+                .catch(function(erro) {
+                    console.error("Erro ao carregar dados do dashboard:", erro);
                 });
-                let dados = await resposta.json();
-
-                // 1. Viagens em Curso
-                viagensAtivasCache = dados.viagensEmCurso || [];
-                document.getElementById('qtd-em-curso').innerText = viagensAtivasCache.length;
-
-                // 2. Total KM Rodado Geral
-                let totalKm = dados.totalKmGeral || 0;
-                document.getElementById('total-km-geral').innerText = totalKm.toLocaleString('pt-BR') + " km";
-
-                // 3. Alertas de Óleo
-                let alertas = dados.alertasOleo || [];
-                document.getElementById('qtd-alertas-oleo').innerText = alertas.length;
-                renderizarAlertasOleo(alertas);
-
-                // 4. Ranking de Motoristas
-                renderizarRanking(dados.ranking || []);
-
-            } catch (erro) {
-                console.error("Erro ao carregar dados do dashboard:", erro);
-            }
         }
 
         function abrirModalAtivas() {
-            let container = document.getElementById('modal-lista-conteudo');
+            var container = document.getElementById('modal-lista-conteudo');
             container.innerHTML = "";
 
             if (viagensAtivasCache.length === 0) {
                 container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Nenhuma frota em operação no momento.</p>';
             } else {
-                viagensAtivasCache.forEach(v => {
-                    container.innerHTML += `
-                        <div class="bg-gray-50 border p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center space-y-2 md:space-y-0 shadow-sm">
-                            <div>
-                                <span class="font-extrabold text-blue-900 text-base">Frota ${v.frota}</span>
-                                <p class="text-sm text-gray-700 font-medium mt-0.5"><i class="fa-solid fa-user text-blue-800 mr-1"></i> Motorista: ${v.motorista}</p>
-                                <p class="text-sm text-gray-600"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> Destino: ${v.destino}</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-xs bg-blue-100 text-blue-900 px-3 py-1 rounded-full font-bold">KM Saída: ${v.kmSaida || 0}</span>
-                            </div>
-                        </div>
-                    `;
+                viagensAtivasCache.forEach(function(v) {
+                    container.innerHTML += 
+                        '<div class="bg-gray-50 border p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center space-y-2 md:space-y-0 shadow-sm hover:bg-blue-50 transition">' +
+                            '<div>' +
+                                '<span class="font-extrabold text-blue-900 text-base">Frota ' + v.frota + '</span>' +
+                                '<p class="text-sm text-gray-700 font-medium mt-0.5"><i class="fa-solid fa-user text-blue-800 mr-1"></i> Motorista: ' + v.motorista + '</p>' +
+                                '<p class="text-sm text-gray-600"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> Destino: ' + v.destino + '</p>' +
+                            '</div>' +
+                            '<div class="text-right">' +
+                                '<span class="text-xs bg-blue-100 text-blue-900 px-3 py-1 rounded-full font-bold">KM Saída: ' + (v.kmSaida || 0).toLocaleString('pt-BR') + '</span>' +
+                            '</div>' +
+                        '</div>';
                 });
             }
             document.getElementById('modal-ativas').classList.remove('hidden');
@@ -195,7 +189,7 @@
         }
 
         function renderizarRanking(ranking) {
-            let container = document.getElementById('lista-ranking');
+            var container = document.getElementById('lista-ranking');
             container.innerHTML = "";
 
             if (ranking.length === 0) {
@@ -203,21 +197,20 @@
                 return;
             }
 
-            ranking.forEach((item, index) => {
-                let posicao = index + 1;
-                let medalha = posicao === 1 ? '🥇 ' : posicao === 2 ? '🥈 ' : posicao === 3 ? '🥉 ' : `#${posicao} `;
+            ranking.forEach(function(item, index) {
+                var posicao = index + 1;
+                var medalha = posicao === 1 ? '🥇 ' : posicao === 2 ? '🥈 ' : posicao === 3 ? '🥉 ' : '#' + posicao + ' ';
 
-                container.innerHTML += `
-                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl border">
-                        <span class="font-bold text-gray-800 text-sm">${medalha} ${item.motorista}</span>
-                        <span class="bg-green-100 text-green-800 font-extrabold text-xs px-3 py-1 rounded-full">${Math.round(item.km).toLocaleString('pt-BR')} km</span>
-                    </div>
-                `;
+                container.innerHTML += 
+                    '<div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl border">' +
+                        '<span class="font-bold text-gray-800 text-sm">' + medalha + item.motorista + '</span>' +
+                        '<span class="bg-green-100 text-green-800 font-extrabold text-xs px-3 py-1 rounded-full">' + Math.round(item.km).toLocaleString('pt-BR') + ' km</span>' +
+                    '</div>';
             });
         }
 
         function renderizarAlertasOleo(alertas) {
-            let container = document.getElementById('lista-alertas-oleo');
+            var container = document.getElementById('lista-alertas-oleo');
             container.innerHTML = "";
 
             if (alertas.length === 0) {
@@ -225,18 +218,43 @@
                 return;
             }
 
-            alertas.forEach(item => {
-                container.innerHTML += `
-                    <div class="flex justify-between items-center p-3 bg-red-50 border border-red-200 rounded-xl">
-                        <div>
-                            <span class="font-bold text-red-900 text-sm">Frota ${item.frota}</span>
-                            <p class="text-xs text-red-600 mt-0.5">Troca de óleo pendente / ultrapassada</p>
-                        </div>
-                        <span class="bg-red-600 text-white font-bold text-xs px-3 py-1 rounded-lg">TROCAR</span>
-                    </div>
-                `;
+            alertas.forEach(function(item) {
+                container.innerHTML += 
+                    '<div class="flex justify-between items-center p-3 bg-red-50 border border-red-200 rounded-xl">' +
+                        '<div>' +
+                            '<span class="font-bold text-red-900 text-sm">Frota ' + item.frota + '</span>' +
+                            '<p class="text-xs text-red-600 mt-0.5">Troca de óleo pendente / ultrapassada</p>' +
+                        '</div>' +
+                        '<span class="bg-red-600 text-white font-bold text-xs px-3 py-1 rounded-lg">TROCAR</span>' +
+                    '</div>';
             });
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            document.getElementById('data-hoje').innerText = new Date().toLocaleDateString('pt-BR', options);
+            
+            document.getElementById('btn-atualizar').addEventListener('click', carregarDadosDashboard);
+            document.getElementById('card-em-curso').addEventListener('click', abrirModalAtivas);
+            document.getElementById('btn-fechar-modal').addEventListener('click', fecharModalAtivas);
+            document.getElementById('btn-fechar-modal-x').addEventListener('click', fecharModalAtivas);
+
+            // Fechar ao clicar fora do modal
+            document.getElementById('modal-ativas').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    fecharModalAtivas();
+                }
+            });
+
+            // Fechar ao pressionar a tecla ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === "Escape") {
+                    fecharModalAtivas();
+                }
+            });
+
+            carregarDadosDashboard();
+        });
     </script>
 </body>
 </html>
