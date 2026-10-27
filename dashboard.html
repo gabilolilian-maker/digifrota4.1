@@ -283,17 +283,18 @@
             });
         }
 
-        function renderizarAlertasOleo(alertas) {
+      function renderizarAlertasOleo(alertas) {
             var container = document.getElementById('lista-alertas-oleo-pagina');
             container.innerHTML = "";
 
-            if (alertas.length === 0) {
+            if (!alertas || alertas.length === 0) {
                 container.innerHTML = '<p class="text-sm text-green-600 font-semibold text-center py-4 col-span-full"><i class="fa-solid fa-circle-check mr-1"></i> Toda a frota está com a manutenção de óleo em dia!</p>';
                 return;
             }
 
             alertas.forEach(function(item) {
-                var kmFaltamNum = Number(item.kmFaltam);
+                var kmFaltamNum = Number(item.kmFaltam) || 0;
+                var kmAtualNum = Number(item.kmAtual) || 0;
                 var isVencido = kmFaltamNum <= 0;
                 
                 var corBorda = isVencido ? 'border-red-600 bg-red-50' : 'border-amber-500 bg-amber-50';
@@ -305,14 +306,14 @@
                         '<div class="flex justify-between items-start">' +
                             '<div>' +
                                 '<span class="text-xs uppercase font-bold tracking-wider text-gray-500">Veículo / Frota</span>' +
-                                '<h3 class="text-lg font-extrabold text-blue-900">Frota ' + item.frota + '</h3>' +
+                                '<h3 class="text-lg font-extrabold text-blue-900">Frota ' + (item.frota || 'N/D') + '</h3>' +
                             '</div>' +
                             '<span class="' + corBadge + ' font-bold text-xs px-3 py-1 rounded-lg uppercase shadow-sm">' + (isVencido ? 'VENCIDO' : 'ATENÇÃO') + '</span>' +
                         '</div>' +
                         '<div class="space-y-1 bg-white p-3 rounded-xl shadow-inner border">' +
                             '<div class="flex justify-between text-xs text-gray-600">' +
                                 '<span>KM Atual:</span>' +
-                                '<span class="font-bold text-gray-800">' + item.kmAtual.toLocaleString('pt-BR') + ' km</span>' +
+                                '<span class="font-bold text-gray-800">' + kmAtualNum.toLocaleString('pt-BR') + ' km</span>' +
                             '</div>' +
                             '<div class="flex justify-between text-xs text-gray-600 pt-1 border-t">' +
                                 '<span>Situação Troca:</span>' +
@@ -321,7 +322,7 @@
                         '</div>' +
                     '</div>';
             });
-        }
+        } 
 
         document.addEventListener("DOMContentLoaded", function() {
             var options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
