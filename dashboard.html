@@ -12,7 +12,6 @@
     <!-- MENU LATERAL (SIDEBAR) -->
     <aside id="sidebar" class="bg-blue-900 text-white w-full md:w-64 flex-shrink-0 flex flex-col justify-between p-4 shadow-xl">
         <div>
-            <!-- LOGO / TÍTULO -->
             <div class="flex items-center space-x-3 p-2 mb-6 border-b border-blue-800">
                 <div class="bg-white p-2 rounded-xl text-blue-900 shadow">
                     <i class="fa-solid fa-chart-pie text-xl"></i>
@@ -23,7 +22,6 @@
                 </div>
             </div>
 
-            <!-- OPÇÕES DO MENU -->
             <nav class="space-y-2">
                 <button onclick="navegarPara('geral')" id="nav-geral" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm bg-blue-800 text-white shadow hover:bg-blue-700 transition">
                     <i class="fa-solid fa-house w-5"></i>
@@ -47,7 +45,6 @@
             </nav>
         </div>
 
-        <!-- RODAPÉ DO MENU -->
         <div class="pt-4 border-t border-blue-800 text-xs text-blue-300 text-center">
             <p id="data-hoje" class="font-medium mb-2"></p>
             <button id="btn-atualizar" class="w-full bg-blue-800 hover:bg-blue-700 text-white py-2 rounded-xl font-semibold flex items-center justify-center space-x-2 transition shadow">
@@ -65,7 +62,6 @@
             <h2 class="text-xl font-bold text-blue-900 border-b pb-2">Visão Geral da Frota</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- CARD 1: VIAGENS EM ANDAMENTO -->
                 <div id="card-em-curso" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-900 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
                     <div class="flex justify-between items-center">
                         <div>
@@ -81,7 +77,6 @@
                     </p>
                 </div>
 
-                <!-- CARD 2: TOTAL DE KM RODADO GERAL -->
                 <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-green-600">
                     <div class="flex justify-between items-center">
                         <div>
@@ -95,7 +90,6 @@
                     <p class="text-xs text-gray-500 font-medium mt-4">Soma das viagens concluídas</p>
                 </div>
 
-                <!-- CARD 3: ALERTAS DE ÓLEO -->
                 <div onclick="navegarPara('oleo')" class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-red-600 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
                     <div class="flex justify-between items-center">
                         <div>
@@ -113,16 +107,16 @@
             </div>
         </section>
 
-        <!-- SEÇÃO 2: DEDICADA A TROCA DE ÓLEO -->
+        <!-- SEÇÃO 2: DEDICADA A TROCA DE ÓLEO (CARDS LADO A LADO) -->
         <section id="sec-oleo" class="space-y-6 hidden">
             <h2 class="text-xl font-bold text-red-600 border-b pb-2 flex items-center">
                 <i class="fa-solid fa-triangle-exclamation mr-2"></i> Relatório de Manutenção e Troca de Óleo
             </h2>
-            <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-red-600">
-                <p class="text-sm text-gray-600 mb-4">Abaixo estão listados todos os veículos que necessitam de intervenção imediata de óleo:</p>
-                <div id="lista-alertas-oleo-pagina" class="space-y-3">
-                    <p class="text-sm text-gray-500 text-center py-4">A carregar alertas...</p>
-                </div>
+            <p class="text-sm text-gray-600">Veículos que necessitam de intervenção ou acompanhamento de óleo:</p>
+            
+            <!-- GRADE DE CARDS QUADRADOS -->
+            <div id="lista-alertas-oleo-pagina" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <p class="text-sm text-gray-500 text-center py-4 col-span-full">A carregar alertas...</p>
             </div>
         </section>
 
@@ -152,25 +146,25 @@
 
     </main>
 
-    <!-- MODAL FROTAS EM OPERAÇÃO (COM FIXAÇÃO DE TAMANHO) -->
+    <!-- MODAL FROTAS EM OPERAÇÃO (CABEÇALHO FIXO E CORPO COM ROLAGEM) -->
     <div id="modal-ativas" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh] relative">
+        <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl flex flex-col max-h-[85vh] overflow-hidden relative">
             
-            <!-- CABEÇALHO DO MODAL -->
-            <div class="flex justify-between items-center border-b pb-3 mb-4">
+            <!-- CABEÇALHO DO MODAL (FIXO) -->
+            <div class="flex justify-between items-center border-b p-6 pb-4 bg-white z-10 flex-shrink-0">
                 <h3 class="text-lg font-bold text-blue-900 flex items-center">
                     <i class="fa-solid fa-truck-fast mr-2"></i> Frotas em Operação
                 </h3>
-                <button id="btn-fechar-modal-x" class="text-gray-400 hover:text-red-600 text-2xl font-bold px-2 py-1 transition">&times;</button>
+                <button id="btn-fechar-modal-x" class="text-gray-400 hover:text-red-600 text-2xl font-bold px-2 py-1 transition focus:outline-none">&times;</button>
             </div>
 
-            <!-- CONTEÚDO COM ROLAGEM -->
-            <div id="modal-lista-conteudo" class="space-y-3 overflow-y-auto pr-2 flex-grow">
+            <!-- CONTEÚDO COM ROLAGEM PRÓPRIA -->
+            <div id="modal-lista-conteudo" class="p-6 space-y-3 overflow-y-auto flex-grow">
                 <p class="text-sm text-gray-500 text-center py-4">A carregar...</p>
             </div>
 
-            <!-- RODAPÉ DO MODAL -->
-            <div class="pt-4 border-t mt-4 flex justify-end">
+            <!-- RODAPÉ DO MODAL (FIXO) -->
+            <div class="p-4 border-t bg-gray-50 flex justify-end flex-shrink-0">
                 <button id="btn-fechar-modal" class="bg-blue-900 hover:bg-blue-800 text-white font-bold px-6 py-2 rounded-xl text-sm shadow transition">
                     Fechar
                 </button>
@@ -179,7 +173,7 @@
     </div>
 
     <script>
-        var URL_API = "https://script.google.com/macros/s/AKfycbyd-Y_HI7vwUNKHCL-8lTTDuoIXIQdLGLC-nU9fdnZoVWRq2qQYrBinq8GDZwBykDrQkg/exec";
+        var URL_API = "https://script.google.com/macros/s/AKfycbyN0w7YVnTzjVyXFyKcUaguw4j-KDOk_Tlt7MueC3DdnbNrenk_rxaqx-ZffXnJFkDCFg/exec";
         var viagensAtivasCache = [];
 
         function carregarDadosDashboard() {
@@ -294,18 +288,37 @@
             container.innerHTML = "";
 
             if (alertas.length === 0) {
-                container.innerHTML = '<p class="text-sm text-green-600 font-semibold text-center py-4"><i class="fa-solid fa-circle-check mr-1"></i> Toda a frota está com a manutenção de óleo em dia!</p>';
+                container.innerHTML = '<p class="text-sm text-green-600 font-semibold text-center py-4 col-span-full"><i class="fa-solid fa-circle-check mr-1"></i> Toda a frota está com a manutenção de óleo em dia!</p>';
                 return;
             }
 
             alertas.forEach(function(item) {
+                var kmFaltamNum = Number(item.kmFaltam);
+                var isVencido = kmFaltamNum <= 0;
+                
+                var corBorda = isVencido ? 'border-red-600 bg-red-50' : 'border-amber-500 bg-amber-50';
+                var corBadge = isVencido ? 'bg-red-600 text-white' : 'bg-amber-500 text-white';
+                var textoStatus = isVencido ? 'Ultrapassado em ' + Math.abs(kmFaltamNum).toLocaleString('pt-BR') + ' km' : 'Faltam ' + kmFaltamNum.toLocaleString('pt-BR') + ' km';
+
                 container.innerHTML += 
-                    '<div class="flex justify-between items-center p-3 bg-red-50 border border-red-200 rounded-xl">' +
-                        '<div>' +
-                            '<span class="font-bold text-red-900 text-sm">Frota ' + item.frota + '</span>' +
-                            '<p class="text-xs text-red-600 mt-0.5">Troca de óleo pendente / ultrapassada</p>' +
+                    '<div class="border-2 ' + corBorda + ' p-5 rounded-2xl shadow-md flex flex-col justify-between space-y-4">' +
+                        '<div class="flex justify-between items-start">' +
+                            '<div>' +
+                                '<span class="text-xs uppercase font-bold tracking-wider text-gray-500">Veículo / Frota</span>' +
+                                '<h3 class="text-lg font-extrabold text-blue-900">Frota ' + item.frota + '</h3>' +
+                            '</div>' +
+                            '<span class="' + corBadge + ' font-bold text-xs px-3 py-1 rounded-lg uppercase shadow-sm">' + (isVencido ? 'VENCIDO' : 'ATENÇÃO') + '</span>' +
                         '</div>' +
-                        '<span class="bg-red-600 text-white font-bold text-xs px-3 py-1 rounded-lg">TROCAR</span>' +
+                        '<div class="space-y-1 bg-white p-3 rounded-xl shadow-inner border">' +
+                            '<div class="flex justify-between text-xs text-gray-600">' +
+                                '<span>KM Atual:</span>' +
+                                '<span class="font-bold text-gray-800">' + item.kmAtual.toLocaleString('pt-BR') + ' km</span>' +
+                            '</div>' +
+                            '<div class="flex justify-between text-xs text-gray-600 pt-1 border-t">' +
+                                '<span>Situação Troca:</span>' +
+                                '<span class="font-bold ' + (isVencido ? 'text-red-600' : 'text-amber-600') + '">' + textoStatus + '</span>' +
+                            '</div>' +
+                        '</div>' +
                     '</div>';
             });
         }
