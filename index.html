@@ -86,9 +86,10 @@
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-gray-700 uppercase mb-1">KM de Saída (Hodômetro):</label>
-                        <input type="number" id="kmSaida" placeholder="Digite ou confirme o KM..." class="w-full border rounded-xl p-3 text-base bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-900 outline-none transition" required>
+                    <!-- CAMPO DE KM DE SAÍDA AMPLIADO -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-blue-900 uppercase mb-2">KM de Saída (Hodômetro):</label>
+                        <input type="number" inputmode="numeric" pattern="[0-9]*" id="kmSaida" placeholder="Ex: 15200" class="w-full border-2 border-blue-300 rounded-xl p-4 text-3xl font-extrabold text-center bg-white focus:border-blue-900 focus:ring-4 focus:ring-blue-200 outline-none transition text-blue-900 shadow-inner" required>
                     </div>
 
                     <div class="mb-5 bg-gray-50 p-4 border rounded-2xl space-y-4 shadow-sm">
@@ -213,9 +214,10 @@
                 </div>
             </div>
 
+            <!-- CAMPO DE KM DE CHEGADA AMPLIADO -->
             <div>
-                <label class="block text-sm font-bold text-gray-700 uppercase mb-1">KM de Chegada:</label>
-                <input type="number" id="encerrar-km" placeholder="Digite o KM final..." class="w-full border rounded-xl p-3 text-base bg-gray-50 outline-none">
+                <label class="block text-sm font-bold text-green-700 uppercase mb-2">KM de Chegada:</label>
+                <input type="number" inputmode="numeric" pattern="[0-9]*" id="encerrar-km" placeholder="Ex: 15250" class="w-full border-2 border-green-300 rounded-xl p-4 text-3xl font-extrabold text-center bg-white focus:border-green-600 focus:ring-4 focus:ring-green-200 outline-none transition text-green-900 shadow-inner" required>
             </div>
 
             <div>
@@ -386,6 +388,7 @@
             let encontrada = dadosGlobais.frotas.find(f => f.frota == frotaSel);
             if (encontrada && encontrada.kmAtual) {
                 document.getElementById('kmSaida').value = encontrada.kmAtual;
+                // Mantemos o dataset apenas para preenchimento automático, mas não usamos mais para travar
                 document.getElementById('kmSaida').dataset.kmUltimo = encontrada.kmAtual;
             } else {
                 document.getElementById('kmSaida').dataset.kmUltimo = "";
@@ -413,16 +416,10 @@
 
             let kmInput = document.getElementById('kmSaida');
             let kmAtualDigitado = parseFloat(kmInput.value);
-            let kmUltimoRegistrado = parseFloat(kmInput.dataset.kmUltimo);
 
-            if (!isNaN(kmUltimoRegistrado) && kmAtualDigitado < kmUltimoRegistrado) {
-                mostrarAlerta(`O KM digitado (${kmAtualDigitado}) é MENOR que o último KM registrado desta frota (${kmUltimoRegistrado}). Deseja realmente prosseguir?`, "confirm", (confirmado) => {
-                    if (confirmado) {
-                        processarEnvioSaida(destinosSelecionados, kmAtualDigitado, " [verificar Km]");
-                    }
-                });
-                return;
-            }
+            // TRAVA DO KM HISTÓRICO REMOVIDA AQUI! 
+            // O sistema agora avança diretamente para processar o envio independentemente de o KM ser menor que o anterior.
+
             processarEnvioSaida(destinosSelecionados, kmAtualDigitado, "");
         }
 
